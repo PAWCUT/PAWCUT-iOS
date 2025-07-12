@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  PawCut
 //
-//  Created by Luminouxx on 7/8/25.
+//  Created by taeni on 7/12/25.
 //
 
 import SwiftUI
