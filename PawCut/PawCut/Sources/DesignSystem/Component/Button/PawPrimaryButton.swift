@@ -9,20 +9,24 @@ import SwiftUI
 
 struct PawPrimaryButton: View {
     
-    @State private var isEnabled: Bool = true
-    
     private let title: String
+    private let isEnabled: Bool
     private let action: () -> Void
+    private let textPadding: CGFloat
     private let horizontalPadding: CGFloat
     private let verticalPadding: CGFloat
     
     init(
         _ title: String,
+        isEnabled: Bool = true,
+        textPadding: CGFloat = 20,
         horizontalPadding: CGFloat = 20,
         verticalPadding: CGFloat = 20,
         action: @escaping () -> Void
     ) {
         self.title = title
+        self.isEnabled = isEnabled
+        self.textPadding = textPadding
         self.action = action
         self.horizontalPadding = horizontalPadding
         self.verticalPadding = verticalPadding
@@ -32,7 +36,8 @@ struct PawPrimaryButton: View {
         Button(action: action) {
             Text(title)
                 .pretendardFont(size: ._16, weight: .semibold)
-                .padding(EdgeInsets(top: 20, leading: 0, bottom: 20, trailing: 0))
+                .padding(.top, textPadding)
+                .padding(.bottom, textPadding)
                 .foregroundColor(.grayScale06)
                 .frame(maxWidth: .infinity)
                 .background(
