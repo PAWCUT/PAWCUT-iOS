@@ -9,6 +9,11 @@ import SwiftUI
 
 @main
 struct PawCutApp: App {
+    
+    init() {
+        FontSet.registerFonts()
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
