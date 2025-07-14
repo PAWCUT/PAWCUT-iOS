@@ -10,9 +10,24 @@
 		CC17719E2E1D2ED600F1B71F /* PawCut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PawCut.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		CCB3A4FA2E2532D0007E78FF /* Exceptions for "PawCut" folder in "PawCut" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				Sources/ViewModels/.gitkeep,
+				Sources/Views/.gitkeep,
+			);
+			target = CC17719D2E1D2ED600F1B71F /* PawCut */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		CC1771A02E1D2ED600F1B71F /* PawCut */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				CCB3A4FA2E2532D0007E78FF /* Exceptions for "PawCut" folder in "PawCut" target */,
+			);
 			path = PawCut;
 			sourceTree = "<group>";
 		};
@@ -255,6 +270,7 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PawCut/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -284,6 +300,7 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PawCut/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
