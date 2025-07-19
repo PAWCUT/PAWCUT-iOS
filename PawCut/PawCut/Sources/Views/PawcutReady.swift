@@ -10,7 +10,7 @@ import SwiftUI
 struct PawcutReady: View {
     var body: some View {
         ZStack {
-            Color("GrayScale06Color")
+            Color.grayScale06
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
@@ -26,7 +26,7 @@ struct PawcutReady: View {
                   
                     Text("촬영이 바로 시작됩니다\n준비해 주세요!")
                         .pretendardFont(size: ._20, weight: .semibold)
-                        .foregroundColor(Color("GrayScale01Color"))
+                        .foregroundColor(.grayScale01)
                         .multilineTextAlignment(.center)
                 }
                 
