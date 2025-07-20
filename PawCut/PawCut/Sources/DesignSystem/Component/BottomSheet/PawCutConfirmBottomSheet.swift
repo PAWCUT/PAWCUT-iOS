@@ -75,7 +75,7 @@ struct PawConfirmBottomSheet: View {
             buttonSection
         }
         .padding(.bottom, 20)
-        .background(Color.white)
+        .background(.white)
         .cornerRadius(12)
     }
     
@@ -151,7 +151,7 @@ struct BodyContent: View {
     private var titleText: some View {
         Text(title)
             .pretendardFont(size: ._20, weight: .semibold)
-            .foregroundColor(.black)
+            .foregroundColor(.grayScale01)
     }
     
     private var messageText: some View {
@@ -159,7 +159,6 @@ struct BodyContent: View {
             .pretendardFont(size: ._14, weight: .medium)
             .foregroundColor(.grayScale02)
             .multilineTextAlignment(.center)
-            .lineSpacing(4)
             .padding(.bottom, 17)
     }
 }
