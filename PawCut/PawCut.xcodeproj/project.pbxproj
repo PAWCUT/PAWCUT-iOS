@@ -16,7 +16,6 @@
 			membershipExceptions = (
 				Info.plist,
 				Sources/ViewModels/.gitkeep,
-				Sources/Views/.gitkeep,
 			);
 			target = CC17719D2E1D2ED600F1B71F /* PawCut */;
 		};
