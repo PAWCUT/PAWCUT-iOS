@@ -145,7 +145,7 @@ struct CalendarDayView: View {
                             .overlay(
                                 Circle()
                                     .stroke(
-                                        day.isToday ? configuration.appearance.todayColor : Color.clear,
+                                        day.isToday ? configuration.appearance.todayColor : .clear,
                                         lineWidth: day.isToday ? 2 : 0
                                     )
                             )

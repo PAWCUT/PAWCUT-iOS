@@ -124,14 +124,14 @@ struct CustomCalendarConfiguration {
         
         /// PawCut 앱 전용 테마 (기존 디자인 시스템 활용)
         static let pawCutTheme = Appearance(
-            primaryColor: Color.grayScale01,            // 진한 회색 (선택된 날짜)
-            backgroundColor: Color.white,               // 시스템 배경색
-            weekColor: Color.grayScale03,               // 요일 표시
-            dayColor: Color.grayScale01,                // 날짜 진한 회색 (기본 텍스트)
-            selectedTextColor: Color.grayScale05,       // 밝은 회색 (선택된 텍스트)
-            disabledTextColor: Color.grayScale04,       // 연한 회색 (비활성화)
-            todayColor: Color.clear,                    // 메인 컬러 (오늘)
-            rangeBackgroundColor: Color.grayScale01,    // 범위 배경색
+            primaryColor: .grayScale01,            // 진한 회색 (선택된 날짜)
+            backgroundColor: .white,               // 시스템 배경색
+            weekColor: .grayScale03,               // 요일 표시
+            dayColor: .grayScale01,                // 날짜 진한 회색 (기본 텍스트)
+            selectedTextColor: .grayScale05,       // 밝은 회색 (선택된 텍스트)
+            disabledTextColor: .grayScale04,       // 연한 회색 (비활성화)
+            todayColor: .clear,                    // 메인 컬러 (오늘)
+            rangeBackgroundColor: .grayScale01,    // 범위 배경색
             dayTextFont: FontSet.pretendard(size: ._14, weight: .semibold),
             headerFont: FontSet.pretendard(size: ._16, weight: .semibold),
             weekdayFont: FontSet.pretendard(size: ._12, weight: .semibold),
@@ -150,7 +150,7 @@ struct CustomCalendarConfiguration {
     let dateImages: [Date: String]         // 날짜별 이미지 (파일명)
     let onNavigate: ((Date) -> Void)?      // 네비게이션 모드 콜백
     
-    /// nil이면 오늘 기준 2년 전후로 자동 설정
+    /// 기본 기간은 오늘 기준 2년 전후
     var effectiveDisplayRange: DisplayRange {
         return displayRange ?? .aroundToday()
     }
@@ -178,7 +178,6 @@ struct CustomCalendarConfiguration {
     }
 }
 
-// MARK: - 편의 생성자들
 extension CustomCalendarConfiguration {
     
     /// 단일 날짜 선택 모드
