@@ -50,7 +50,7 @@ struct PawcutSelectionView: View {
                 Spacer()
             }
             .padding(.top, 68)
-            .padding(.horizontal,21)
+            .padding(.horizontal, 21)
 
             // 선택된 사진 썸네일
             ScrollView(.horizontal, showsIndicators: false) {
