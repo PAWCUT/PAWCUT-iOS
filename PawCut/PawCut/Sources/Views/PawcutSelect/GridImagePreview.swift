@@ -27,12 +27,12 @@ struct GridImagePreview: View {
                             Image(uiImage: images[index])
                                 .resizable()
                                 .scaledToFill()
-                                .frame(width: 99.6, height: 133.6)
+                                .frame(width: 100, height: 134)
                                 .clipped()
                         } else {
                             Rectangle()
                                 .fill(Color.gray.opacity(0.2))
-                                .frame(width: 99.6, height: 133.6)
+                                .frame(width: 100, height: 134)
                                 .overlay(
                                     Rectangle()
                                         .stroke(Color("GrayScale01"), lineWidth: 1)
@@ -45,8 +45,8 @@ struct GridImagePreview: View {
             Image("logo_black")
                 .resizable()
                 .scaledToFit()
-                .frame(height: 19.21)
-                .padding(.top, 13.11)
+                .frame(height: 20)
+                .padding(.top, 12)
         }
         .frame(maxWidth: .infinity, alignment: .center)
     }

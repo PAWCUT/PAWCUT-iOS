@@ -83,7 +83,3 @@ struct PawcutSelectionView: View {
 #Preview {
     PawcutSelectionView()
 }
-
-
-
-
