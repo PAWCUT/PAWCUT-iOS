@@ -9,21 +9,21 @@ import SwiftUI
 
 enum ColorSet {
     enum GrayScale: String, CaseIterable {
-        case grayScale01 = "GrayScale01Color"
-        case grayScale02 = "GrayScale02Color"
-        case grayScale03 = "GrayScale03Color"
-        case grayScale04 = "GrayScale04Color"
-        case grayScale05 = "GrayScale05Color"
-        case grayScale06 = "GrayScale06Color"
+        case grayScale01 = "GrayScale01"
+        case grayScale02 = "GrayScale02"
+        case grayScale03 = "GrayScale03"
+        case grayScale04 = "GrayScale04"
+        case grayScale05 = "GrayScale05"
+        case grayScale06 = "GrayScale06"
     }
     
     enum PointPurple: String, CaseIterable {
-        case pointPurple01 = "PointPurple01Color"
-        case pointPurple02 = "PointPurple02Color"
+        case pointPurple01 = "PointPurple01"
+        case pointPurple02 = "PointPurple02"
     }
     
     enum PointRed: String, CaseIterable {
-        case pointRed01 = "PointRed01Color"
-        case pointRed02 = "PointRed02Color"
+        case pointRed01 = "PointRed01"
+        case pointRed02 = "PointRed02"
     }
 } 
