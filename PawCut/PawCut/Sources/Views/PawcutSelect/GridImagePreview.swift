@@ -42,7 +42,7 @@ struct GridImagePreview: View {
                 }
             }
             
-            Image("logo_black")
+            Image(.logoBlack)
                 .resizable()
                 .scaledToFit()
                 .frame(height: 20)
