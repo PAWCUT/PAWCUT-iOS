@@ -8,20 +8,20 @@ import SwiftUI
 
 struct GridImagePreview: View {
     let images: [UIImage]
-
+    
     var body: some View {
         VStack(spacing: 0) {
             ForEach(0..<2, id: \.self) { row in
                 if row == 1 {
                     Spacer().frame(height: 8)
                 }
-
+                
                 HStack(spacing: 0) {
                     ForEach(0..<2, id: \.self) { col in
                         if col == 1 {
                             Spacer().frame(width: 5)
                         }
-
+                        
                         let index = row * 2 + col
                         if index < images.count {
                             Image(uiImage: images[index])
@@ -41,7 +41,7 @@ struct GridImagePreview: View {
                     }
                 }
             }
-
+            
             Image("logo_black")
                 .resizable()
                 .scaledToFit()

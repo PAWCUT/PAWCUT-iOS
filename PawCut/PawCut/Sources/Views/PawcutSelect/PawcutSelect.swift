@@ -55,7 +55,7 @@ struct PawcutSelectionView: View {
             // 선택된 사진 썸네일
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
-                    ForEach(0..<4, id: \.self) { index in
+                    ForEach(0..<4) { index in
                         if index < selectedImages.count {
                             Image(uiImage: selectedImages[index])
                                 .resizable()
