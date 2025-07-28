@@ -11,13 +11,13 @@ struct GridImagePreview: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            ForEach(0..<2, id: \.self) { row in
+            ForEach(0..<2) { row in
                 if row == 1 {
                     Spacer().frame(height: 8)
                 }
                 
                 HStack(spacing: 0) {
-                    ForEach(0..<2, id: \.self) { col in
+                    ForEach(0..<2) { col in
                         if col == 1 {
                             Spacer().frame(width: 5)
                         }
