@@ -35,11 +35,11 @@ struct PawSecondaryButton: View {
                 .pretendardFont(size: ._16, weight: .semibold)
                 .padding(.top, textPadding)
                 .padding(.bottom, textPadding)
-                .foregroundColor(.grayScale03)
+                .foregroundColor(.grayScale06)
                 .frame(maxWidth: .infinity)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(.grayScale05)
+                        .fill(.grayScale03)
                 )
         }
         .padding(.horizontal, horizontalPadding)
