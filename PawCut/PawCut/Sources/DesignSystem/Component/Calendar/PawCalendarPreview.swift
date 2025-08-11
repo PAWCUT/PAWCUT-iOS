@@ -124,11 +124,11 @@ struct NavigationPreview: View {
                     formatter.dateFormat = "yyyy-MM-dd"
                     print("네비게이션 선택 (사진 있음): \(formatter.string(from: date)) - \(imageName)")
                     
-                    navigationPath.append(PhotoDestination(date: date, imageName: imageName))
+                    navigationPath.append(PhotoPreviewDestination(date: date, imageName: imageName))
                 }
             }
-            .navigationDestination(for: PhotoDestination.self) { destination in
-                PhotoDetailView(
+            .navigationDestination(for: PhotoPreviewDestination.self) { destination in
+                PhotoDetailPreview(
                     selectedDate: destination.date,
                     imageName: destination.imageName
                 )
@@ -138,13 +138,13 @@ struct NavigationPreview: View {
 }
 
 // MARK: - Photo Destination
-struct PhotoDestination: Hashable {
+struct PhotoPreviewDestination: Hashable {
     let date: Date
     let imageName: String
 }
 
 // MARK: - 사진 상세 뷰 (예제)
-struct PhotoDetailView: View {
+struct PhotoDetailPreview: View {
     let selectedDate: Date
     let imageName: String
     
@@ -154,39 +154,8 @@ struct PhotoDetailView: View {
             Text(dateString)
                 .font(.title2)
                 .fontWeight(.bold)
-            
-            // Mock 이미지 (실제로는 AsyncImage 사용)
-            Rectangle()
-                .fill(
-                    LinearGradient(
-                        colors: [.blue.opacity(0.6), .purple.opacity(0.6)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                .frame(width: 300, height: 300)
-                .cornerRadius(12)
-                .overlay(
-                    VStack {
-                        Image(systemName: "photo")
-                            .font(.system(size: 60))
-                            .foregroundColor(.white)
-                        
-                        Text(imageName)
-                            .foregroundColor(.white)
-                            .font(.caption)
-                    }
-                )
-            
-            Text("이 날의 사진입니다!")
-                .font(.body)
-                .foregroundColor(.secondary)
-            
             Spacer()
         }
-        .padding()
-        .navigationTitle("사진 보기")
-        .navigationBarTitleDisplayMode(.inline)
     }
     
     private var dateString: String {
@@ -256,7 +225,7 @@ struct CalendarExampleView: View {
                 case .multiple:
                     MultipleSelectionPreview()
                 case .navigate:
-                    navigationCalendar
+                    NavigationPreview()
                 }
             }
             .frame(maxHeight: .infinity)
@@ -276,10 +245,6 @@ struct CalendarExampleView: View {
             formatter.dateFormat = "yyyy-MM-dd"
             print("단일 선택: \(formatter.string(from: date))")
         }
-    }
-    
-    private var navigationCalendar: some View {
-        NavigationCalendarExample()
     }
 }
 
@@ -301,11 +266,11 @@ struct NavigationCalendarExample: View {
                 formatter.dateFormat = "yyyy-MM-dd"
                 print("네비게이션 선택 (사진 있음): \(formatter.string(from: date)) - \(imageName)")
                 
-                navigationPath.append(PhotoDestination(date: date, imageName: imageName))
+                navigationPath.append(PhotoPreviewDestination(date: date, imageName: imageName))
             }
         }
-        .navigationDestination(for: PhotoDestination.self) { destination in
-            PhotoDetailView(
+        .navigationDestination(for: PhotoPreviewDestination.self) { destination in
+            PhotoDetailPreview(
                 selectedDate: destination.date,
                 imageName: destination.imageName
             )
