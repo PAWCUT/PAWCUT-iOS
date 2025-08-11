@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct ThirdOnboardingView: View {
-    @State private var currentPage: Int = 2
+    
+    @StateObject private var viewModel = ThirdOnboardingViewModel()
+    
     var body: some View {
-        Spacer()
         VStack{
             Text("사진은 언제나\n다시 꺼내볼 수 있어요")
                 .font(.pretendard(size: ._24 ,weight: .semibold))
@@ -29,11 +30,14 @@ struct ThirdOnboardingView: View {
                 size: CGSize(width: 200, height: 265)
             )
             .padding(.bottom,93)
-            PageControl(numberOfPages: 3, currentPage:currentPage)
+            
+            PageControl(numberOfPages: 3, currentPage: viewModel.currentPage)
+            
             PawPrimaryButton("다음"){
-                print("다음")
+                viewModel.tapNextButton()
             }
         }
+        .navigationBarBackButtonHidden()
     }
 }
 

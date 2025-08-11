@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct FirstOnboardingView: View {
-    @State private var currentPage: Int = 0
+    
+    @StateObject private var viewModel = FirstOnboardingViewModel()
+
     var body: some View {
-        Spacer()
         VStack{
             Text("귀가 쫑긋! \n그 찰나를 담아보세요")
                 .font(.pretendard(size: ._24 ,weight: .semibold))
@@ -24,16 +25,20 @@ struct FirstOnboardingView: View {
                 .foregroundColor(.grayScale03)
                 .padding(.bottom,102)
             
+            
             ImageComponent(
                 imageName: "onboarding_1",
                 size: CGSize(width: 220, height: 251)
             )
             .padding(.bottom,96)
-            PageControl(numberOfPages: 3, currentPage:currentPage)
+            
+            PageControl(numberOfPages: 3, currentPage: viewModel.currentPage)
+            
             PawPrimaryButton("다음"){
-                print("다음")
+                viewModel.tapNextButton()
             }
         }
+        .navigationBarBackButtonHidden()
     }
 }
 
