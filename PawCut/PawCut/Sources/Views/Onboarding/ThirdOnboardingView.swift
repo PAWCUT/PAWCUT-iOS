@@ -13,23 +13,28 @@ struct ThirdOnboardingView: View {
     
     var body: some View {
         VStack{
-            Text("사진은 언제나\n다시 꺼내볼 수 있어요")
-                .font(.pretendard(size: ._24 ,weight: .semibold))
-                .multilineTextAlignment(.center)
-                .foregroundColor(.grayScale01)
+            PawTitleLabel
+                .bold24(
+                    "사진은 언제나\n다시 꺼내볼 수 있어요",
+                    alignment: .center,
+                    lineLimit: 2
+                )
                 .padding(12)
             
-            Text("언제든 꺼내볼 수 있는\n따뜻한 기록이 되어줄 거예요")
-                .font(.pretendard(size: ._16,weight: .medium))
-                .multilineTextAlignment(.center)
-                .foregroundColor(.grayScale03)
-                .padding(.bottom,91)
+            PawBodyLabel
+                .med16(
+                    "언제든 꺼내볼 수 있는\n따뜻한 기록이 되어줄 거예요",
+                    color: .grayScale03,
+                    alignment: .center,
+                    lineLimit: 2
+                )
+                .padding(.bottom, 91)
             
             ImageComponent(
                 imageName: "onboarding_3",
                 size: CGSize(width: 200, height: 265)
             )
-            .padding(.bottom,93)
+            .padding(.bottom, 93)
             
             PageControl(numberOfPages: 3, currentPage: viewModel.currentPage)
             

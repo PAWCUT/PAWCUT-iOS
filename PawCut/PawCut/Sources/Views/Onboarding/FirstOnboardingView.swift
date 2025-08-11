@@ -13,18 +13,22 @@ struct FirstOnboardingView: View {
 
     var body: some View {
         VStack{
-            Text("귀가 쫑긋! \n그 찰나를 담아보세요")
-                .font(.pretendard(size: ._24 ,weight: .semibold))
-                .multilineTextAlignment(.center)
-                .foregroundColor(.grayScale01)
+            PawTitleLabel
+                .bold24(
+                    "귀가 쫑긋! \n그 찰나를 담아보세요",
+                    alignment: .center,
+                    lineLimit: 2
+                )
                 .padding(12)
             
-            Text("우리 아이가 반응하는 소리로\n자연스러운 시선을 끌어내보세요")
-                .font(.pretendard(size: ._16,weight: .medium))
-                .multilineTextAlignment(.center)
-                .foregroundColor(.grayScale03)
+            PawBodyLabel
+                .med16(
+                    "우리 아이가 반응하는 소리로\n자연스러운 시선을 끌어내보세요",
+                    color: .grayScale03,
+                    alignment: .center,
+                    lineLimit: 2
+                )
                 .padding(.bottom,102)
-            
             
             ImageComponent(
                 imageName: "onboarding_1",
