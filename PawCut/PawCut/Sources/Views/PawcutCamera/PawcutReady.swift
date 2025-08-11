@@ -18,7 +18,7 @@ struct PawcutReady: View {
            
                 VStack(spacing: 28) {
                   
-                    Image("onboarding_first")
+                    Image("onboarding_1")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 190, height: 217)
