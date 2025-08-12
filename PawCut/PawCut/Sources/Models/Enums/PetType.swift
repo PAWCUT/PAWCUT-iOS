@@ -16,4 +16,11 @@ enum PetType: String, CaseIterable, Codable {
         case .cat: return "cat_"
         }
     }
+    
+    var fileSuffix: String {
+        switch self {
+        case .dog: return "_dog"
+        case .cat: return "_cat"
+        }
+    }
 }
