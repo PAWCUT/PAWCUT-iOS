@@ -1,16 +1,9 @@
-//
-//  select.swift
-//  PawCut
-//
-//  Created by Jay on 7/28/25.
-//
-
 import SwiftUI
 
 struct PawcutSelectionView: View {
     @State private var selectedImages: [UIImage] = []
     @Environment(\.dismiss) private var dismiss
-    
+
     var body: some View {
         VStack(spacing: 0) {
             HStack {
@@ -22,10 +15,10 @@ struct PawcutSelectionView: View {
                         .foregroundColor(.grayScale01)
                 }
                 .frame(width: 33, height: 44)
-                
+
                 Spacer()
             }
-            
+
             // 상단 이미지 프레임 미리보기
             VStack {
                 GridImagePreview(images: selectedImages)
@@ -46,7 +39,7 @@ struct PawcutSelectionView: View {
                 Text("(\(selectedImages.count)/4)")
                     .pretendardFont(size: ._18, weight: .semibold)
                     .foregroundColor(.pointPurple01)
-                    .padding(.leading,4)
+                    .padding(.leading, 4)
                 Spacer()
             }
             .padding(.top, 68)
