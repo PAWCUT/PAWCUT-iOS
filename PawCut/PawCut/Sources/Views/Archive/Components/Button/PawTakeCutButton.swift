@@ -1,5 +1,5 @@
 //
-//  PawChoiceButton.swift
+//  PawTakeCutButton.swift
 //  PawCut
 //
 //  Created by taeni on 8/12/25.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct TakePawCutButton: View {
+struct PawTakeCutButton: View {
     private let title: String
     private let action: () -> Void
     private let textPadding: CGFloat = 16
@@ -48,7 +48,7 @@ struct TakePawCutButton: View {
 
 #Preview {
     HStack(spacing: 12) {
-        TakePawCutButton("포우컷 촬영하러 가기") {
+        PawTakeCutButton("포우컷 촬영하러 가기") {
             
         }
     }
