@@ -209,10 +209,7 @@ extension PawCalendarView {
             return ""
         }
         
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.dateFormat = "yyyy년 M월"
-        return formatter.string(from: targetDate)
+        return targetDate.koreanYearMonthString
     }
     
     func scrollToDate(_ date: Date) {
