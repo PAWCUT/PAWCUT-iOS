@@ -15,12 +15,12 @@ struct PawConfirmBottomSheet: View {
     private let petType: PetType
     private let confirmAction: () -> Void
     private let cancelAction: () -> Void
-    
+
     private let textPadding: CGFloat = 16
     private let viewPadding: CGFloat = 20
-    
+
     @Binding var isPresented: Bool
-    
+
     init(
         _ petType: PetType = .dog,
         title: String,
@@ -40,7 +40,7 @@ struct PawConfirmBottomSheet: View {
         self.confirmAction = confirmAction
         self.cancelAction = cancelAction
     }
-    
+
     var body: some View {
         ZStack {
             Color.black.opacity(0.4)
@@ -48,7 +48,7 @@ struct PawConfirmBottomSheet: View {
                 .onTapGesture {
                     isPresented = false
                 }
-            
+
             VStack {
                 Spacer()
                 sheetContent
@@ -57,15 +57,15 @@ struct PawConfirmBottomSheet: View {
             .ignoresSafeArea()
         }
     }
-    
+
     private var sheetContent: some View {
         ZStack(alignment: .top) {
             VStack {
                 Spacer()
                     .frame(height: 70)
-                
+
                 bodyContent
-                
+
                 HStack(spacing: 20) {
                     PawSecondaryButton(
                         cancelTitle,
@@ -76,7 +76,7 @@ struct PawConfirmBottomSheet: View {
                         isPresented = false
                         cancelAction()
                     }
-                    
+
                     PawPrimaryButton(
                         confirmTitle,
                         textPadding: textPadding,
@@ -92,17 +92,18 @@ struct PawConfirmBottomSheet: View {
             .padding(.bottom, viewPadding)
             .background(.white)
             .cornerRadius(12)
-            
+
             HeaderPetImage(type: petType)
-        }.frame(height: 286)
+        }
+        .frame(height: 286)
     }
-    
+
     private var bodyContent: some View {
         VStack(spacing: 12) {
             Text(title)
                 .pretendardFont(size: ._20, weight: .semibold)
                 .foregroundColor(.grayScale01)
-            
+
             Text(message)
                 .pretendardFont(size: ._14, weight: .medium)
                 .foregroundColor(.grayScale02)
@@ -111,11 +112,11 @@ struct PawConfirmBottomSheet: View {
         }
         .padding(.horizontal, viewPadding)
     }
-    
+
     // TODO: - Image Component 교체 및 파일명 처리 방안 고민
     private struct HeaderPetImage: View {
         let type: PetType
-        
+
         var body: some View {
             Image(imageName)
                 .resizable()
@@ -155,5 +156,3 @@ struct PawConfirmBottomSheet: View {
         cancelAction: {}
     )
 }
-
-

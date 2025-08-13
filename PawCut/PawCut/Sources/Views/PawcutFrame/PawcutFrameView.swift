@@ -1,14 +1,16 @@
 import SwiftUI
 
 struct PawcutFrameView: View {
+    @StateObject private var viewModel: PawcutFrameViewModel
+    
     @State private var selectedImages: [UIImage] = []
-    @Environment(\.dismiss) private var dismiss
+    @State private var isBottomSheetPresented = false
 
     var body: some View {
         VStack(spacing: 0) {
             HStack {
                 Button(action: {
-                    dismiss()
+                    viewModel.tapBackButton()
                 }) {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 17, weight: .semibold))
@@ -28,7 +30,7 @@ struct PawcutFrameView: View {
                 Text("\(selectedImages.count)White")
                     .pretendardFont(size: ._18, weight: .bold)
                     .foregroundColor(.grayScale01)
-                
+
             }
             .padding(.top, 48)
             .padding(.horizontal, 21)
@@ -56,14 +58,33 @@ struct PawcutFrameView: View {
             .padding(.leading, 4)
 
             PawSecondaryButton("저장하기") {
-                // 다음 단계로 이동
+                isBottomSheetPresented = true
             }
         }
         .frame(maxHeight: .infinity, alignment: .top)
+        .overlay(
+            Group {
+                if isBottomSheetPresented {
+                    PawConfirmBottomSheet(
+                        .dog,
+                        title: "포우컷 생성완료!",
+                        message: "포우-컷 생성이 완료되었어요.\n지금 바로 확인해보세요.",
+                        confirmTitle: "홈으로 가기",
+                        cancelTitle: "닫기",
+                        isPresented: $isBottomSheetPresented,
+                        confirmAction: {
+                            print("✅ 홈으로 이동")
+                        },
+                        cancelAction: {
+                            print("❌ 닫기")
+                        }
+                    )
+                }
+            }
+        )
     }
 }
 
 #Preview {
     PawcutFrameView()
 }
-

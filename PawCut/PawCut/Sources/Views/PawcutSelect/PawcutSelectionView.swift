@@ -10,7 +10,7 @@ struct PawcutSelectionView: View {
         VStack(spacing: 0) {
             HStack {
                 Button(action: {
-                    dismiss()
+                    viewModel.tapBackButton()
                 }) {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 17, weight: .semibold))
