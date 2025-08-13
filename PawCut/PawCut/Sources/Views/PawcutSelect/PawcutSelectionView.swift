@@ -4,7 +4,6 @@ struct PawcutSelectionView: View {
     @StateObject private var viewModel = PawcutSelectionViewModel()
     
     @State private var selectedImages: [UIImage] = []
-    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         VStack(spacing: 0) {
