@@ -1,8 +1,6 @@
 import SwiftUI
 
-struct PawcutSelectionView: View {
-    @StateObject private var viewModel = PawcutSelectionViewModel()
-    
+struct PawcutFrameView: View {
     @State private var selectedImages: [UIImage] = []
     @Environment(\.dismiss) private var dismiss
 
@@ -22,27 +20,23 @@ struct PawcutSelectionView: View {
             }
 
             // 상단 이미지 프레임 미리보기
-            GridImagePreview(images: selectedImages, style: .selection)
+            GridImagePreview(images: selectedImages, style: .frame)
                 .padding(.top, 38)
 
             // 사진 선택 카운트
             HStack(spacing: 0) {
-                Text("사진 선택하기")
-                    .pretendardFont(size: ._18, weight: .semibold)
+                Text("\(selectedImages.count)White")
+                    .pretendardFont(size: ._18, weight: .bold)
                     .foregroundColor(.grayScale01)
-                Text("(\(selectedImages.count)/4)")
-                    .pretendardFont(size: ._18, weight: .semibold)
-                    .foregroundColor(.pointPurple01)
-                    .padding(.leading, 4)
-                Spacer()
+                
             }
-            .padding(.top, 68)
+            .padding(.top, 48)
             .padding(.horizontal, 21)
 
             // 선택된 사진 썸네일
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(0..<4) { index in
+                HStack(spacing: 8) {
+                    ForEach(0..<10) { index in
                         if index < selectedImages.count {
                             Image(uiImage: selectedImages[index])
                                 .resizable()
@@ -50,18 +44,19 @@ struct PawcutSelectionView: View {
                                 .frame(width: 64, height: 90)
                                 .clipShape(RoundedRectangle(cornerRadius: 4))
                         } else {
-                            RoundedRectangle(cornerRadius: 8)
+                            Circle()
                                 .fill(Color.gray.opacity(0.2))
-                                .frame(width: 100, height: 132)
+                                .frame(width: 40, height: 40)
                         }
                     }
                 }
-                .padding(.top, 18)
+                .padding(.top, 38)
                 .padding(.horizontal)
             }
+            .padding(.leading, 4)
 
-            PawSecondaryButton("다음") {
-                viewModel.tapNextButton()
+            PawSecondaryButton("저장하기") {
+                // 다음 단계로 이동
             }
         }
         .frame(maxHeight: .infinity, alignment: .top)
@@ -69,5 +64,6 @@ struct PawcutSelectionView: View {
 }
 
 #Preview {
-    PawcutSelectionView()
+    PawcutFrameView()
 }
+
