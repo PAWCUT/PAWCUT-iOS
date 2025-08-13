@@ -36,7 +36,7 @@ enum GridImagePreviewStyle {
     }
 }
 
-struct GridImagePreview: View {
+struct PawCutGridImagePreview: View {
     let images: [UIImage]
     let style: GridImagePreviewStyle
     
@@ -91,7 +91,7 @@ struct GridImagePreview: View {
 }
 
 #Preview {
-    GridImagePreview(
+    PawCutGridImagePreview(
         images: [],
         style: .frame
     )

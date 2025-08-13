@@ -21,7 +21,7 @@ struct PawcutSelectionView: View {
             }
 
             // 상단 이미지 프레임 미리보기
-            GridImagePreview(images: selectedImages, style: .selection)
+            PawCutGridImagePreview(images: selectedImages, style: .selection)
                 .padding(.top, 38)
 
             // 사진 선택 카운트
