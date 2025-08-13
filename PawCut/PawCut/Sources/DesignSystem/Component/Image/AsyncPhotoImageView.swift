@@ -22,12 +22,16 @@ struct AsyncPhotoImageView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             } else if isLoading {
-                // TODO: Loading 이미지 필요
-                ImageComponent(imageName: "mock_sample", size: CGSize(width: 290, height: 440))
+                // 테스트용 이미지 보기
+                 ImageComponent(imageName: "mock_sample", size: CGSize(width: 290, height: 440))
+                
+                // TODO: Loading 이미지 필요?
+                
                 //                ProgressView()
                 //                    .scaleEffect(0.8)
                 //                    .foregroundColor(.grayScale03)
             } else {
+                // TODO: Loading 이미지 필요?
                 ImageComponent(imageName: "mock_sample", size: CGSize(width: 290, height: 440))
             }
         }
