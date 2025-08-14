@@ -10,7 +10,7 @@ import SwiftUI
 struct ArchiveGridView: View {
     @ObservedObject var viewModel: ArchiveViewModel
     
-    // 디바이스 별로 width dynamic
+    // 디바이스별로 width dynamic
     private var screenWidth: CGFloat {
         UIScreen.main.bounds.width
     }
@@ -24,30 +24,46 @@ struct ArchiveGridView: View {
     }
     
     var body: some View {
-        ScrollView {
-            LazyVGrid(
-                columns: Array(repeating: GridItem(.flexible(), spacing: 3), count: 3),
-                spacing: 3
-            ) {
-                ForEach(viewModel.sortedDates, id: \.self) { date in
-                    if let photos = viewModel.groupedPhotos[date] {
-                        ForEach(Array(photos.enumerated()), id: \.element.id) { index, photo in
-                            PhotoGridCell(
-                                photo: photo,
-                                gridWidth: gridWidth,
-                                gridHeight: gridHeight,
-                                showDateOverlay: index == 0,
-                                onTap: {
-                                    viewModel.selectPhoto(photo, at: index, date: date)
-                                }
-                            )
+        ScrollViewReader { proxy in
+            ScrollView {
+                LazyVGrid(
+                    columns: Array(repeating: GridItem(.flexible(), spacing: 3), count: 3),
+                    spacing: 3
+                ) {
+                    ForEach(viewModel.sortedDates, id: \.self) { date in
+                        if let photos = viewModel.groupedPhotos[date] {
+                            ForEach(Array(photos.enumerated()), id: \.element.id) { index, photo in
+                                PhotoGridCell(
+                                    photo: photo,
+                                    gridWidth: gridWidth,
+                                    gridHeight: gridHeight,
+                                    showDateOverlay: index == 0,
+                                    onTap: {
+                                        viewModel.selectPhoto(photo, at: index, date: date)
+                                    }
+                                )
+                            }
                         }
                     }
+                    
+                    Rectangle()
+                        .fill(Color.clear)
+                        .frame(height: 1)
+                        .id("bottom_scroll")
+                }
+            }
+            .onAppear {
+                proxy.scrollTo("bottom_scroll", anchor: .bottom)
+            }
+            .onChange(of: viewModel.groupedPhotos) { _, _ in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    proxy.scrollTo("bottom_scroll", anchor: .bottom)
                 }
             }
         }
     }
 }
+
 
 struct PhotoGridCell: View {
     let photo: Photo
