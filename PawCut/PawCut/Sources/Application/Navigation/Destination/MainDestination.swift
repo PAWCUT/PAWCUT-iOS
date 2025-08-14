@@ -10,7 +10,7 @@ import SwiftUI
 enum MainDestination: NavigationDestination {
     case home
     case archive
-    case photoDetails
+    case photoGallery
     
     @ViewBuilder
     func view() -> some View {
@@ -20,7 +20,7 @@ enum MainDestination: NavigationDestination {
             EmptyView()
         case .archive:
             ArchiveView()
-        case .photoDetails:
+        case .photoGallery:
             PhotoGalleryView()
         }
     }
