@@ -26,7 +26,11 @@ struct PawcutCamera: View {
         .onDisappear {
             viewModel.cancelCountdown()
         }
-        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+        .onReceive(
+            NotificationCenter.default.publisher(
+                for: UIApplication.willResignActiveNotification
+            )
+        ) { _ in
             viewModel.pauseCountdown()
         }
     }
@@ -99,28 +103,40 @@ struct PawcutCamera: View {
                 Spacer()
 
                 Button(action: {
+                    viewModel.playPlasticBagSound()
                 }) {
                     ImageComponent(
                         imageName: "pawcut_sound",
                         size: CGSize(width: 22, height: 22)
                     )
                     .scaleEffect(viewModel.soundButtonScale)
-                    .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: viewModel.soundButtonScale)
+                    .animation(
+                        .easeInOut(duration: 1.5).repeatForever(
+                            autoreverses: true
+                        ),
+                        value: viewModel.soundButtonScale
+                    )
                 }
 
                 Button(action: {
                     viewModel.toggleFlash()
                 }) {
                     ImageComponent(
-                        imageName: "flash_light",
+                        imageName: viewModel.isFlashEnabled
+                            ? "flash_light" : "flash_dark",
                         size: CGSize(width: 22, height: 22)
+                    )
+                    .opacity(viewModel.isFlashEnabled ? 1.0 : 1.0)
+                    .scaleEffect(viewModel.isFlashEnabled ? 1.1 : 1.0)
+                    .animation(
+                        .easeInOut(duration: 0.2),
+                        value: viewModel.isFlashEnabled
                     )
                 }
                 .frame(width: 36, height: 42)
             }
             .padding(.horizontal, 20)
             .padding(.top, 0)
-
             Spacer()
         }
     }
@@ -144,7 +160,7 @@ struct PawcutCamera: View {
                     .foregroundColor(.white)
                     .shadow(radius: 5)
                     .transition(.opacity)
-                    .zIndex(1)
+                    .padding(.bottom, 60)
             }
         }
     }
@@ -154,6 +170,9 @@ struct PawcutCamera: View {
             Spacer()
             if viewModel.cameraPosition == .back {
                 zoomControlView
+                    .padding(.bottom, 76)
+            } else {
+                frontZoomControlView
                     .padding(.bottom, 76)
             }
             bottomButtonsView
@@ -185,6 +204,22 @@ struct PawcutCamera: View {
         .padding(.vertical, 4)
         .background(Color.white.opacity(0.1))
         .cornerRadius(105)
+    }
+
+    private var frontZoomControlView: some View {
+        Button(action: {
+            viewModel.toggleFrontZoom()
+        }) {
+            ImageComponent(
+                imageName: viewModel.isZoomedIn ? "zoom_out" : "zoom_in",
+                size: CGSize(width: 35, height: 35)
+            )
+            .frame(width: 35, height: 35)
+            .background(Color.white.opacity(0.35))
+            .clipShape(Circle())
+        }
+        .scaleEffect(viewModel.isZoomedIn ? 1.1 : 1.0)
+        .animation(.easeInOut(duration: 0.2), value: viewModel.isZoomedIn)
     }
 
     private var bottomButtonsView: some View {
@@ -225,7 +260,6 @@ struct PawcutCamera: View {
                 VStack {
                     HStack {
                         Spacer()
-
                         VStack(spacing: 0) {
                             PawToolTip(
                                 message: "소리를 설정에서 변경할 수 있어요!"
@@ -233,10 +267,8 @@ struct PawcutCamera: View {
                         }
                         .padding(.top, 50)
                         .padding(.trailing, -120)
-
                         Spacer()
                     }
-
                     Spacer()
                 }
                 .transition(.opacity.combined(with: .scale))

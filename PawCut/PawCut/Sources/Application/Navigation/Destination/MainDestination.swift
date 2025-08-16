@@ -15,7 +15,19 @@ enum MainDestination: NavigationDestination {
         switch self {
         case .home:
             // TODO: HomeView로 수정 예정
-            EmptyView()
+            VStack {
+                Spacer()
+                
+                NavigationLink(destination: PawcutCamera()) {
+                    Text("카메라 테스트")
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                }
+                
+                Spacer()
+            }
         }
     }
 }
