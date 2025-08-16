@@ -26,6 +26,9 @@ struct PawcutCamera: View {
         .onDisappear {
             viewModel.cancelCountdown()
         }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+            viewModel.pauseCountdown()
+        }
     }
 
     // MARK: - View Components
@@ -101,6 +104,8 @@ struct PawcutCamera: View {
                         imageName: "pawcut_sound",
                         size: CGSize(width: 22, height: 22)
                     )
+                    .scaleEffect(viewModel.soundButtonScale)
+                    .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: viewModel.soundButtonScale)
                 }
 
                 Button(action: {
