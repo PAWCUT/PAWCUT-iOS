@@ -8,12 +8,7 @@
 import SwiftUI
 
 struct PetInfoView: View {
-    @State private var isError: Bool = true
-    @State private var name: String = ""
-    @State private var selectedType: PetType? = nil
-    @State private var isDogEnabled = false
-    @State private var isCatEnabled = false
-
+    @StateObject private var viewModel = PetInfoViewModel()
 
     var body: some View {
         HStack {
@@ -35,17 +30,13 @@ struct PetInfoView: View {
                 //Text 입력칸
                 PawTextField(
                     "이름을 입력해 주세요.",
-                    text: $name,
-                    isError: $isError,
+                    text: $viewModel.name,
+                    isError: $viewModel.isError,
                     errorMessage: "공백없이 1자 이상 5자 이하로 입력해주세요."
                 )
                 .padding(.bottom, 28)
-                .onChange(of: name) { oldValue, newValue in
-                    if newValue.count > 5 || newValue.isEmpty {
-                        self.isError = true
-                    } else {
-                        self.isError = false
-                    }
+                .onChange(of: viewModel.name) { oldValue, newValue in
+                    viewModel.updateName(newValue)
                 }
 
                 PawTitleLabel
@@ -58,25 +49,24 @@ struct PetInfoView: View {
                 HStack(spacing: 12) {
                     PawChoiceButton(
                         "강아지",
-                        isEnabled: isDogEnabled,
+                        isEnabled: viewModel.isDogEnabled,
                         horizontalPadding: 0
                     ) {
-                        isDogEnabled.toggle()
-
+                        viewModel.selectDog()
                     }
                     PawChoiceButton(
                         "고양이",
-                        isEnabled: isCatEnabled,
+                        isEnabled: viewModel.isCatEnabled,
                         horizontalPadding: 0
                     ) {
-                        isCatEnabled.toggle()
+                        viewModel.selectCat()
                     }
                 }
             }
         }
         .padding(.horizontal, 20)
-        PawSecondaryButton("시작하기") {
-
+        PawPrimaryButton("시작하기", isEnabled: viewModel.isValidInput) {
+            viewModel.startApp()
         }
     }
 }
