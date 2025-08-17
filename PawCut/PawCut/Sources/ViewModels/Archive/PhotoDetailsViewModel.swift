@@ -21,14 +21,14 @@ final class PhotoDetailsViewModel: ObservableObject {
     @Published var showToast: Bool = false
     @Published var toastMessage: String = ""
     
-
     // MARK: 최신순 정렬
     var sortedDates: [Date] {
-        Photo.sortedDates(from: groupedPhotos)
+        // 최신순(내림차순) 정렬로 통일
+        groupedPhotos.keys.sorted(by: >)
     }
     
     var currentPhotos: [Photo] {
-        groupedPhotos[currentDate] ?? []
+        return groupedPhotos[currentDate.startOfDay] ?? []
     }
     
     var currentPhoto: Photo? {
@@ -37,6 +37,9 @@ final class PhotoDetailsViewModel: ObservableObject {
     }
     
     init(modelContext: ModelContext? = nil) {
+        // currentDate를 startOfDay로 정규화
+        self.currentDate = Date().startOfDay
+        print(currentDate.koreanYearMonthDateString)
         self.modelContext = modelContext
     }
     
@@ -49,6 +52,8 @@ final class PhotoDetailsViewModel: ObservableObject {
         // guard let currentPhoto = currentPhoto else { return }
         
         showToastMessage("사진이 저장되었습니다")
+        // 저장 성공 시 햅틱
+        HapticManager.shared.triggerSaveComplete()
     }
     
     /// 현재 이미지 삭제
@@ -68,31 +73,39 @@ final class PhotoDetailsViewModel: ObservableObject {
             updateAfterDeletion()
             showToastMessage("사진이 삭제되었습니다.")
             
+            // 삭제 성공 시 햅틱
+            HapticManager.shared.triggerSuccess()
+            
         } catch {
             showToastMessage("사진 삭제에 실패했습니다.")
+            
+            // 삭제 실패 시 햅틱
+            HapticManager.shared.triggerError()
         }
     }
     
     /// 삭제 후 UI 업데이트
     private func updateAfterDeletion() {
+        let normalizedCurrentDate = currentDate.startOfDay
+        
         // 현재 날짜의 사진 목록 업데이트
-        var updatedPhotos = currentPhotos
+        var updatedPhotos = groupedPhotos[normalizedCurrentDate] ?? []
         if currentIndex < updatedPhotos.count {
             updatedPhotos.remove(at: currentIndex)
         }
         
         if updatedPhotos.isEmpty {
             // 현재 날짜에 더 이상 사진이 없으면 날짜 제거
-            groupedPhotos.removeValue(forKey: currentDate)
+            groupedPhotos.removeValue(forKey: normalizedCurrentDate)
             
             // 다른 날짜로 이동
             if !sortedDates.isEmpty {
-                currentDate = sortedDates.first!
+                currentDate = sortedDates.first!.startOfDay
                 currentIndex = 0
             }
         } else {
             // 현재 날짜 사진 목록 업데이트
-            groupedPhotos[currentDate] = updatedPhotos
+            groupedPhotos[normalizedCurrentDate] = updatedPhotos
             
             // 인덱스 조정
             if currentIndex >= updatedPhotos.count {
@@ -103,13 +116,14 @@ final class PhotoDetailsViewModel: ObservableObject {
     
     /// 현재 사진과 인덱스 업데이트
     func updateCurrentPhotosAndIndex() {
-        let photos = groupedPhotos[currentDate] ?? []
+        let normalizedCurrentDate = currentDate.startOfDay
+        let photos = groupedPhotos[normalizedCurrentDate] ?? []
         
         if photos.isEmpty {
             // 현재 날짜에 사진이 없으면 가장 최근 날짜로 이동
             if let firstDate = sortedDates.first,
-               let firstDatePhotos = groupedPhotos[firstDate], !firstDatePhotos.isEmpty {
-                currentDate = firstDate
+               let firstDatePhotos = groupedPhotos[firstDate.startOfDay], !firstDatePhotos.isEmpty {
+                currentDate = firstDate.startOfDay
                 currentIndex = 0
             }
         } else if currentIndex >= photos.count {

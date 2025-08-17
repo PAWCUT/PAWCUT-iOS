@@ -263,8 +263,6 @@ struct PhotoDetailsView: View {
         }
     }
     
-    // MARK: - Helper Methods
-    
     private func setupViewModel() {
         viewModel.setupModelContext(modelContext)
         syncWithViewModel()
@@ -285,13 +283,14 @@ struct ThumbnailStripView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
+                HStack(spacing: 3) {
                     ForEach(viewModel.currentPhotos, id: \.id) { photo in
                         thumbnailCell(for: photo, proxy: proxy)
                     }
                 }
                 // TODO: 현재 인덱스를 가운데로 둘 것인지?
-//                .padding(.horizontal, UIScreen.main.bounds.width / 2 - 16)
+                // TODO: 사용자 제스쳐로 이동되면 currentIndex를 바꾸도록 작업해야함
+                .padding(.horizontal, UIScreen.main.bounds.width / 2 - 6)
                 .frame(minWidth: UIScreen.main.bounds.width)
             }
             .onAppear {
@@ -351,3 +350,4 @@ struct ThumbnailStripView: View {
         )
     }
 }
+
