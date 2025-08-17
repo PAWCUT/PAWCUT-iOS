@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct PawcutSelectionView: View {
-    @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = PawcutSelectionViewModel()
     
     @State private var selectedImages: [UIImage] = []
@@ -10,7 +9,6 @@ struct PawcutSelectionView: View {
         VStack(spacing: 0) {
             HStack {
                 Button(action: {
-                    dismiss()
                     viewModel.tapBackButton()
                 }) {
                     Image(systemName: "chevron.left")

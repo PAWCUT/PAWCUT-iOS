@@ -4,7 +4,6 @@ import SwiftUI
 class PawcutSelectionViewModel: ObservableObject {
     private let navigationManager = NavigationManager.shared
     
-    
     func tapNextButton() {
         navigationManager.navigate(to: .main(.pawcutFrameSelection))
     }
