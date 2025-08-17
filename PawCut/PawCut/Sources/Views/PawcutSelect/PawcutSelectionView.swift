@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct PawcutSelectionView: View {
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = PawcutSelectionViewModel()
     
     @State private var selectedImages: [UIImage] = []
@@ -9,6 +10,7 @@ struct PawcutSelectionView: View {
         VStack(spacing: 0) {
             HStack {
                 Button(action: {
+                    dismiss()
                     viewModel.tapBackButton()
                 }) {
                     Image(systemName: "chevron.left")
@@ -43,6 +45,7 @@ struct PawcutSelectionView: View {
                 HStack(spacing: 12) {
                     ForEach(0..<4) { index in
                         if index < selectedImages.count {
+                            Image(uiImage: selectedImages[index])
                             Image(uiImage: selectedImages[index])
                                 .resizable()
                                 .scaledToFill()

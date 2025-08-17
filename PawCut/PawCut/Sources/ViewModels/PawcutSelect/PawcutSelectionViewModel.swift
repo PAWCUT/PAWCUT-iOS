@@ -4,8 +4,9 @@ import SwiftUI
 class PawcutSelectionViewModel: ObservableObject {
     private let navigationManager = NavigationManager.shared
     
+    
     func tapNextButton() {
-        navigationManager.navigate(to: .pawcutImageSelection(.pawcutFrameSelection))
+        navigationManager.navigate(to: .main(.pawcutFrameSelection))
     }
     
     func tapBackButton() {

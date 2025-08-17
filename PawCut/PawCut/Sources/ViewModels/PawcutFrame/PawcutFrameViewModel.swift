@@ -4,9 +4,9 @@ import SwiftUI
 class PawcutFrameViewModel: ObservableObject {
     private let navigationManager = NavigationManager.shared
     
-    func tapNextButton() {
-        navigationManager.navigate(to: .pawcutImageSelection(.pawcutFrameSelection))
-    }
+    @Published var selectedImages: [UIImage] = []
+    @Published var selectedFrame: [UIImage] = []
+    @Published var isBottomSheetPresented = false
     
     func tapBackButton() {
         navigationManager.pop()

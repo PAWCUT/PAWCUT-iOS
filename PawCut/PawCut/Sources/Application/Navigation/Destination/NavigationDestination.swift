@@ -15,7 +15,6 @@ protocol NavigationDestination: Hashable, CaseIterable {
 enum AppDestination: Hashable {
     case onboarding(OnboardingDestination)
     case main(MainDestination)
-    case pawcutImageSelection(PawcutImageSelectionDestination)
 }
 
 extension AppDestination {
@@ -25,8 +24,6 @@ extension AppDestination {
         case .onboarding(let destination):
             destination.view()
         case .main(let destination):
-            destination.view()
-        case .pawcutImageSelection(let destination):
             destination.view()
         }
     }
