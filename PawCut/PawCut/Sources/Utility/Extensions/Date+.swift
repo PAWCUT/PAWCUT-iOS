@@ -55,4 +55,8 @@ extension Date {
         formatter.dateFormat = "d"
         return formatter.string(from: self)
     }
+    
+    var startOfDay: Date {
+        Calendar.current.startOfDay(for: self)
+    }
 }
