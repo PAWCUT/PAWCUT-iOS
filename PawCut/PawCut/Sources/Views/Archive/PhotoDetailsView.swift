@@ -290,7 +290,7 @@ struct ThumbnailStripView: View {
                 }
                 // TODO: 현재 인덱스를 가운데로 둘 것인지?
                 // TODO: 사용자 제스쳐로 이동되면 currentIndex를 바꾸도록 작업해야함
-                .padding(.horizontal, UIScreen.main.bounds.width / 2 - 6)
+//                .padding(.horizontal, UIScreen.main.bounds.width / 2 - 6)
                 .frame(minWidth: UIScreen.main.bounds.width)
             }
             .onAppear {
