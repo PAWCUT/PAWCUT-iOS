@@ -9,14 +9,14 @@ import Foundation
 
 @MainActor
 class PetInfoViewModel: ObservableObject {
+    private let navigationManager = NavigationManager.shared
+    
     @Published var name: String = ""
     @Published var selectedType: PetType? = nil
     @Published var isDogEnabled = false
     @Published var isCatEnabled = false
-    @Published var isError: Bool = true
-
-    private let navigationManager = NavigationManager.shared
-
+    @Published var isError: Bool = false
+    
     var isValidInput: Bool {
         !name.isEmpty && name.count <= 5 && selectedType != nil
     }
@@ -38,7 +38,7 @@ class PetInfoViewModel: ObservableObject {
         selectedType = .cat
     }
 
-    func startApp() {
+    func tapStartButton() {
         guard isValidInput else { return }
         navigationManager.completeOnboarding()
     }
