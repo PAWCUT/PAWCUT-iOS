@@ -11,6 +11,7 @@ enum MainDestination: NavigationDestination {
     case home
     case archive
     case pawcutFrameSelection
+    case petInfo
     
     @ViewBuilder
     func view() -> some View {
@@ -22,6 +23,8 @@ enum MainDestination: NavigationDestination {
             ArchiveView()
         case .pawcutFrameSelection:
             PawcutFrameView()
+        case .petInfo:
+            PetInfoView()
         }
     }
 }
