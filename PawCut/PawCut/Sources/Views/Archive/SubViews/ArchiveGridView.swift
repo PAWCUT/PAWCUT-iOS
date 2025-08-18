@@ -64,7 +64,6 @@ struct ArchiveGridView: View {
     }
 }
 
-
 struct PhotoGridCell: View {
     let photo: Photo
     let gridWidth: CGFloat

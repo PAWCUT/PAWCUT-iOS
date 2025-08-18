@@ -10,6 +10,7 @@ import SwiftUI
 enum MainDestination: NavigationDestination {
     case home
     case archive
+    case pawcutFrameSelection
     
     @ViewBuilder
     func view() -> some View {
@@ -19,6 +20,8 @@ enum MainDestination: NavigationDestination {
             EmptyView()
         case .archive:
             ArchiveView()
+        case .pawcutFrameSelection:
+            PawcutFrameView()
         }
     }
 }

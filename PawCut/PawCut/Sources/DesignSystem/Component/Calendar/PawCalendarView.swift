@@ -152,17 +152,27 @@ struct PawCalendarDayView: View {
     }
     
     private var imageBackgroundView: some View {
-        //        AsyncPhotoImageView(fileName: day.imageName ?? "")
-        ImageComponent(imageName: "mock_sample", size: CGSize(width: configuration.appearance.cellSize*2, height: configuration.appearance.cellSize*2))
-            .frame(width: configuration.appearance.cellSize, height: configuration.appearance.cellSize)
-            .clipShape(Circle())
-            .overlay(
-                Circle()
-                    .stroke(
-                        day.isToday ? configuration.appearance.todayColor : .clear,
-                        lineWidth: day.isToday ? 2 : 0
-                    )
+        ImageComponent(
+            imageName: "mock_sample",
+            size: CGSize(
+                width: configuration.appearance.cellSize*2,
+                height: configuration.appearance.cellSize*2
             )
+        )
+        .frame(
+            width: configuration.appearance.cellSize,
+            height: configuration.appearance.cellSize
+        )
+        .clipShape(
+            Circle()
+        )
+        .overlay(
+            Circle()
+                .stroke(
+                    day.isToday ? configuration.appearance.todayColor : .clear,
+                    lineWidth: day.isToday ? 2 : 0
+                )
+        )
     }
     
     private var defaultBackgroundView: some View {

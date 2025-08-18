@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct EmptyArchiveView: View {
+struct ArchiveEmptyView: View {
     
     let petType: PetType
     
@@ -43,5 +43,5 @@ struct EmptyArchiveView: View {
     }
 }
 #Preview {
-    EmptyArchiveView(petType: .dog)
+    ArchiveEmptyView(petType: .dog)
 }

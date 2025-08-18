@@ -9,14 +9,13 @@ import SwiftUI
 import SwiftData
 
 struct ArchiveView: View {
-    @Environment(\.modelContext) private var modelContext
     @StateObject private var viewModel = ArchiveViewModel()
     
     var body: some View {
         VStack(spacing: 0) {
-            if viewModel.isEmpty {
+            if viewModel.groupedPhotos.isEmpty {
                 // TODO: 사용자가 설정한 타입 가져와야함
-                EmptyArchiveView(petType: .cat)
+                ArchiveEmptyView(petType: .cat)
             } else {
                 if viewModel.showGrid {
                     ArchiveGridView(viewModel: viewModel)
