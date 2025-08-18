@@ -2,8 +2,6 @@ import SwiftUI
 
 struct PawcutSelectionView: View {
     @StateObject private var viewModel = PawcutSelectionViewModel()
-    
-    @State private var selectedImages: [UIImage] = []
 
     var body: some View {
         VStack(spacing: 0) {
@@ -21,7 +19,7 @@ struct PawcutSelectionView: View {
             }
 
             // 상단 이미지 프레임 미리보기
-            PawCutGridImagePreview(images: selectedImages, style: .selection)
+            PawCutGridImagePreview(images: viewModel.selectedImagesInOrder, style: .selection)
                 .padding(.top, 38)
 
             // 사진 선택 카운트
@@ -29,7 +27,7 @@ struct PawcutSelectionView: View {
                 Text("사진 선택하기")
                     .pretendardFont(size: ._18, weight: .semibold)
                     .foregroundColor(.grayScale01)
-                Text("(\(selectedImages.count)/4)")
+                Text("(\(viewModel.selectedCount)/\(viewModel.maxSelection))")
                     .pretendardFont(size: ._18, weight: .semibold)
                     .foregroundColor(.pointPurple01)
                     .padding(.leading, 4)
@@ -41,10 +39,10 @@ struct PawcutSelectionView: View {
             // 선택된 사진 썸네일
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
-                    ForEach(0..<4) { index in
-                        if index < selectedImages.count {
-                            Image(uiImage: selectedImages[index])
-                            Image(uiImage: selectedImages[index])
+                    ForEach(0..<viewModel.sourceImagesCount, id: \.self) { index in
+                        if index < viewModel.selectedCount {
+                            Image(uiImage: viewModel.sourceImages[index])
+                            Image(uiImage: viewModel.sourceImages[index])
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 64, height: 90)
