@@ -22,6 +22,7 @@ struct PawcutReady: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 190, height: 217)
+                    
                     Text("촬영이 바로 시작됩니다\n준비해 주세요!")
                         .pretendardFont(size: ._20, weight: .semibold)
                         .foregroundColor(.grayScale01)
