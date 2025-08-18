@@ -1,6 +1,5 @@
 import SwiftUI
 
-
 enum GridImagePreviewStyle {
     case selection
     case frame
@@ -36,7 +35,7 @@ enum GridImagePreviewStyle {
     }
 }
 
-struct PawCutGridImagePreview: View {
+struct PawcutGridImagePreview: View {
     let images: [UIImage]
     let style: GridImagePreviewStyle
     
@@ -91,7 +90,7 @@ struct PawCutGridImagePreview: View {
 }
 
 #Preview {
-    PawCutGridImagePreview(
+    PawcutGridImagePreview(
         images: [],
         style: .frame
     )

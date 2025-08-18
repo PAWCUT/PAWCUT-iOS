@@ -19,7 +19,7 @@ struct PawcutFrameView: View {
             }
 
             // 상단 이미지 프레임 미리보기
-            PawCutGridImagePreview(images: viewModel.selectedImages, style: .frame)
+            PawcutGridImagePreview(images: viewModel.selectedImages, style: .frame)
                 .padding(.top, 38)
 
             // 선택된 프레임 이름

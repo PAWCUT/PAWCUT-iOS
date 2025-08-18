@@ -20,6 +20,5 @@ enum MainDestination: NavigationDestination {
         case .pawcutFrameSelection:
             PawcutFrameView()
         }
-        
     }
 }

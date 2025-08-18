@@ -12,5 +12,3 @@ class PawcutFrameViewModel: ObservableObject {
         navigationManager.pop()
     }
 }
-
-
