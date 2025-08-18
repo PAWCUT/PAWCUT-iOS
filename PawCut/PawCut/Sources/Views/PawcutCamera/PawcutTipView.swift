@@ -20,35 +20,33 @@ struct PawcutTipView: View {
     ]
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Color.grayScale06
-                    .ignoresSafeArea()
+        ZStack {
+            Color.grayScale06
+                .ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                PawBackButtonNavigationBar {
+                    viewModel.tapBackButton()
+                }
                 
-                VStack(spacing: 0) {
-                    PawBackButtonNavigationBar {
-                        viewModel.tapBackButton()
-                    }
-                
-                    VStack(alignment: .leading, spacing: 0) {
-                        PawTitleLabel("촬영 전에 확인해주세요!", style: .bold24, color: .grayScale01)
-                            .padding(.top, 56)
-                            .padding(.leading, 20)
-                        
-                        VStack(spacing: 25) {
-                            ForEach(tips, id: \.icon) { tip in
-                                TipRow(iconName: tip.icon, text: tip.text)
-                            }
+                VStack(alignment: .leading, spacing: 0) {
+                    PawTitleLabel("촬영 전에 확인해주세요!", style: .bold24, color: .grayScale01)
+                        .padding(.top, 56)
+                        .padding(.leading, 20)
+                    
+                    VStack(spacing: 25) {
+                        ForEach(tips, id: \.icon) { tip in
+                            TipRow(iconName: tip.icon, text: tip.text)
                         }
-                        .padding(.top, 60)
-                        .padding(.horizontal, 32)
                     }
-                    
-                    Spacer()
-                    
-                    PawPrimaryButton("촬영하기") {
-                        viewModel.tapNextButton()
-                    }
+                    .padding(.top, 60)
+                    .padding(.horizontal, 32)
+                }
+                
+                Spacer()
+                
+                PawPrimaryButton("촬영하기") {
+                    viewModel.tapNextButton()
                 }
             }
         }
