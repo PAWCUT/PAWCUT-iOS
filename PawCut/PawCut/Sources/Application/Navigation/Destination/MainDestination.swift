@@ -9,6 +9,7 @@ import SwiftUI
 
 enum MainDestination: NavigationDestination {
     case home
+    case pawcutFrameSelection
     
     @ViewBuilder
     func view() -> some View {
@@ -16,6 +17,8 @@ enum MainDestination: NavigationDestination {
         case .home:
             // TODO: HomeView로 수정 예정
             EmptyView()
+        case .pawcutFrameSelection:
+            PawcutFrameView()
         }
     }
 }

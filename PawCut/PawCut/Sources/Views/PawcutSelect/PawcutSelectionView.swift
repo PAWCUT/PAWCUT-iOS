@@ -1,42 +1,28 @@
-//
-//  select.swift
-//  PawCut
-//
-//  Created by Jay on 7/28/25.
-//
-
 import SwiftUI
 
 struct PawcutSelectionView: View {
-    @State private var selectedImages: [UIImage] = []
-    @Environment(\.dismiss) private var dismiss
+    @StateObject private var viewModel = PawcutSelectionViewModel()
     
+    @State private var selectedImages: [UIImage] = []
+
     var body: some View {
         VStack(spacing: 0) {
             HStack {
                 Button(action: {
-                    dismiss()
+                    viewModel.tapBackButton()
                 }) {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundColor(.grayScale01)
                 }
                 .frame(width: 33, height: 44)
-                
+
                 Spacer()
             }
-            
+
             // 상단 이미지 프레임 미리보기
-            VStack {
-                GridImagePreview(images: selectedImages)
-                    .padding(10)
-            }
-            .frame(width: 225, height: 340)
-            .overlay(
-                Rectangle()
-                    .stroke(Color("GrayScale01"), lineWidth: 1)
-            )
-            .padding(.top, 38)
+            PawcutGridImagePreview(images: selectedImages, style: .selection)
+                .padding(.top, 38)
 
             // 사진 선택 카운트
             HStack(spacing: 0) {
@@ -46,7 +32,7 @@ struct PawcutSelectionView: View {
                 Text("(\(selectedImages.count)/4)")
                     .pretendardFont(size: ._18, weight: .semibold)
                     .foregroundColor(.pointPurple01)
-                    .padding(.leading,4)
+                    .padding(.leading, 4)
                 Spacer()
             }
             .padding(.top, 68)
@@ -57,6 +43,7 @@ struct PawcutSelectionView: View {
                 HStack(spacing: 12) {
                     ForEach(0..<4) { index in
                         if index < selectedImages.count {
+                            Image(uiImage: selectedImages[index])
                             Image(uiImage: selectedImages[index])
                                 .resizable()
                                 .scaledToFill()
@@ -74,9 +61,10 @@ struct PawcutSelectionView: View {
             }
 
             PawSecondaryButton("다음") {
-                // 다음 단계로 이동
+                viewModel.tapNextButton()
             }
         }
+        .frame(maxHeight: .infinity, alignment: .top)
     }
 }
 
