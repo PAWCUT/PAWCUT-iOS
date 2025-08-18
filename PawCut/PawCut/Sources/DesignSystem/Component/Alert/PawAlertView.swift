@@ -145,7 +145,6 @@ extension View {
 #Preview {
     struct PreviewWrapper: View {
         @State private var showAlert = false
-        @State private var showDeleteAlert = false
         
         var body: some View {
             VStack(spacing: 20) {
