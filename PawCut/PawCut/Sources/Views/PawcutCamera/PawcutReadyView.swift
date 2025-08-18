@@ -7,18 +7,18 @@
 
 import SwiftUI
 
-struct PawcutReady: View {
+struct PawcutReadyView: View {
     var body: some View {
         ZStack {
             Color.grayScale06
                 .ignoresSafeArea()
-            
+
             VStack(spacing: 0) {
                 Spacer()
-           
+
                 VStack(spacing: 28) {
-                  
-                    Image("onboarding_first")
+
+                    Image("onboarding_1")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 190, height: 217)
@@ -28,7 +28,7 @@ struct PawcutReady: View {
                         .foregroundColor(.grayScale01)
                         .multilineTextAlignment(.center)
                 }
-                
+
                 Spacer()
             }
         }
@@ -37,5 +37,5 @@ struct PawcutReady: View {
 }
 
 #Preview {
-    PawcutReady()
+    PawcutReadyView()
 }
