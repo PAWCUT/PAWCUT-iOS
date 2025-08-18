@@ -11,9 +11,6 @@ import Photos
 import SwiftUI
 
 final class PawcutCameraViewModel: NSObject, ObservableObject {
-
-    // MARK: - Published Properties
-
     // 촬영 상태
     @Published var currentShotIndex: Int = 0
     @Published var countdownNumber: Int? = nil
@@ -36,16 +33,14 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
     // 사운드 재생
     private var audioPlayer: AVAudioPlayer?
 
-    // MARK: - Constants
-
     let totalShots: Int = 8
+    
     let zoomOptions: [ZoomOption] = [
         ZoomOption(id: "0.5", title: ".5"),
         ZoomOption(id: "1.0", title: "1x"),
         ZoomOption(id: "2.0", title: "2"),
     ]
 
-    // MARK: - Types
     enum CameraPosition {
         case front, back
     }
@@ -64,7 +59,6 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
     private var loopTimer: Timer?
     private var tooltipTimer: Timer?
 
-    // MARK: - Initialization
     override init() {
         super.init()
         setupCamera()
@@ -79,7 +73,6 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
         tooltipTimer?.invalidate()
     }
 
-    // MARK: - Public Methods
     func startLoopedCountdown() {
         startCountdown { [weak self] in
             self?.performCapture()
@@ -431,8 +424,8 @@ extension PawcutCameraViewModel: AVCaptureVideoDataOutputSampleBufferDelegate {
         else { return }
 
         // 카메라 방향 설정
-        if connection.isVideoOrientationSupported {
-            connection.videoOrientation = .portrait
+        if connection.isVideoRotationAngleSupported(0) {
+            connection.videoRotationAngle = 0
         }
 
         let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
