@@ -10,6 +10,7 @@ import SwiftUI
 struct PhotoDetailsView: View {
     @Environment(\.modelContext) private var modelContext
     @StateObject private var viewModel = PhotoDetailsViewModel()
+    // TODO: ViewModel로 분리할 것
     @StateObject private var navigationManager = NavigationManager.shared
     
     // MARK: - Bindings
