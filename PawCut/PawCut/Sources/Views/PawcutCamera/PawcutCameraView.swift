@@ -8,10 +8,10 @@
 import AVFoundation
 import SwiftUI
 
-struct PawcutCamera: View {
+struct PawcutCameraView: View {
     @StateObject private var viewModel = PawcutCameraViewModel()
     @Environment(\.dismiss) private var dismiss
-
+    
     var body: some View {
         ZStack {
             backgroundLayer
@@ -34,12 +34,11 @@ struct PawcutCamera: View {
             viewModel.pauseCountdown()
         }
     }
-
-    // MARK: - View Components
+    
     private var backgroundLayer: some View {
         Color.black.ignoresSafeArea()
     }
-
+    
     private var cameraPreviewLayer: some View {
         Group {
             if let image = viewModel.rawImage {
@@ -63,7 +62,7 @@ struct PawcutCamera: View {
             }
         }
     }
-
+    
     private var shutterAnimationLayer: some View {
         Group {
             if viewModel.showShutter {
@@ -77,7 +76,7 @@ struct PawcutCamera: View {
             }
         }
     }
-
+    
     private var uiOverlayLayer: some View {
         ZStack {
             topNavigationView
@@ -87,7 +86,7 @@ struct PawcutCamera: View {
             tooltipView
         }
     }
-
+    
     private var topNavigationView: some View {
         VStack {
             HStack {
@@ -99,9 +98,9 @@ struct PawcutCamera: View {
                         .foregroundColor(.white)
                 }
                 .frame(width: 33, height: 44)
-
+                
                 Spacer()
-
+                
                 Button(action: {
                     viewModel.playPlasticBagSound()
                 }) {
@@ -117,13 +116,13 @@ struct PawcutCamera: View {
                         value: viewModel.soundButtonScale
                     )
                 }
-
+                
                 Button(action: {
                     viewModel.toggleFlash()
                 }) {
                     ImageComponent(
                         imageName: viewModel.isFlashEnabled
-                            ? "flash_light" : "flash_dark",
+                        ? "flash_light" : "flash_dark",
                         size: CGSize(width: 22, height: 22)
                     )
                     .opacity(viewModel.isFlashEnabled ? 1.0 : 1.0)
@@ -140,7 +139,7 @@ struct PawcutCamera: View {
             Spacer()
         }
     }
-
+    
     private var shotProgressView: some View {
         Text("\(viewModel.currentShotIndex) / 8")
             .pretendardFont(size: ._16, weight: .semibold)
@@ -151,7 +150,7 @@ struct PawcutCamera: View {
             .clipShape(Capsule())
             .offset(y: -270)
     }
-
+    
     private var countdownView: some View {
         Group {
             if let timeLeft = viewModel.countdownNumber {
@@ -164,7 +163,7 @@ struct PawcutCamera: View {
             }
         }
     }
-
+    
     private var bottomControlsView: some View {
         VStack {
             Spacer()
@@ -179,7 +178,7 @@ struct PawcutCamera: View {
         }
         .padding(.bottom, 20)
     }
-
+    
     private var zoomControlView: some View {
         HStack(spacing: 20) {
             ForEach(viewModel.zoomOptions, id: \.id) { option in
@@ -205,7 +204,7 @@ struct PawcutCamera: View {
         .background(Color.white.opacity(0.1))
         .cornerRadius(105)
     }
-
+    
     private var frontZoomControlView: some View {
         Button(action: {
             viewModel.toggleFrontZoom()
@@ -221,7 +220,7 @@ struct PawcutCamera: View {
         .scaleEffect(viewModel.isZoomedIn ? 1.1 : 1.0)
         .animation(.easeInOut(duration: 0.2), value: viewModel.isZoomedIn)
     }
-
+    
     private var bottomButtonsView: some View {
         HStack(spacing: 77) {
             Button(action: {
@@ -232,7 +231,7 @@ struct PawcutCamera: View {
                     size: CGSize(width: 48, height: 48)
                 )
             }
-
+            
             Button(action: {
                 viewModel.cancelCountdown()
                 viewModel.performCapture()
@@ -242,7 +241,7 @@ struct PawcutCamera: View {
                     size: CGSize(width: 68, height: 82)
                 )
             }
-
+            
             Button(action: {
                 viewModel.toggleCamera()
             }) {
@@ -253,7 +252,7 @@ struct PawcutCamera: View {
             }
         }
     }
-
+    
     private var tooltipView: some View {
         Group {
             if viewModel.showSoundTooltip {
@@ -281,5 +280,5 @@ struct PawcutCamera: View {
 }
 
 #Preview {
-    PawcutCamera()
+    PawcutCameraView()
 }

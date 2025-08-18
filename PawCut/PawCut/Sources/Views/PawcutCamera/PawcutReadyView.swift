@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PawcutReady: View {
+struct PawcutReadyView: View {
     var body: some View {
         ZStack {
             Color.grayScale06
@@ -37,5 +37,5 @@ struct PawcutReady: View {
 }
 
 #Preview {
-    PawcutReady()
+    PawcutReadyView()
 }
