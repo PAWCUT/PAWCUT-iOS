@@ -151,18 +151,11 @@ struct PhotoDetailPreview: View {
     var body: some View {
         VStack(spacing: 20) {
             // 날짜 표시
-            Text(dateString)
+            Text(selectedDate.koreanYearMonthDateString)
                 .font(.title2)
                 .fontWeight(.bold)
             Spacer()
         }
-    }
-    
-    private var dateString: String {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.dateFormat = "yyyy년 M월 d일"
-        return formatter.string(from: selectedDate)
     }
 }
 struct MultipleSelectionPreview: View {

@@ -38,6 +38,10 @@ extension PawTitleLabel {
         PawTitleLabel(text, style: .bold20, color: color, alignment: alignment, lineLimit: lineLimit)
     }
     
+    static func semi18(_ text: String, color: Color? = nil, alignment: TextAlignment = .leading, lineLimit: Int? = nil) -> PawTitleLabel {
+        PawTitleLabel(text, style: .semi18, color: color, alignment: alignment, lineLimit: lineLimit)
+    }
+    
     static func semi17(_ text: String, color: Color? = nil, alignment: TextAlignment = .leading, lineLimit: Int? = nil) -> PawTitleLabel {
         PawTitleLabel(text, style: .semi17, color: color, alignment: alignment, lineLimit: lineLimit)
     }

@@ -209,10 +209,7 @@ extension PawCalendarView {
             return ""
         }
         
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.dateFormat = "yyyy년 M월"
-        return formatter.string(from: targetDate)
+        return targetDate.koreanYearMonthString
     }
     
     func scrollToDate(_ date: Date) {
@@ -244,24 +241,45 @@ extension PawCalendarView {
         return PawCalendarView(configuration: configuration, onDateSelected: onDateSelected)
     }
     
-    static func withDateRange(from startYear: Int, startMonth: Int, to endYear: Int, endMonth: Int,
-                              selectionMode: PawCalendarConfiguration.SelectionMode = .single, onDateSelected: ((Date) -> Void)? = nil) -> PawCalendarView {
+    static func withDateRange(
+        from startYear: Int,
+        startMonth: Int,
+        to endYear: Int,
+        endMonth: Int,
+        selectionMode: PawCalendarConfiguration.SelectionMode = .single,
+        onDateSelected: ((Date) -> Void)? = nil
+    ) -> PawCalendarView {
         let config = PawCalendarConfiguration(
             selectionMode: selectionMode,
-            displayRange: .months(from: startYear, startMonth: startMonth,
-                                  to: endYear, endMonth: endMonth)
+            displayRange:
+                    .months(
+                        from: startYear,
+                        startMonth: startMonth,
+                        to: endYear,
+                        endMonth: endMonth
+                    )
         )
         return PawCalendarView(configuration: config, onDateSelected: onDateSelected)
     }
     
-    static func navigation(from startYear: Int, startMonth: Int, to endYear: Int, endMonth: Int,
-                           dateImages: [Date: String] = [:], onNavigate: @escaping (Date) -> Void) -> PawCalendarView {
+    static func navigation(
+        from startYear: Int,
+        startMonth: Int,
+        to endYear: Int,
+        endMonth: Int,
+        dateImages: [Date: String] = [:],
+        onNavigate: @escaping (Date) -> Void
+    ) -> PawCalendarView {
         let config = PawCalendarConfiguration.navigationMode(
-            from: startYear, startMonth: startMonth,
-            to: endYear, endMonth: endMonth,
+            from: startYear,
+            startMonth: startMonth,
+            to: endYear,
+            endMonth: endMonth,
             dateImages: dateImages,
             onNavigate: onNavigate
         )
-        return PawCalendarView(configuration: config)
+        return PawCalendarView(
+            configuration: config
+        )
     }
 }
