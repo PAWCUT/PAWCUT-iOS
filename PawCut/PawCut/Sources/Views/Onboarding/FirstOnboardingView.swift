@@ -42,7 +42,6 @@ struct FirstOnboardingView: View {
                 viewModel.tapNextButton()
             }
         }
-        .navigationBarBackButtonHidden()
     }
 }
 
