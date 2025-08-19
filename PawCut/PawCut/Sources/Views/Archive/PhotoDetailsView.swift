@@ -48,11 +48,6 @@ struct PhotoDetailsView: View {
                     .padding(.horizontal, 45)
                     .padding(.bottom, 40)
             }
-            
-            // 삭제 확인 다이얼로그
-            if viewModel.showDeleteConfirmation {
-                deleteConfirmationView
-            }
         }
         .navigationBarHidden(true)
         .onAppear {
@@ -75,6 +70,16 @@ struct PhotoDetailsView: View {
             currentIndex = newValue
         }
         .toast(isShowing: $viewModel.showToast, message: viewModel.toastMessage, iconName: "toast_icon", duration: 2.0)
+        .pawAlert(
+            isShowing: $viewModel.showDeleteConfirmation,
+            title: "정말 사진을 삭제할까요?",
+            message: "삭제한 사진은 다시 확인할 수 없어요.",
+            confirmTitle: "삭제하기",
+            cancelTitle: "아니요",
+            onConfirm: {
+                viewModel.deleteCurrentImage()
+            }
+        )
     }
     
     private var headerView: some View {
@@ -163,57 +168,6 @@ struct PhotoDetailsView: View {
         }
     }
     
-    // MARK: - Delete Confirmation View
-    private var deleteConfirmationView: some View {
-        ZStack {
-            Color.black.opacity(0.6)
-                .ignoresSafeArea()
-                .onTapGesture {
-                    viewModel.showDeleteConfirmation = false
-                }
-            
-            VStack(spacing: 20) {
-                PawTitleLabel.bold20(
-                    "정말 사진을 삭제할까요?",
-                    color: .grayScale01
-                )
-                
-                PawBodyLabel.med16(
-                    "삭제한 사진은 다시 확인할 수 없어요.",
-                    color: .grayScale02,
-                    alignment: TextAlignment.center
-                )
-                
-                HStack(spacing: 12) {
-                    Button(action: {
-                        viewModel.showDeleteConfirmation = false
-                    }) {
-                        PawButtonLabel.semi16("아니요", color: .grayScale01)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
-                            .background(Color.grayScale05)
-                            .cornerRadius(8)
-                    }
-                    
-                    Button(action: {
-                        viewModel.showDeleteConfirmation = false
-                        viewModel.deleteCurrentImage()
-                    }) {
-                        PawButtonLabel.semi16("삭제하기", color: .white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
-                            .background(.pointPurple01)
-                            .cornerRadius(8)
-                    }
-                }
-            }
-            .padding(24)
-            .background(Color.white)
-            .cornerRadius(12)
-            .padding(.horizontal, 40)
-        }
-    }
-
     /// 이전 이미지로 이동
     private func moveToPreviousImage() {
         withAnimation(.easeInOut(duration: 0.3)) {
@@ -291,7 +245,7 @@ struct ThumbnailStripView: View {
                 }
                 // TODO: 현재 인덱스를 가운데로 둘 것인지?
                 // TODO: 사용자 제스쳐로 이동되면 currentIndex를 바꾸도록 작업해야함
-//                .padding(.horizontal, UIScreen.main.bounds.width / 2 - 6)
+                //                .padding(.horizontal, UIScreen.main.bounds.width / 2 - 6)
                 .frame(minWidth: UIScreen.main.bounds.width)
             }
             .onAppear {
