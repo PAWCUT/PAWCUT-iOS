@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct MainView: View {
+    
+    @StateObject var viewModel = HomeViewModel()
+    
     var body: some View {
         HStack {
             ImageComponent(
@@ -15,25 +18,25 @@ struct MainView: View {
                 size: CGSize(width: 83, height: 33)
             )
             Spacer()
-            ImageComponent(
-                imageName: "archivebox" ,
-                size: CGSize(width: 20, height: 18)
-            )
-            .padding(16)
-            ImageComponent(
-                imageName: "gearshape",
-                size: CGSize(width: 19, height: 19)
-            )
+            
+            IconButton(imageName: "archivebox") {
+                viewModel.tapAchiveButton()
+            }
+            .padding(.trailing, 6)
+            
+            IconButton(imageName: "gearshape") {
+                viewModel.tapSettingButton()
+            }
         }
         .padding(.horizontal, 20)
-        .padding(.vertical,43)
+        .padding(.vertical, 43)
+        
         HStack{
-            PawTitleLabel
-                .bold24(
-                    "해피와 함께 행복한\n추억을 남겨 보세요!",
-                    alignment: .center,
-                    lineLimit: 2
-                )
+            PawTitleLabel.bold24(
+                "해피와 함께 행복한\n추억을 남겨 보세요!",
+                alignment: .center,
+                lineLimit: 2
+            )
             Spacer()
         }
         .padding(.horizontal,20)
@@ -46,7 +49,7 @@ struct MainView: View {
             )
             Spacer()
             PawPrimaryButton("촬영하기") {
-                
+                viewModel.tapCaptureButton()
             }
         }
     }
