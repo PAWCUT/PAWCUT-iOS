@@ -117,7 +117,7 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
 
     func toggleCamera() {
         cameraPosition = (cameraPosition == .front) ? .back : .front
-        // 카메라 전환 시 줌 상태 초기화
+ 
         if cameraPosition == .front {
             isZoomedIn = false
             currentZoomLevel = 1.0
@@ -157,26 +157,71 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
 
     func setZoom(_ zoomId: String) {
         selectedZoomId = zoomId
+        if zoomId == "0.5" {
+            switchToUltraWideCamera()
+        } else {
+            switchToWideCamera(zoomLevel: zoomId)
+        }
+    }
 
-        guard let camera = currentCamera else { return }
+    private func switchToUltraWideCamera() {
+        guard let newCamera = getCameraDevice(for: "0.5") else { return }
 
-        let zoomFactor: CGFloat
-        switch zoomId {
-        case "0.5": zoomFactor = 0.5
-        case "2.0": zoomFactor = 2.0
-        default: zoomFactor = 1.0
+        session.beginConfiguration()
+
+        if let currentInput = currentInput {
+            session.removeInput(currentInput)
         }
 
         do {
-            try camera.lockForConfiguration()
-            camera.videoZoomFactor = min(
-                max(zoomFactor, camera.minAvailableVideoZoomFactor),
-                camera.maxAvailableVideoZoomFactor
-            )
-            camera.unlockForConfiguration()
+            let input = try AVCaptureDeviceInput(device: newCamera)
+            if session.canAddInput(input) {
+                session.addInput(input)
+                currentInput = input
+                currentCamera = newCamera
+            }
         } catch {
-            // 줌 설정 실패
+            // 카메라 전환 실패
         }
+
+        session.commitConfiguration()
+    }
+
+    private func switchToWideCamera(zoomLevel: String) {
+        guard let newCamera = getCameraDevice(for: zoomLevel) else { return }
+
+        session.beginConfiguration()
+
+        if let currentInput = currentInput {
+            session.removeInput(currentInput)
+        }
+
+        do {
+            let input = try AVCaptureDeviceInput(device: newCamera)
+            if session.canAddInput(input) {
+                session.addInput(input)
+                currentInput = input
+                currentCamera = newCamera
+
+                // 줌 설정
+                let zoomFactor: CGFloat
+                switch zoomLevel {
+                case "2.0": zoomFactor = 2.0
+                default: zoomFactor = 1.0
+                }
+
+                try newCamera.lockForConfiguration()
+                newCamera.videoZoomFactor = min(
+                    max(zoomFactor, newCamera.minAvailableVideoZoomFactor),
+                    newCamera.maxAvailableVideoZoomFactor
+                )
+                newCamera.unlockForConfiguration()
+            }
+        } catch {
+            // 카메라 전환 실패
+        }
+
+        session.commitConfiguration()
     }
 
     func toggleFrontZoom() {
@@ -327,7 +372,7 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
         }
     }
 
-    private func getCameraDevice() -> AVCaptureDevice? {
+    private func getCameraDevice(for zoomLevel: String = "1.0") -> AVCaptureDevice? {
         switch cameraPosition {
         case .front:
             return AVCaptureDevice.default(
@@ -336,11 +381,23 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
                 position: .front
             )
         case .back:
-            return AVCaptureDevice.default(
-                .builtInWideAngleCamera,
-                for: .video,
-                position: .back
-            )
+            if zoomLevel == "0.5" {
+                return AVCaptureDevice.default(
+                    .builtInUltraWideCamera,
+                    for: .video,
+                    position: .back
+                ) ?? AVCaptureDevice.default(
+                    .builtInWideAngleCamera,
+                    for: .video,
+                    position: .back
+                )
+            } else {
+                return AVCaptureDevice.default(
+                    .builtInWideAngleCamera,
+                    for: .video,
+                    position: .back
+                )
+            }
         }
     }
 
