@@ -19,7 +19,10 @@ struct PetInfoView: View {
                         alignment: .leading,
                         lineLimit: 2
                     )
+                    .frame(height: 70,alignment: .topLeading)
                     .padding(.bottom, 44)
+                    .padding(.top, 100)
+                
                 PawTitleLabel
                     .semi14(
                         "이름",
@@ -62,6 +65,7 @@ struct PetInfoView: View {
                         viewModel.selectCat()
                     }
                 }
+                Spacer()
             }
         }
         .padding(.horizontal, 20)
