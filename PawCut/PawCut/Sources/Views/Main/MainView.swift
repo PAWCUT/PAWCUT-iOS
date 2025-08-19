@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     
-    @StateObject var viewModel = MainViewModel()
+    @StateObject var viewModel = HomeViewModel()
     
     var body: some View {
         HStack {

@@ -8,7 +8,7 @@
 import Foundation
 
 @MainActor
-class MainViewModel: ObservableObject {
+class HomeViewModel: ObservableObject {
     
     private let navigationManager = NavigationManager.shared
     
