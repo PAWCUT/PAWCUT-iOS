@@ -208,7 +208,6 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
     }
 
     func playPlasticBagSound() {
-        // 여러 확장자 시도
         let extensions = ["wav", "mp3", "m4a"]
 
         for ext in extensions {
@@ -424,8 +423,8 @@ extension PawcutCameraViewModel: AVCaptureVideoDataOutputSampleBufferDelegate {
         else { return }
 
         // 카메라 방향 설정
-        if connection.isVideoRotationAngleSupported(0) {
-            connection.videoRotationAngle = 0
+        if connection.isVideoOrientationSupported {
+            connection.videoOrientation = .portrait
         }
 
         let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
