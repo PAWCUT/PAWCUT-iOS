@@ -57,9 +57,12 @@ struct PawCutGridImagePreview: View {
                         if index < images.count {
                             Image(uiImage: images[index])
                                 .resizable()
-                                .scaledToFill()
-                                .frame(width: style.metrics.frameWidth, height: style.metrics.frameHeight)
+                                .frame(width: style.metrics.imagesWidth, height: style.metrics.imagesHeight)
                                 .clipped()
+                                .overlay(
+                                    Rectangle()
+                                        .stroke(Color("GrayScale01"), lineWidth: 1)
+                                )
                         } else {
                             Rectangle()
                                 .fill(Color.gray.opacity(0.2))
@@ -92,7 +95,13 @@ struct PawCutGridImagePreview: View {
 
 #Preview {
     PawCutGridImagePreview(
-        images: [],
+        images: {
+            if let image = UIImage(named: "save_cat") {
+                return [image]
+            } else {
+                return []
+            }
+        }(),
         style: .frame
     )
 }

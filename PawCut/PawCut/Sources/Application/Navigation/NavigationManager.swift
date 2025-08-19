@@ -41,7 +41,8 @@ class NavigationManager: ObservableObject {
         if hasCompletedOnboarding {
             MainDestination.home.view()
         } else {
-            OnboardingDestination.firstOnboarding.view()
+//            OnboardingDestination.firstOnboarding.view()
+            MainDestination.pawcutImgageSelection.view()
         }
     }
     
