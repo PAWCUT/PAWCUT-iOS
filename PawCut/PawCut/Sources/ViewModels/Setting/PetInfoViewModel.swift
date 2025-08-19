@@ -40,7 +40,7 @@ class PetInfoViewModel: ObservableObject {
 
     func tapStartButton() {
         guard isValidInput else { return }
-        navigationManager.completeOnboarding()
+        navigationManager.startMainFlow()
     }
 
     private func validateName() {
