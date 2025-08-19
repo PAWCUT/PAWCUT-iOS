@@ -37,22 +37,19 @@ struct SettingView: View {
                 }
                 .padding(.top, 8)
             }
-        }
-        .navigationTitle("설정")
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
-                    dismiss()
-                }) {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(.grayScale01)
+            .navigationTitle("설정")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.grayScale01)
+                    }
                 }
             }
-        }
-        .navigationDestination(isPresented: $viewModel.navigateToFixPetInfo) {
-            PetInfoView()  // TODO:  FixPetInfoView로 수정 필요
         }
     }
 }

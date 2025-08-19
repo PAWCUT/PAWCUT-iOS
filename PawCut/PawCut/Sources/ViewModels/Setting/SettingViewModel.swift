@@ -9,24 +9,21 @@ import Foundation
 
 @MainActor
 class SettingViewModel: ObservableObject {
-    @Published var navigateToFixPetInfo = false
-    @Published var navigateToSoundSetting = false
-    @Published var navigateToInquiry = false
-    @Published var navigateToTerms = false
+    private let navigationManager = NavigationManager.shared
     
     func navigateToProfileEdit() {
-        navigateToFixPetInfo = true
+        navigationManager.navigate(to: .main(.fixPetInfo))
     }
     
     func navigateToSoundEdit() {
-        navigateToSoundSetting = true
+        navigationManager.navigate(to: .main(.soundSetting))
     }
     
     func navigateToCustomerInquiry() {
-        navigateToInquiry = true
+        navigationManager.navigate(to: .main(.inquiry))
     }
     
     func navigateToServiceTerms() {
-        navigateToTerms = true
+        navigationManager.navigate(to: .main(.terms))
     }
 }
