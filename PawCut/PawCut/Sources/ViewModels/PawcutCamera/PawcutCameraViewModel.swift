@@ -89,6 +89,10 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
                 self?.currentShotIndex = self?.capturedImages.count ?? 0
 
                 if self?.capturedImages.count == 8 {
+                    self?.saveImagesToUserDefaults()
+                    DispatchQueue.main.async {
+                        NavigationManager.shared.navigate(to: .main(.pawcutSelection))
+                    }
                     return
                 }
             }
@@ -273,6 +277,14 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
     }
 
     // MARK: - Private Methods
+
+    private func saveImagesToUserDefaults() {
+        let imageDataArray = capturedImages.compactMap { image in
+            image.jpegData(compressionQuality: 0.8)
+        }
+        UserDefaults.standard.set(imageDataArray, forKey: "captured_photos")
+        UserDefaults.standard.set(Date(), forKey: "photo_capture_date")
+    }
 
     private func startSoundButtonAnimation() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
