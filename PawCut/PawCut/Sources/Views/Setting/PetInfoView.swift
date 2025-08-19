@@ -9,9 +9,9 @@ import SwiftUI
 
 struct PetInfoView: View {
     @StateObject private var viewModel = PetInfoViewModel()
-
+    
     var body: some View {
-        HStack {
+        VStack {
             VStack(alignment: .leading) {
                 PawTitleLabel
                     .bold24(
@@ -20,6 +20,7 @@ struct PetInfoView: View {
                         lineLimit: 2
                     )
                     .padding(.bottom, 44)
+                
                 PawTitleLabel
                     .semi14(
                         "이름",
@@ -27,7 +28,7 @@ struct PetInfoView: View {
                         alignment: .leading,
                         lineLimit: 2
                     )
-                //Text 입력칸
+                
                 PawTextField(
                     "이름을 입력해 주세요.",
                     text: $viewModel.name,
@@ -38,7 +39,7 @@ struct PetInfoView: View {
                 .onChange(of: viewModel.name) { oldValue, newValue in
                     viewModel.updateName(newValue)
                 }
-
+                
                 PawTitleLabel
                     .semi14(
                         "종류",
@@ -54,6 +55,7 @@ struct PetInfoView: View {
                     ) {
                         viewModel.selectDog()
                     }
+                    
                     PawChoiceButton(
                         "고양이",
                         isEnabled: viewModel.isCatEnabled,
@@ -63,10 +65,13 @@ struct PetInfoView: View {
                     }
                 }
             }
-        }
-        .padding(.horizontal, 20)
-        PawPrimaryButton("시작하기", isEnabled: viewModel.isValidInput) {
-            viewModel.startApp()
+            .padding(20)
+            
+            Spacer()
+            
+            PawPrimaryButton("시작하기", isEnabled: viewModel.isValidInput) {
+                viewModel.tapStartButton()
+            }
         }
     }
 }

@@ -72,7 +72,7 @@ struct AsyncPhotoImageView: View {
             .overlay(
                 // 로딩 인디케이터
                 ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: Color("GrayScale03Color")))
+                    .progressViewStyle(CircularProgressViewStyle(tint: Color(.grayScale03)))
                     .scaleEffect(1.2)
             )
     }
