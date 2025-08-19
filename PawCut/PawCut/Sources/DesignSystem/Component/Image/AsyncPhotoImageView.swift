@@ -17,6 +17,7 @@ struct AsyncPhotoImageView: View {
     @State private var lastScaleValue: CGFloat = 1.0
     @State private var doubleTapZoomScale: CGFloat = 2.5
     
+    private let imageFileManager = ImageFileManager.shared
     private let defaultImage = Image("empty_image") // default iamge
     
     var body: some View {
@@ -78,23 +79,20 @@ struct AsyncPhotoImageView: View {
     }
     
     private func loadImage() {
-        // 줌 상태 초기화
         scale = 1.0
         lastScaleValue = 1.0
         image = nil
         
-        // TODO: - ImageFileManager 사용 아래 loadMockImage 는 제거
-        /*
-        ImageFileManager....
-        */
-        
-        // MARK: - 임시 구현 (실제 구현 시 위 주석 해제하고 아래 제거)
-        loadMockImage()
+        Task {
+            self.image = await imageFileManager.loadImage(fileName: fileName)
+        }
     }
     
     private func loadMockImage() {
         // 실제 앱에서는 ImageFileManager를 사용하지만,
         // 현재는 주석처리된 상태이므로 샘플 이미지를 사용
+        
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             // fileName에서 .jpg 확장자 제거하고 Asset 이미지명으로 사용
             let imageName = self.fileName.replacingOccurrences(of: ".jpg", with: "")

@@ -12,6 +12,7 @@ import SwiftData
 final class PhotoDetailsViewModel: ObservableObject {
     
     private var modelContext: ModelContext?
+    private let imageFileManager = ImageFileManager.shared
     
     @Published var groupedPhotos: [Date: [Photo]] = [:]
     @Published var currentDate: Date = Date()
@@ -48,39 +49,54 @@ final class PhotoDetailsViewModel: ObservableObject {
     }
     
     func saveCurrentImage() {
-        // TODO: ImageFileManager 주석처리된 상태에서는 구현하지 않음 처리해야함
-        // guard let currentPhoto = currentPhoto else { return }
+        guard let currentPhoto = currentPhoto else { return }
         
-        showToastMessage("사진이 저장되었습니다")
-        // 저장 성공 시 햅틱
-        HapticManager.shared.triggerSaveComplete()
+        Task {
+            do {
+                guard let image = await imageFileManager.loadImage(fileName: currentPhoto.fileName) else {
+                    await MainActor.run {
+                        showToastMessage("이미지를 불러올 수 없습니다")
+                        HapticManager.shared.triggerError()
+                    }
+                    return
+                }
+                
+                try await imageFileManager.saveToPhotoLibrary(image: image)
+                
+                await MainActor.run {
+                    showToastMessage("사진이 저장되었습니다")
+                    HapticManager.shared.triggerSaveComplete()
+                }
+                
+            } catch {
+                await MainActor.run {
+                    showToastMessage("사진 저장에 실패했습니다")
+                    HapticManager.shared.triggerError()
+                }
+            }
+        }
     }
     
-    /// 현재 이미지 삭제
+    
+    // 현재 이미지 삭제
     func deleteCurrentImage() {
-        guard let currentPhoto = currentPhoto,
-              let context = modelContext else { return }
+        guard let currentPhoto = currentPhoto else { return }
         
-        do {
-            // SwiftData에서 삭제
-            context.delete(currentPhoto)
-            try context.save()
-            
-            // TODO: ImageFileManager 주석처리된 상태에서는 구현하지 않음
-            // try ImageFileManager.shared.deleteFile(fileName: currentPhoto.fileName)
-            
-            // UI 업데이트
-            updateAfterDeletion()
-            showToastMessage("사진이 삭제되었습니다.")
-            
-            // 삭제 성공 시 햅틱
-            HapticManager.shared.triggerSuccess()
-            
-        } catch {
-            showToastMessage("사진 삭제에 실패했습니다.")
-            
-            // 삭제 실패 시 햅틱
-            HapticManager.shared.triggerError()
+        Task {
+            do {
+                try await imageFileManager.deleteFile(fileName: currentPhoto.fileName)
+                
+                await MainActor.run {
+                    updateAfterDeletion()
+                    showToastMessage("사진이 삭제되었습니다.")
+                    HapticManager.shared.triggerSuccess()
+                }
+            } catch {
+                await MainActor.run {
+                    showToastMessage("사진 삭제에 실패했습니다.")
+                    HapticManager.shared.triggerError()
+                }
+            }
         }
     }
     
