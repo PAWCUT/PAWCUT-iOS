@@ -46,6 +46,7 @@ struct PawcutSelectionView: View {
                 }
             } else {
                 PawSecondaryButton("다음") {
+
                 }
             }
         }

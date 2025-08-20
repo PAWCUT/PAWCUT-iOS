@@ -43,6 +43,7 @@ class PawcutSelectionViewModel: ObservableObject {
     
     func selectionOrder(_ index: Int) -> Int? {
         selectedIndices.firstIndex(of: index).map { $0 + 1 } // 1부터 보이게
+
     }
     
     func tapNextButton() {
@@ -51,5 +52,15 @@ class PawcutSelectionViewModel: ObservableObject {
     
     func tapBackButton() {
         navigationManager.pop()
+    }
+    
+    private func loadImagesFromUserDefaults() {
+        guard let imageDataArray = UserDefaults.standard.array(forKey: "captured_photos") as? [Data] else {
+            return
+        }
+        
+        capturedImages = imageDataArray.compactMap { data in
+            UIImage(data: data)
+        }
     }
 }

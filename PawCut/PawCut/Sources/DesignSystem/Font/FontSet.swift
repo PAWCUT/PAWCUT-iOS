@@ -21,6 +21,7 @@ enum FontSet {
     }
     
     enum Size: CGFloat, CaseIterable {
+        case _8 = 8
         case _9 = 9
         case _12 = 12
         case _14 = 14

@@ -9,13 +9,15 @@ import SwiftUI
 
 @MainActor
 class NavigationManager: ObservableObject {
+    @Published var path = NavigationPath()
+    @Published var root: AppDestination?
+    @Published var hasCompletedOnboarding: Bool = false
+    
     static let shared = NavigationManager()
     
-    @Published var path = NavigationPath()
-    @Published private(set) var hasCompletedOnboarding: Bool
-    
     private init() {
-        self.hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
+        // TODO: 온보딩 정보 불러옴
+        root = .onboarding(.firstOnboarding)
     }
     
     func navigate(to destination: AppDestination) {
@@ -27,33 +29,12 @@ class NavigationManager: ObservableObject {
         path.removeLast()
     }
     
-    func popToRoot() {
-        path.removeLast(path.count)
+    func startMainFlow() {
+        path = NavigationPath()
+        root = .main(.home)
     }
     
-    func reset(to destination: AppDestination) {
-        popToRoot()
-        navigate(to: destination)
-    }
-    
-    @ViewBuilder
     func getRootView() -> some View {
-        if hasCompletedOnboarding {
-            MainDestination.home.view()
-        } else {
-            MainDestination.pawcutImgageSelection.view()
-        }
-    }
-    
-    func completeOnboarding() {
-        hasCompletedOnboarding = true
-        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
-        reset(to: .main(.home))
-    }
-    
-    func restartOnboarding() {
-        hasCompletedOnboarding = false
-        UserDefaults.standard.set(false, forKey: "hasCompletedOnboarding")
-        reset(to: .onboarding(.firstOnboarding))
+        return root?.view()
     }
 }

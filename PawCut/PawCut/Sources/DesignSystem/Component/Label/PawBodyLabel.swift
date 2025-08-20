@@ -30,6 +30,10 @@ struct PawBodyLabel: PawLabelProtocol {
 }
 
 extension PawBodyLabel {
+    static func med8(_ text: String, color: Color? = nil, alignment: TextAlignment = .leading, lineLimit: Int? = nil) -> PawBodyLabel {
+        PawBodyLabel(text, style: .med8, color: color, alignment: alignment, lineLimit: lineLimit)
+    }
+    
     static func med14(_ text: String, color: Color? = nil, alignment: TextAlignment = .leading, lineLimit: Int? = nil) -> PawBodyLabel {
         PawBodyLabel(text, style: .med14, color: color, alignment: alignment, lineLimit: lineLimit)
     }

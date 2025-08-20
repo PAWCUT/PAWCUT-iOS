@@ -10,6 +10,7 @@ enum OnboardingDestination: NavigationDestination {
     case firstOnboarding
     case secondOnboarding
     case thirdOnboarding
+    case petInfo
     
     @ViewBuilder
     func view() -> some View {
@@ -18,8 +19,13 @@ enum OnboardingDestination: NavigationDestination {
             FirstOnboardingView()
         case .secondOnboarding:
             SecondOnboardingView()
+                .navigationBarBackButtonHidden(true)
         case .thirdOnboarding:
             ThirdOnboardingView()
+                .navigationBarBackButtonHidden(true)
+        case .petInfo:
+            PetInfoView()
+                .navigationBarBackButtonHidden(true)
         }
     }
 }

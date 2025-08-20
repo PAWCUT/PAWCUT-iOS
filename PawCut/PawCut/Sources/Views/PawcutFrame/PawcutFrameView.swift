@@ -17,6 +17,7 @@ struct PawcutFrameView: View {
 
                 Spacer()
             }
+
             ZStack {
                 // 상단 이미지 프레임 미리보기
                 PawcutGridImagePreview(
@@ -24,8 +25,6 @@ struct PawcutFrameView: View {
                     frameOverlay: viewModel.selectedFrameImage,
                     style: .frame
                 )
-                .padding(.top, 38)
-            }
             
             // 선택된 프레임 이름
             HStack(spacing: 0) {
