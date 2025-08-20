@@ -37,7 +37,7 @@ enum GridImagePreviewStyle {
     }
 }
 
-struct PawCutGridImagePreview: View {
+struct PawcutGridImagePreview: View {
     let images: [UIImage]
     let frameOverlay: UIImage?
     let style: GridImagePreviewStyle
@@ -117,7 +117,7 @@ struct PawCutGridImagePreview: View {
 }
 
 #Preview {
-    PawCutGridImagePreview(
+    PawcutGridImagePreview(
         images: {
             if let image = UIImage(named: "save_cat") {
                 return [image]

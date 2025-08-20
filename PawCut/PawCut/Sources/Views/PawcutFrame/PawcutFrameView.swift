@@ -19,7 +19,7 @@ struct PawcutFrameView: View {
             }
             ZStack {
                 // 상단 이미지 프레임 미리보기
-                PawCutGridImagePreview(
+                PawcutGridImagePreview(
                     images: viewModel.selectedImages,
                     frameOverlay: viewModel.selectedFrameImage,
                     style: .frame
