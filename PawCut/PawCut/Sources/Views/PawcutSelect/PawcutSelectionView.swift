@@ -19,12 +19,9 @@ struct PawcutSelectionView: View {
 
                 Spacer()
             }
-
-            // 상단 이미지 프레임 미리보기
             PawcutGridImagePreview(images: selectedImages, style: .selection)
                 .padding(.top, 38)
 
-            // 사진 선택 카운트
             HStack(spacing: 0) {
                 Text("사진 선택하기")
                     .pretendardFont(size: ._18, weight: .semibold)
@@ -37,18 +34,32 @@ struct PawcutSelectionView: View {
             }
             .padding(.top, 68)
             .padding(.horizontal, 21)
-
-            // 선택된 사진 썸네일
+            
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
-                    ForEach(0..<4) { index in
-                        if index < selectedImages.count {
-                            Image(uiImage: selectedImages[index])
-                            Image(uiImage: selectedImages[index])
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 64, height: 90)
-                                .clipShape(RoundedRectangle(cornerRadius: 4))
+                    ForEach(0..<8) { index in
+                        if index < viewModel.capturedImages.count {
+                            Button(action: {
+                                if selectedImages.contains(where: { $0 === viewModel.capturedImages[index] }) {
+                                    selectedImages.removeAll { $0 === viewModel.capturedImages[index] }
+                                } else if selectedImages.count < 4 {
+                                    selectedImages.append(viewModel.capturedImages[index])
+                                }
+                            }) {
+                                Image(uiImage: viewModel.capturedImages[index])
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 100, height: 132)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .stroke(
+                                                selectedImages.contains(where: { $0 === viewModel.capturedImages[index] }) 
+                                                ? Color.pointPurple01 : Color.clear,
+                                                lineWidth: 2
+                                            )
+                                    )
+                            }
                         } else {
                             RoundedRectangle(cornerRadius: 8)
                                 .fill(Color.gray.opacity(0.2))
