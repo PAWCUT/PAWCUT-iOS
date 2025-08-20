@@ -6,6 +6,7 @@ class PawcutSelectionViewModel: ObservableObject {
     
     @Published private(set) var sourceImages: [UIImage] = []
     @Published private(set) var selectedIndices: [Int] = []
+    @Published var capturedImages: [UIImage] = []
     
     let maxSelection = 4
 
@@ -15,6 +16,11 @@ class PawcutSelectionViewModel: ObservableObject {
         selectedIndices.map { sourceImages[$0] }
     }
     
+    init() {
+        loadImagesFromUserDefaults()
+
+    }  
+  
     func loadMockData() {
         var imgs: [UIImage] = []
         for _ in 0..<8 {
@@ -43,7 +49,7 @@ class PawcutSelectionViewModel: ObservableObject {
     
     func selectionOrder(_ index: Int) -> Int? {
         selectedIndices.firstIndex(of: index).map { $0 + 1 } // 1부터 보이게
-    }
+    
     
     func tapNextButton() {
         navigationManager.navigate(to: .main(.pawcutFrameSelection))
@@ -51,5 +57,15 @@ class PawcutSelectionViewModel: ObservableObject {
     
     func tapBackButton() {
         navigationManager.pop()
+    }
+    
+    private func loadImagesFromUserDefaults() {
+        guard let imageDataArray = UserDefaults.standard.array(forKey: "captured_photos") as? [Data] else {
+            return
+        }
+        
+        capturedImages = imageDataArray.compactMap { data in
+            UIImage(data: data)
+        }
     }
 }

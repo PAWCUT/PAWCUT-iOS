@@ -19,7 +19,7 @@ struct PawcutFrameView: View {
             }
 
             // 상단 이미지 프레임 미리보기
-            PawCutGridImagePreview(
+            PawcutGridImagePreview(
                 images: viewModel.selectedImages,
                 style: .frame
             )

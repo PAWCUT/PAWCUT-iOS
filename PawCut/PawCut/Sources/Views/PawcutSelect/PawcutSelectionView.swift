@@ -18,7 +18,7 @@ struct PawcutSelectionView: View {
                 Spacer()
             }
 
-            PawCutGridImagePreview(
+            PawcutGridImagePreview(
                 images: viewModel.selectedImagesInOrder,
                 style: .selection
             )
