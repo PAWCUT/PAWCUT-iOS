@@ -72,7 +72,7 @@ struct PawcutFrameView: View {
             }
             .padding(.leading, 4)
 
-            PawSecondaryButton("저장하기") {
+            PawPrimaryButton("저장하기") {
                 viewModel.isBottomSheetPresented = true
             }
         }
