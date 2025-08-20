@@ -16,13 +16,13 @@ enum MainDestination: NavigationDestination {
     case fixPetInfo
     case inquiry
     case terms
+    case petInfo
     
     @ViewBuilder
     func view() -> some View {
         switch self {
         case .home:
-            // TODO: HomeView로 수정 예정
-            EmptyView()
+            MainView()
         case .archive:
             ArchiveView()
         case .pawcutFrameSelection:
@@ -37,6 +37,8 @@ enum MainDestination: NavigationDestination {
             EmptyView() // TODO: InquiryView 구현 예정
         case .terms:
             EmptyView() // TODO: TermsView 구현 예정
+        case .petInfo:
+            PetInfoView()
         }
     }
 }

@@ -42,7 +42,6 @@ struct ThirdOnboardingView: View {
                 viewModel.tapNextButton()
             }
         }
-        .navigationBarBackButtonHidden()
     }
 }
 
