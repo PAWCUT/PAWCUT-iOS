@@ -2,16 +2,28 @@
 //  SettingViewModel.swift
 //  PawCut
 //
-//  Created by Luminouxx on 8/18/25.
+//  Created by donghee on 8/19/25.
 //
 
-import SwiftUI
+import Foundation
 
 @MainActor
 class SettingViewModel: ObservableObject {
-    // TODO: 설정 화면
     private let navigationManager = NavigationManager.shared
+    
+    func navigateToProfileEdit() {
+        navigationManager.navigate(to: .main(.fixPetInfo))
+    }
+    
+    func navigateToSoundEdit() {
+        navigationManager.navigate(to: .main(.soundSetting))
+    }
+    
+    func navigateToCustomerInquiry() {
+        navigationManager.navigate(to: .main(.inquiry))
+    }
+    
+    func navigateToServiceTerms() {
+        navigationManager.navigate(to: .main(.terms))
+    }
 }
-
-
-
