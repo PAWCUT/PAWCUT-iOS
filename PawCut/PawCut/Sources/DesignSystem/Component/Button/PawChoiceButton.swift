@@ -44,7 +44,7 @@ struct PawChoiceButton: View {
                 )
         }
         .padding(.horizontal, horizontalPadding)
-        .padding(.vertical, verticalPadding)
+        .padding(.vertical, verticalPadding) 
         .buttonStyle(PlainButtonStyle())
     }
 }
