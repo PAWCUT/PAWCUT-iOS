@@ -54,9 +54,7 @@ struct PawcutSelectionView: View {
         .onAppear {
             viewModel.loadMockData()
         }
-
     }
-
 }
 
 #Preview {
