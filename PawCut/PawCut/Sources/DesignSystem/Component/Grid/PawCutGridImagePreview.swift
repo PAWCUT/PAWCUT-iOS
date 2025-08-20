@@ -1,18 +1,19 @@
 import SwiftUI
 
-
 enum GridImagePreviewStyle {
     case selection
     case frame
 
-    var metrics: (
-        imagesWidth: CGFloat,
-        imagesHeight: CGFloat,
-        frameWidth: CGFloat,
-        frameHeight: CGFloat,
-        logoHeight: CGFloat,
-        logoTopPadding: CGFloat
-    ) {
+    var metrics:
+        (
+            imagesWidth: CGFloat,
+            imagesHeight: CGFloat,
+            frameWidth: CGFloat,
+            frameHeight: CGFloat,
+            logoHeight: CGFloat,
+            logoTopPadding: CGFloat
+        )
+    {
         switch self {
         case .selection:
             return (
@@ -39,7 +40,7 @@ enum GridImagePreviewStyle {
 struct PawCutGridImagePreview: View {
     let images: [UIImage]
     let style: GridImagePreviewStyle
-    
+
     var body: some View {
         VStack(spacing: 0) {
             ForEach(0..<2) { row in
@@ -54,41 +55,46 @@ struct PawCutGridImagePreview: View {
                         }
 
                         let index = row * 2 + col
+
                         if index < images.count {
                             Image(uiImage: images[index])
                                 .resizable()
-                                .frame(width: style.metrics.imagesWidth, height: style.metrics.imagesHeight)
+                                .frame(
+                                    width: style.metrics.imagesWidth,
+                                    height: style.metrics.imagesHeight
+                                )
                                 .clipped()
                                 .overlay(
                                     Rectangle()
-                                        .stroke(Color("GrayScale01"), lineWidth: 1)
+                                        .stroke(
+                                            Color("GrayScale01"),
+                                            lineWidth: 1
+                                        )
                                 )
                         } else {
                             Rectangle()
                                 .fill(Color.gray.opacity(0.2))
-                                .frame(width: style.metrics.imagesWidth, height: style.metrics.imagesHeight)
+                                .frame(
+                                    width: style.metrics.imagesWidth,
+                                    height: style.metrics.imagesHeight
+                                )
                                 .overlay(
                                     Rectangle()
-                                        .stroke(Color("GrayScale01"), lineWidth: 1)
+                                        .stroke(
+                                            Color("GrayScale01"),
+                                            lineWidth: 1
+                                        )
                                 )
                         }
                     }
                 }
             }
-
-            Image(.logoBlack)
-                .resizable()
-                .scaledToFit()
-                .frame(height: style.metrics.logoHeight)
-                .padding(.top, style.metrics.logoTopPadding)
-            
             Spacer()
         }
         .padding(.top, 10)
-        .frame(width: style.metrics.frameWidth, height: style.metrics.frameHeight)
-        .overlay(
-            Rectangle()
-                .stroke(Color("GrayScale01"), lineWidth: 1)
+        .frame(
+            width: style.metrics.frameWidth,
+            height: style.metrics.frameHeight
         )
     }
 }

@@ -2,7 +2,7 @@ import SwiftUI
 
 struct PawcutFrameView: View {
     @StateObject private var viewModel = PawcutFrameViewModel()
-    
+
     var body: some View {
         VStack(spacing: 0) {
             HStack {
@@ -19,12 +19,15 @@ struct PawcutFrameView: View {
             }
 
             // 상단 이미지 프레임 미리보기
-            PawCutGridImagePreview(images: viewModel.selectedImages, style: .frame)
-                .padding(.top, 38)
+            PawCutGridImagePreview(
+                images: viewModel.selectedImages,
+                style: .frame
+            )
+            .padding(.top, 38)
 
             // 선택된 프레임 이름
             HStack(spacing: 0) {
-                Text("\(viewModel.selectedFrame.count)White")
+                Text(viewModel.selectedFrameDisplayName ?? "")
                     .pretendardFont(size: ._18, weight: .bold)
                     .foregroundColor(.grayScale01)
 
@@ -35,17 +38,30 @@ struct PawcutFrameView: View {
             // 선택된 프레임 썸네일
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
-                    ForEach(0..<10) { index in
-                        if index < viewModel.selectedFrame.count {
-                            Image(uiImage: viewModel.selectedFrame[index])
+                    ForEach(
+                        Array(viewModel.frameScrollImageNames.enumerated()),
+                        id: \.offset
+                    ) { index, name in
+
+                        let image = UIImage(named: name)
+                        let isSelected = index == viewModel.selectedFrameIndex
+
+                        if let image = image {
+                            Image(uiImage: image)
                                 .resizable()
-                                .scaledToFill()
                                 .frame(width: 40, height: 40)
                                 .clipShape(Circle())
-                        } else {
-                            Circle()
-                                .fill(Color.gray.opacity(0.2))
-                                .frame(width: 40, height: 40)
+                                .overlay(
+                                    Circle()
+                                        .strokeBorder(
+                                            isSelected
+                                                ? Color.pointPurple01 : .clear,
+                                            lineWidth: 2
+                                        )
+                                )
+                                .onTapGesture {
+                                    viewModel.selectedFrameIndex = index
+                                }
                         }
                     }
                 }
@@ -56,6 +72,11 @@ struct PawcutFrameView: View {
 
             PawSecondaryButton("저장하기") {
                 viewModel.isBottomSheetPresented = true
+            }
+        }
+        .onAppear {
+            if viewModel.selectedFrameIndex == nil {
+                viewModel.selectedFrameIndex = 0
             }
         }
         .frame(maxHeight: .infinity, alignment: .top)
