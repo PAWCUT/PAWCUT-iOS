@@ -252,7 +252,6 @@ struct PawcutCameraView: View {
             }
         }
     }
-    
     private var tooltipView: some View {
         Group {
             if viewModel.showSoundTooltip {
