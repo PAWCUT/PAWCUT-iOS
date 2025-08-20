@@ -17,14 +17,16 @@ struct PawcutFrameView: View {
 
                 Spacer()
             }
-
-            // 상단 이미지 프레임 미리보기
-            PawCutGridImagePreview(
-                images: viewModel.selectedImages,
-                style: .frame
-            )
-            .padding(.top, 38)
-
+            ZStack {
+                // 상단 이미지 프레임 미리보기
+                PawCutGridImagePreview(
+                    images: viewModel.selectedImages,
+                    frameOverlay: viewModel.selectedFrameImage,
+                    style: .frame
+                )
+                .padding(.top, 38)
+            }
+            
             // 선택된 프레임 이름
             HStack(spacing: 0) {
                 Text(viewModel.selectedFrameDisplayName ?? "")

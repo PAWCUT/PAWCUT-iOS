@@ -20,6 +20,7 @@ struct PawcutSelectionView: View {
 
             PawCutGridImagePreview(
                 images: viewModel.selectedImagesInOrder,
+                frameOverlay: nil,
                 style: .selection
             )
             .padding(.top, 38)

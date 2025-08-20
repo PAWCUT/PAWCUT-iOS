@@ -18,7 +18,7 @@ enum GridImagePreviewStyle {
         case .selection:
             return (
                 imagesWidth: 100,
-                imagesHeight: 134,
+                imagesHeight: 132,
                 frameWidth: 225,
                 frameHeight: 340,
                 logoHeight: 20,
@@ -39,6 +39,7 @@ enum GridImagePreviewStyle {
 
 struct PawCutGridImagePreview: View {
     let images: [UIImage]
+    let frameOverlay: UIImage?
     let style: GridImagePreviewStyle
 
     var body: some View {
@@ -51,7 +52,7 @@ struct PawCutGridImagePreview: View {
                 HStack(spacing: 0) {
                     ForEach(0..<2) { col in
                         if col == 1 {
-                            Spacer().frame(width: 5)
+                            Spacer().frame(width: 7)
                         }
 
                         let index = row * 2 + col
@@ -66,7 +67,7 @@ struct PawCutGridImagePreview: View {
                                 .clipped()
                                 .overlay(
                                     Rectangle()
-                                        .stroke(
+                                        .strokeBorder(
                                             Color("GrayScale01"),
                                             lineWidth: 1
                                         )
@@ -80,7 +81,7 @@ struct PawCutGridImagePreview: View {
                                 )
                                 .overlay(
                                     Rectangle()
-                                        .stroke(
+                                        .strokeBorder(
                                             Color("GrayScale01"),
                                             lineWidth: 1
                                         )
@@ -96,6 +97,22 @@ struct PawCutGridImagePreview: View {
             width: style.metrics.frameWidth,
             height: style.metrics.frameHeight
         )
+        .overlay(
+            Image(uiImage: frameOverlay ?? UIImage(named: "snow_frame")!)
+                .resizable()
+                .frame(
+                    width: style.metrics.frameWidth,
+                    height: style.metrics.frameHeight
+                )
+                .overlay(
+                    Rectangle()
+                        .stroke(
+                            Color("GrayScale01"),
+                            lineWidth: 1
+                        )
+                )
+                .allowsHitTesting(false)
+        )
     }
 }
 
@@ -108,6 +125,7 @@ struct PawCutGridImagePreview: View {
                 return []
             }
         }(),
+        frameOverlay: UIImage(named: "snow_frame"),
         style: .frame
     )
 }
