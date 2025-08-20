@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 @MainActor
 class SettingViewModel: ObservableObject {
@@ -20,7 +21,8 @@ class SettingViewModel: ObservableObject {
     }
     
     func navigateToCustomerInquiry() {
-        navigationManager.navigate(to: .main(.inquiry))
+        guard let url = URL(string: "https://open.kakao.com/o/s4Za1sNh") else { return }
+        UIApplication.shared.open(url)
     }
     
     func navigateToServiceTerms() {
