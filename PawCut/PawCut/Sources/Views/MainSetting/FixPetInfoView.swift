@@ -75,7 +75,7 @@ struct FixPetInfoView: View {
                 .padding(.horizontal, 20)
                 
                 PawPrimaryButton("시작하기", isEnabled: viewModel.isValidInput) {
-                    viewModel.startApp()
+                    // TODO: 화면 연결
                 }
             }
             .navigationTitle("프로필")

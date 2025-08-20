@@ -11,6 +11,7 @@ enum MainDestination: NavigationDestination {
     case home
     case archive
     case pawcutFrameSelection
+    case pawcutSelection
     case setting
     case soundSetting
     case fixPetInfo
@@ -39,6 +40,8 @@ enum MainDestination: NavigationDestination {
             EmptyView() // TODO: TermsView 구현 예정
         case .petInfo:
             PetInfoView()
+        case .pawcutSelection:
+            PawcutSelectionView()
         }
     }
 }
