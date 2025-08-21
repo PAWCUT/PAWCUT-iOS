@@ -77,7 +77,7 @@ struct PhotoGridCell: View {
                 .fill(.clear)
             
             AsyncPhotoImageView(fileName: photo.fileName)
-                .frame(height: gridWidth, alignment: .bottom)
+                .frame(width: gridWidth, alignment: .bottom)
         }
         .frame(width: gridWidth, height: gridHeight)
         .clipped()
