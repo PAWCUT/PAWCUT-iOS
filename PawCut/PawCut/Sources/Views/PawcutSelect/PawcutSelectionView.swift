@@ -52,7 +52,7 @@ struct PawcutSelectionView: View {
         }
         .frame(maxHeight: .infinity, alignment: .top)
         .onAppear {
-            viewModel.loadMockData()
+            viewModel.loadSavedData()
         }
     }
 }

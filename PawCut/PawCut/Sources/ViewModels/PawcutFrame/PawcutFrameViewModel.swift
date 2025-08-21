@@ -33,8 +33,15 @@ class PawcutFrameViewModel: ObservableObject {
         guard let index = selectedFrameIndex else { return nil }
         return UIImage(named: frameImageNames[index])
     }
-    
+
     func tapBackButton() {
         navigationManager.pop()
+    }
+
+    func saveCurrentPawcut(rendered: UIImage) {
+        if let data = rendered.jpegData(compressionQuality: 0.9) {
+            UserDefaults.standard.set(data, forKey: "pawcut_photo")
+            UserDefaults.standard.set(Date(), forKey: "pawcut_capture_date")
+        }
     }
 }

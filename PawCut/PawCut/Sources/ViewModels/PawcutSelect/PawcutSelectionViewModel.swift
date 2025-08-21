@@ -15,15 +15,12 @@ class PawcutSelectionViewModel: ObservableObject {
         selectedIndices.map { sourceImages[$0] }
     }
     
-    func loadMockData() {
-        var imgs: [UIImage] = []
-        for _ in 0..<8 {
-            if let ui = UIImage(named: "save_cat") {
-                imgs.append(ui)
-            }
+    func loadSavedData() {
+        if let dataArray = UserDefaults.standard.array(forKey: "captured_photos") as? [Data] {
+            let images = dataArray.compactMap { UIImage(data: $0) }
+            sourceImages = images
+            selectedIndices.removeAll()
         }
-        sourceImages = imgs
-        selectedIndices.removeAll()
     }
     
     func toggleSelection(at index: Int) {
