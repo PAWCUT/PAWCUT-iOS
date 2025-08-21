@@ -10,7 +10,8 @@ import SwiftUI
 struct ArchiveGridView: View {
     @ObservedObject var viewModel: ArchiveViewModel
     
-    // 디바이스별로 width dynamic
+    @State private var isInitial: Bool = true // 처음에만 scroll 하단
+    
     private var screenWidth: CGFloat {
         UIScreen.main.bounds.width
     }
@@ -53,11 +54,9 @@ struct ArchiveGridView: View {
                 }
             }
             .onAppear {
-                proxy.scrollTo("bottom_scroll", anchor: .bottom)
-            }
-            .onChange(of: viewModel.groupedPhotos) { _, _ in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                if isInitial {
                     proxy.scrollTo("bottom_scroll", anchor: .bottom)
+                    isInitial = false
                 }
             }
         }
@@ -73,14 +72,14 @@ struct PhotoGridCell: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            Rectangle()
-                .fill(.clear)
+            Color.clear
             
             AsyncPhotoImageView(fileName: photo.fileName)
-                .frame(width: gridWidth, alignment: .bottom)
+                .scaledToFill()
+                .frame(width: gridWidth, height: gridHeight, alignment: .bottom)
+                .clipped()
         }
         .frame(width: gridWidth, height: gridHeight)
-        .clipped()
         .overlay(
             showDateOverlay ? PhotoDateOverlay(date: photo.createdAt) : nil,
             alignment: .topLeading
