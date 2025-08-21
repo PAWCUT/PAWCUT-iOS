@@ -10,22 +10,80 @@ import Foundation
 @MainActor
 class SoundSettingViewModel: ObservableObject {
     @Published var selectedSoundIndex: Int = 0
+    @Published var availableAudioFiles: [AudioFile] = []
     
-    let soundNames = ["벨소리", "벨소리", "벨소리", "벨소리", "벨소리", "벨소리"]
+    private let audioManager: AudioManager
+    private let petStorage: PetStorageManaging
+    
+    private let navigationManager = NavigationManager.shared
+    
+    init(
+        audioManager: AudioManager = AudioManager(),
+        petStorage: PetStorageManaging = PetStorage()
+    ) {
+        self.audioManager = audioManager
+        self.petStorage = petStorage
+        
+        setupAudioFiles()
+        loadSelectedSound()
+    }
+    
+    var soundNames: [String] {
+        return availableAudioFiles.map { $0.displayName }
+    }
+    
+    private func setupAudioFiles() {
+        let currentPetType = petStorage.getPetType()
+        availableAudioFiles = AudioFile.availableFiles(for: currentPetType)
+    }
+    
+    private func loadSelectedSound() {
+        let currentPetType = petStorage.getPetType()
+        
+        guard let savedFileName = petStorage.getSelectedAudioFileName(for: currentPetType),
+              let savedAudioFile = AudioFile(rawValue: savedFileName) else {
+            selectedSoundIndex = 0
+            return
+        }
+        
+        if let index = availableAudioFiles.firstIndex(of: savedAudioFile) {
+            selectedSoundIndex = index
+        } else {
+            selectedSoundIndex = 0
+            saveSelection()
+        }
+    }
     
     func selectSound(at index: Int) {
+        guard index < availableAudioFiles.count else { return }
+        
         selectedSoundIndex = index
-        // TODO: 사운드 재생 기능 추가
         playSound(at: index)
     }
     
     private func playSound(at index: Int) {
-        // TODO: 실제 사운드 재생 로직 구현
-        print("Playing sound at index: \(index)")
+        guard index < availableAudioFiles.count else { return }
+        
+        let audioFile = availableAudioFiles[index]
+        audioManager.playAudio(audioFile: audioFile)
     }
     
     func saveSelection() {
-        // TODO: 선택된 사운드 저장 로직
-        print("Saved sound at index: \(selectedSoundIndex)")
+        guard selectedSoundIndex < availableAudioFiles.count else { return }
+        
+        let currentPetType = petStorage.getPetType()
+        let selectedAudioFile = availableAudioFiles[selectedSoundIndex]
+        
+        petStorage.setSelectedAudioFileName(selectedAudioFile.rawValue, for: currentPetType)
+        navigationManager.popToRoot()
+    }
+    
+    func stopCurrentAudio() {
+        audioManager.stopAudio()
+    }
+    
+    func getCurrentSelectedAudioFile() -> AudioFile? {
+        guard selectedSoundIndex < availableAudioFiles.count else { return nil }
+        return availableAudioFiles[selectedSoundIndex]
     }
 }
