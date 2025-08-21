@@ -49,6 +49,8 @@ class PetInfoViewModel: ObservableObject {
     func tapStartButton() {
         guard isValidInput else { return }
         petStorage.setPetName(name)
+        petStorage.setPetType(selectedType ?? .dog)
+        userStorage.setIsOnboardingCompleted(true)
         navigationManager.startMainFlow()
     }
 

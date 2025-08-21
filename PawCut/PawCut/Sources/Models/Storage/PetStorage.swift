@@ -22,4 +22,16 @@ final class PetStorage: PetStorageManaging {
     func setPetName(_ name: String) {
         userDefaults.set(name, forKey: StorageKeys.petName)
     }
+    
+    func getPetType() -> PetType {
+        guard let typeRawValue = userDefaults.string(forKey: StorageKeys.petType),
+              let type = PetType(rawValue: typeRawValue) else {
+            return .dog // 기본값은 강아지
+        }
+        return type
+    }
+    
+    func setPetType(_ type: PetType) {
+        userDefaults.set(type.rawValue, forKey: StorageKeys.petType)
+    }
 }

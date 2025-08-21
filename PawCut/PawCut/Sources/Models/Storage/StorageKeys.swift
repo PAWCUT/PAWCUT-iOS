@@ -10,4 +10,5 @@ import Foundation
 enum StorageKeys {
     static let isOnboardingCompleted = "isOnboardingCompleted"
     static let petName = "petName"
+    static let petType = "petType"
 }
