@@ -5,7 +5,6 @@
 //  Created by donghee on 8/19/25.
 //
 
-import Foundation
 import SafariServices
 import UIKit
 

@@ -25,7 +25,7 @@ struct SettingView: View {
             
             Group {
                 PawSettingRow(title: "1 : 1 문의") {
-                    viewModel.navigateToCustomerInquiry()
+                    viewModel.requestCustomerInquiry()
                 }
                 PawSettingRow(title: "서비스 이용 약관") {
                     viewModel.navigateToServiceTerms()
@@ -38,17 +38,16 @@ struct SettingView: View {
         .navigationTitle("설정")
         .navigationBarTitleDisplayMode(.inline)
         .fullScreenCover(
-                item: Binding<URLItem?>(
-                    get: {
-                        viewModel.customerInquiryURL.map { URLItem(url: $0) }
-                    },
-                    set: { _ in
-                        viewModel.customerInquiryURL = nil
-                    }
-                )
-            ) { urlItem in
-                SFSafariViewControllerWrapper(url: urlItem.url)
-            }
+            item: Binding<URLItem?>(
+                get: {
+                    viewModel.customerInquiryURL.map { URLItem(url: $0) }
+                },
+                set: { _ in
+                    viewModel.customerInquiryURL = nil
+                }
+            )
+        ) { urlItem in
+            SFSafariViewControllerWrapper(url: urlItem.url)
         }
     }
 }
