@@ -20,7 +20,11 @@ struct PawcutCameraView: View {
         }
         .toolbar(.hidden, for: .navigationBar)
         .onAppear {
-            viewModel.startLoopedCountdown()
+        }
+        .onChange(of: viewModel.session.isRunning) { _, isRunning in
+            if isRunning {
+                viewModel.startLoopedCountdown()
+            }
         }
         .onDisappear {
             viewModel.cancelCountdown()
