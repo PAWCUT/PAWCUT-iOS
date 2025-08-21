@@ -37,6 +37,19 @@ struct SettingView: View {
         .padding(.top, 8)
         .navigationTitle("설정")
         .navigationBarTitleDisplayMode(.inline)
+        .fullScreenCover(
+                item: Binding<URLItem?>(
+                    get: {
+                        viewModel.customerInquiryURL.map { URLItem(url: $0) }
+                    },
+                    set: { _ in
+                        viewModel.customerInquiryURL = nil
+                    }
+                )
+            ) { urlItem in
+                SFSafariViewControllerWrapper(url: urlItem.url)
+            }
+        }
     }
 }
 
