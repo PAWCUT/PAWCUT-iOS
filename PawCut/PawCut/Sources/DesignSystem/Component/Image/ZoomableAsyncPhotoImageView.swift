@@ -1,5 +1,5 @@
 //
-//  ZoomableAsyncPhotoView.swift
+//  ZoomableAsyncPhotoImageView.swift
 //  PawCut
 //
 //  Created by taeni on 8/21/25.
