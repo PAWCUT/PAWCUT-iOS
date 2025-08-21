@@ -13,11 +13,13 @@ class NavigationManager: ObservableObject {
     @Published var root: AppDestination?
     @Published var hasCompletedOnboarding: Bool = false
     
+    private var loginStorage: UserStorageManaging
+    
     static let shared = NavigationManager()
     
     private init() {
-        // TODO: 온보딩 정보 불러옴
-        root = .onboarding(.firstOnboarding)
+        self.loginStorage = UserStorage()
+        setRootView()
     }
     
     func navigate(to destination: AppDestination) {
@@ -29,12 +31,22 @@ class NavigationManager: ObservableObject {
         path.removeLast()
     }
     
-    func startMainFlow() {
-        path = NavigationPath()
-        root = .main(.home)
+    func setRootView() {
+        let isOnboardingCompleted = loginStorage.getIsOnboardingCompleted()
+        
+        if isOnboardingCompleted {
+            self.root = .main(.home)
+        } else {
+            self.root = .onboarding(.firstOnboarding)
+        }
     }
     
     func getRootView() -> some View {
         return root?.view()
+    }
+    
+    func startMainFlow() {
+        path = NavigationPath()
+        root = .main(.home)
     }
 }

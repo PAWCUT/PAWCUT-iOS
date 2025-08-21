@@ -34,8 +34,8 @@ struct MainView: View {
             
             HStack{
                 PawTitleLabel.bold24(
-                    "해피와 함께 행복한\n추억을 남겨 보세요!",
-                    alignment: .center,
+                    viewModel.getPetName() + "와 함께 행복한\n추억을 남겨 보세요!",
+                    alignment: .leading,
                     lineLimit: 2
                 )
                 Spacer()

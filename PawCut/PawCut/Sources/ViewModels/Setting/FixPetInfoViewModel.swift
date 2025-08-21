@@ -17,6 +17,12 @@ class FixPetInfoViewModel: ObservableObject {
     @Published var isCatEnabled = false
     @Published var isError: Bool = false
     
+    private let petStorage: PetStorageManaging
+    
+    init() {
+        self.petStorage = PetStorage()
+    }
+    
     var isValidInput: Bool {
         !name.isEmpty && name.count <= 5 && selectedType != nil
     }
@@ -38,9 +44,11 @@ class FixPetInfoViewModel: ObservableObject {
         selectedType = .cat
     }
 
-    func tapStartButton() {
+    func tapSaveButton() {
         guard isValidInput else { return }
-        navigationManager.startMainFlow()
+        petStorage.setPetName(name)
+        petStorage.setPetType(selectedType ?? .dog)
+        navigationManager.pop()
     }
 
     private func validateName() {

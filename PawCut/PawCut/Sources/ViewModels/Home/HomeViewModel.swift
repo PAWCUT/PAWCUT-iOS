@@ -9,8 +9,13 @@ import Foundation
 
 @MainActor
 class HomeViewModel: ObservableObject {
-    
+    private let petName: String
     private let navigationManager = NavigationManager.shared
+    private let petStorage: PetStorage = PetStorage()
+    
+    init() {
+        self.petName = petStorage.getPetName()
+    }
     
     let currentPage: Int = 0
     
@@ -28,5 +33,9 @@ class HomeViewModel: ObservableObject {
     
     func tapNextButton() {
         navigationManager.navigate(to: .onboarding(.secondOnboarding))
+    }
+    
+    func getPetName() -> String {
+        return self.petName
     }
 }

@@ -9,13 +9,21 @@ import Foundation
 
 @MainActor
 class PetInfoViewModel: ObservableObject {
-    private let navigationManager = NavigationManager.shared
-    
     @Published var name: String = ""
     @Published var selectedType: PetType? = nil
     @Published var isDogEnabled = false
     @Published var isCatEnabled = false
     @Published var isError: Bool = false
+    
+    private let navigationManager: NavigationManager
+    private let userStorage: UserStorageManaging
+    private let petStorage: PetStorageManaging
+    
+    init() {
+        self.navigationManager = NavigationManager.shared
+        self.userStorage = UserStorage()
+        self.petStorage = PetStorage()
+    }
     
     var isValidInput: Bool {
         !name.isEmpty && name.count <= 5 && selectedType != nil
@@ -40,6 +48,9 @@ class PetInfoViewModel: ObservableObject {
 
     func tapStartButton() {
         guard isValidInput else { return }
+        petStorage.setPetName(name)
+        petStorage.setPetType(selectedType ?? .dog)
+        userStorage.setIsOnboardingCompleted(true)
         navigationManager.startMainFlow()
     }
 
