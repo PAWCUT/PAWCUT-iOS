@@ -15,6 +15,9 @@ final class ArchiveViewModel: ObservableObject {
     @Published private(set) var groupedPhotos: [Date: [Photo]] = [:]
     @Published private(set) var isLoading = false
     
+    private let navigationManager = NavigationManager.shared
+    private let petStorage: PetStorage = PetStorage()
+    
     @Published var showGrid = false
     @Published var currentDate: Date = Date()
     @Published var currentIndex: Int = 0
@@ -41,26 +44,18 @@ final class ArchiveViewModel: ObservableObject {
         loadData()
     }
     
-    func selectPhoto(_ photo: Photo, at index: Int, date: Date) {
-        currentIndex = index
-        currentDate = date
-        navigateToPhotoDetail()
-    }
-    
-    func selectCalendarDate(_ date: Date) {
-        let normalizedDate = Calendar.current.startOfDay(for: date)
-        
-        guard groupedPhotos[normalizedDate] != nil else { return }
-        
-        currentIndex = 0
-        currentDate = normalizedDate
-        navigateToPhotoDetail()
+    func goToDetails(date: Date, index: Int) {
+        navigateToPhotoDetails(date: date, index: index)
     }
     
     func createThumbnailImages() -> [Date: String] {
         groupedPhotos.compactMapValues { photos in
             photos.first?.fileName
         }
+    }
+    
+    func getPetType() -> PetType {
+        petStorage.getPetType()
     }
 }
 
@@ -83,8 +78,8 @@ private extension ArchiveViewModel {
         }
     }
     
-    // TODO: navigation 붙일 곳
-    func navigateToPhotoDetail() {
+    func navigateToPhotoDetails(date: Date, index: Int) {
+        navigationManager.navigate(to: .main(.photoDetails(date: date, index: index)))
     }
     
     func createGroupedPhotosBinding() -> Binding<[Date: [Photo]]> {

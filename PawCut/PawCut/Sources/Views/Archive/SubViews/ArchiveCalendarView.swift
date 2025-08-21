@@ -26,7 +26,7 @@ struct ArchiveCalendarView: View {
                         endMonth: range.endMonth,
                         dateImages: viewModel.createThumbnailImages(),
                         onNavigate: { date in
-                            viewModel.selectCalendarDate(date)
+                            viewModel.goToDetails(date: date, index: 0)
                         }
                     )
                     .frame(maxHeight: .infinity)

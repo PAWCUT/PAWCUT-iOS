@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct ArchiveEmptyView: View {
-    
+
     let petType: PetType
+    private let navigationManager = NavigationManager.shared
     
     var body: some View {
         VStack(spacing: 22) {
