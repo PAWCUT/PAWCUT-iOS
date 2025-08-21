@@ -32,6 +32,7 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
     @Published var soundButtonScale: CGFloat = 1.0
     // 사운드 재생
     private var audioPlayer: AVAudioPlayer?
+    private let navigationManager = NavigationManager.shared
 
     let totalShots: Int = 8
     
@@ -72,6 +73,12 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
         loopTimer?.invalidate()
         tooltipTimer?.invalidate()
     }
+    
+     func tapBackButton() {
+         DispatchQueue.main.async {
+             self.navigationManager.popUntil(to: 2)
+         }
+    }
 
     func startLoopedCountdown() {
         startCountdown { [weak self] in
@@ -92,7 +99,7 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
                 if self?.capturedImages.count == 8 {
                     self?.saveImagesToUserDefaults()
                     DispatchQueue.main.async {
-                        NavigationManager.shared.navigate(to: .main(.pawcutSelection))
+                        self?.navigationManager.navigate(to: .main(.pawcutSelection))
                     }
                     return
                 }
@@ -101,6 +108,7 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
             self?.startLoopedCountdown()
         }
     }
+    
     func cancelCountdown() {
         countdownTimer?.invalidate()
         loopTimer?.invalidate()
