@@ -54,6 +54,7 @@ struct PawcutSelectionView: View {
         .onAppear {
             viewModel.loadSavedData()
         }
+        .navigationBarBackButtonHidden()
     }
 }
 

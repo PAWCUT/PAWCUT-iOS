@@ -114,6 +114,7 @@ struct PawcutFrameView: View {
                 }
             )
         }
+        .navigationBarBackButtonHidden()
     }
 }
 #Preview {
