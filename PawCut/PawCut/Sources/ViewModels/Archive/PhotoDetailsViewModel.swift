@@ -22,10 +22,22 @@ final class PhotoDetailsViewModel: ObservableObject {
     @Published var showToast: Bool = false
     @Published var toastMessage: String = ""
     
-    // MARK: 최신순 정렬
+    
+    init(initialDate: Date = Date(), initialIndex: Int = 0) {
+        // 초기값 설정
+        self.currentDate = initialDate.startOfDay
+        self.currentIndex = initialIndex
+    }
+    
+    //TODO: 실제 SwiftData 에서 가져오도록 함 modelContext....
+    func loadPhotosFromDatabase() {
+        self.groupedPhotos = Photo.mockGroupedPhotos
+        updateCurrentPhotosAndIndex()
+    }
+    
     var sortedDates: [Date] {
-        // 최신순(내림차순) 정렬로 통일
-        groupedPhotos.keys.sorted(by: >)
+        // 오래된 순으로 정렬
+        groupedPhotos.keys.sorted(by: <)
     }
     
     var currentPhotos: [Photo] {
