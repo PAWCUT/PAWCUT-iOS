@@ -31,6 +31,14 @@ class NavigationManager: ObservableObject {
         path.removeLast()
     }
     
+    func popUntil(to count: Int) {
+        path.removeLast(count)
+    }
+    
+    func popToRoot() {
+        path.removeLast(path.count)
+    }
+    
     func setRootView() {
         let isOnboardingCompleted = loginStorage.getIsOnboardingCompleted()
         

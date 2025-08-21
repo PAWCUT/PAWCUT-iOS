@@ -20,7 +20,7 @@ class HomeViewModel: ObservableObject {
     let currentPage: Int = 0
     
     func tapCaptureButton() {
-        // TODO: 화면 연결
+        navigationManager.navigate(to: .main(.tip))
     }
     
     func tapAchiveButton() {

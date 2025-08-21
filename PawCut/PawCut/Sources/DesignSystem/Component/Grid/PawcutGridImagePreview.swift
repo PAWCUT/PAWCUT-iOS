@@ -98,7 +98,7 @@ struct PawcutGridImagePreview: View {
             height: style.metrics.frameHeight
         )
         .overlay(
-            Image(uiImage: frameOverlay ?? UIImage(named: "snow_frame")!)
+            Image(uiImage: frameOverlay ?? UIImage(named: "Snow_Frame")!)
                 .resizable()
                 .frame(
                     width: style.metrics.frameWidth,

@@ -50,6 +50,7 @@ struct PawcutTipView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden()
     }
 }
 

@@ -10,7 +10,6 @@ import SwiftUI
 
 struct PawcutCameraView: View {
     @StateObject private var viewModel = PawcutCameraViewModel()
-    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         ZStack {
@@ -91,7 +90,7 @@ struct PawcutCameraView: View {
         VStack {
             HStack {
                 Button(action: {
-                    dismiss()
+                    viewModel.tapBackButton()
                 }) {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 17, weight: .medium))
