@@ -101,10 +101,16 @@ struct PhotoDetailsView: View {
                     }
                 }
             }
-            .onChange(of: viewModel.currentPhoto) { _, newPhoto in
-                if let newPhoto = newPhoto {
-                    withAnimation {
-                        proxy.scrollTo(newPhoto.id, anchor: .center)
+            .onChange(of: viewModel.currentPhoto) { oldValue, newPhoto in
+                DispatchQueue.main.async {
+                    if let newPhoto = newPhoto {
+                        if oldValue == nil {
+                            proxy.scrollTo(newPhoto.id, anchor: .center)
+                        } else {
+                            withAnimation {
+                                proxy.scrollTo(newPhoto.id, anchor: .center)
+                            }
+                        }
                     }
                 }
             }
