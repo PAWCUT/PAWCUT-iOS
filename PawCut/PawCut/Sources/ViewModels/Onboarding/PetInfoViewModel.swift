@@ -16,11 +16,13 @@ class PetInfoViewModel: ObservableObject {
     @Published var isError: Bool = false
     
     private let navigationManager: NavigationManager
+    private let userStorage: UserStorageManaging
     private let petStorage: PetStorageManaging
     
     init() {
         self.navigationManager = NavigationManager.shared
-        self.petStorage = UserDefaultsStorage()
+        self.userStorage = UserStorage()
+        self.petStorage = PetStorage()
     }
     
     var isValidInput: Bool {

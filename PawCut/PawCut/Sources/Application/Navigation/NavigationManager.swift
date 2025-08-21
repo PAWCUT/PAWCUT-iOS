@@ -18,7 +18,7 @@ class NavigationManager: ObservableObject {
     static let shared = NavigationManager()
     
     private init() {
-        self.loginStorage = UserDefaultsStorage()
+        self.loginStorage = UserStorage()
         setRootView()
     }
     
@@ -29,10 +29,6 @@ class NavigationManager: ObservableObject {
     func pop() {
         guard !path.isEmpty else { return }
         path.removeLast()
-    }
-    
-    func setStorage() {
-        self.loginStorage = UserDefaultsStorage()
     }
     
     func setRootView() {

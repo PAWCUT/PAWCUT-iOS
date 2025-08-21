@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class UserDefaultsStorage: UserStorageManaging {
+final class UserStorage: UserStorageManaging {
 
     private let userDefaults: UserDefaults
     
@@ -23,14 +23,3 @@ final class UserDefaultsStorage: UserStorageManaging {
         userDefaults.set(isCompleted, forKey: StorageKeys.isOnboardingCompleted)
     }
 }
-
-extension UserDefaultsStorage: PetStorageManaging {
-    func getPetName() -> String {
-        return userDefaults.string(forKey: StorageKeys.petName) ?? "이름 없음"
-    }
-    
-    func setPetName(_ name: String) {
-        userDefaults.set(name, forKey: StorageKeys.petName)
-    }
-}
-    
