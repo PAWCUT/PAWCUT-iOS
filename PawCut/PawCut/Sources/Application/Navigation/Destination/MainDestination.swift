@@ -33,7 +33,7 @@ enum MainDestination: NavigationDestination {
         case .soundSetting:
             SoundSettingView()
         case .fixPetInfo:
-            PetInfoView() // TODO: FixPetInfoView로 수정 예정
+            FixPetInfoView()
         case .inquiry:
             EmptyView() // TODO: InquiryView 구현 예정
         case .terms:

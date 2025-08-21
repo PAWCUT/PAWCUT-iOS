@@ -23,8 +23,8 @@ struct PawSettingRow: View {
                     )
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundColor(.secondary)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(.grayScale01)
             }
             .contentShape(Rectangle())
         }
@@ -37,7 +37,7 @@ struct PawSectionSeparator: View {
     var body: some View {
         VStack(spacing: 0) {
             Rectangle()
-                .fill(Color(.systemGray5))
+                .fill(Color(.grayScale05))
                 .frame(height: 8)
         }
     }
