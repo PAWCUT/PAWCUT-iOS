@@ -36,16 +36,16 @@ final class PetStorage: PetStorageManaging {
     }
     
     func getSelectedAudioFileName(for petType: PetType) -> String? {
-            let key = getSelectedAudioFileKey(for: petType)
-            return userDefaults.string(forKey: key)
-        }
-        
-        func setSelectedAudioFileName(_ fileName: String, for petType: PetType) {
-            let key = getSelectedAudioFileKey(for: petType)
-            userDefaults.set(fileName, forKey: key)
-        }
-        
-        private func getSelectedAudioFileKey(for petType: PetType) -> String {
-            return "selectedAudioFile_\(petType.rawValue)"
-        }
+        let key = getSelectedAudioFileKey(for: petType)
+        return userDefaults.string(forKey: key)
+    }
+    
+    func setSelectedAudioFileName(_ fileName: String, for petType: PetType) {
+        let key = getSelectedAudioFileKey(for: petType)
+        userDefaults.set(fileName, forKey: key)
+    }
+    
+    private func getSelectedAudioFileKey(for petType: PetType) -> String {
+        return "selectedAudioFile_\(petType.rawValue)"
+    }
 }
