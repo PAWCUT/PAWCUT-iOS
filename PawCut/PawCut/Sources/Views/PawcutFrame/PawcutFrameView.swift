@@ -90,6 +90,8 @@ struct PawcutFrameView: View {
                 if viewModel.selectedFrameIndex == nil {
                     viewModel.selectedFrameIndex = 0
                 }
+                
+                viewModel.loadSelectedImages()
             }
             .frame(maxHeight: .infinity, alignment: .top)
             .overlay(
@@ -102,10 +104,9 @@ struct PawcutFrameView: View {
                             confirmTitle: "홈으로 가기",
                             cancelTitle: "닫기",
                             isPresented: $viewModel.isBottomSheetPresented,
-                            // TODO: 확인
                             confirmAction: {
+                                viewModel.tapHomeButton()
                             },
-                            // TODO: 취소
                             cancelAction: {
                             }
                         )

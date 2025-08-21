@@ -7,13 +7,15 @@ class PawcutFrameViewModel: ObservableObject {
     @Published var selectedImages: [UIImage] = []
     @Published var isBottomSheetPresented = false
     @Published var selectedFrameIndex: Int? = nil
-    @Published var frameScrollImageNames: [String] = [
+    
+    var frameScrollImageNames: [String] = [
         "snow_scroll", "ink_scroll", "cobalt_scroll", "peek_scroll",
         "heart_scroll", "cloud_scroll", "blush_scroll", "wave_scroll",
         "sparkle_scroll", "dawn_scroll", "bloom_scroll", "breeze_scroll",
         "blue_scroll", "ginkgo_scroll",
     ]
-    @Published var frameImageNames: [String] = [
+    
+    var frameImageNames: [String] = [
         "snow_frame", "ink_frame", "cobalt_frame", "peek_frame", "heart_frame",
         "cloud_frame", "blush_frame", "wave_frame", "sparkle_frame",
         "dawn_frame", "bloom_frame", "breeze_frame", "blue_frame",
@@ -34,14 +36,28 @@ class PawcutFrameViewModel: ObservableObject {
         return UIImage(named: frameImageNames[index])
     }
 
-    func tapBackButton() {
-        navigationManager.pop()
+    func loadSelectedImages() {
+        if let dataArray = UserDefaults.standard.array(
+            forKey: "pawcut_selected_images"
+        ) as? [Data] {
+            let images = dataArray.compactMap { UIImage(data: $0) }
+            self.selectedImages = images
+            return
+        }
     }
 
     func saveCurrentPawcut(rendered: UIImage) {
         if let data = rendered.jpegData(compressionQuality: 0.9) {
             UserDefaults.standard.set(data, forKey: "pawcut_photo")
-            UserDefaults.standard.set(Date(), forKey: "pawcut_capture_date")
+            UserDefaults.standard.set(Date(), forKey: "pawcut_photo_date")
         }
+    }
+    
+    func tapBackButton() {
+        navigationManager.pop()
+    }
+    
+    func tapHomeButton() {
+        navigationManager.navigate(to: .main(.home))
     }
 }
