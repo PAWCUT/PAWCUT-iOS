@@ -18,6 +18,9 @@ enum MainDestination: NavigationDestination {
     case inquiry
     case terms
     case petInfo
+    case tip
+    case ready
+    case camera
     
     @ViewBuilder
     func view() -> some View {
@@ -42,6 +45,12 @@ enum MainDestination: NavigationDestination {
             PetInfoView()
         case .pawcutSelection:
             PawcutSelectionView()
+        case .tip:
+            PawcutTipView()
+        case .ready:
+            PawcutReadyView()
+        case .camera:
+            PawcutCameraView()
         }
     }
 }

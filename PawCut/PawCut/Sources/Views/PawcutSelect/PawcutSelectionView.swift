@@ -46,7 +46,7 @@ struct PawcutSelectionView: View {
                 }
             } else {
                 PawSecondaryButton("다음") {
-
+                    viewModel.tapNextButton()
                 }
             }
         }

@@ -17,6 +17,6 @@ class PawcutTipViewModel: ObservableObject {
     }
     
     func tapNextButton() {
-        // TODO: 화면 전환 구현
+        navigationManager.navigate(to: .main(.ready))
     }
 }

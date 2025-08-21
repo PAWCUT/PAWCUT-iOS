@@ -78,6 +78,7 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
             self?.performCapture()
         }
     }
+    
     func performCapture() {
         showShutter = true
 
