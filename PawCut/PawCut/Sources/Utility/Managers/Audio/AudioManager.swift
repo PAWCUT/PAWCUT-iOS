@@ -27,7 +27,7 @@ final class AudioManager: NSObject, ObservableObject {
         }
     }
     
-    func playAudio( audioFile: AudioFile) {
+    func playAudio(audioFile: AudioFile) {
         
         guard let url = Bundle.main.url(forResource: audioFile.rawValue, withExtension: "mp3") else {
             // TODO: 예외 처리 - 파일이 존재하지 않는 경우

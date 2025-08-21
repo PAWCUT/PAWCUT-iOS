@@ -65,7 +65,7 @@ class SoundSettingViewModel: ObservableObject {
         guard index < availableAudioFiles.count else { return }
         
         let audioFile = availableAudioFiles[index]
-        audioManager.playAudio(audioFile)
+        audioManager.playAudio(audioFile: audioFile)
     }
     
     func saveSelection() {
