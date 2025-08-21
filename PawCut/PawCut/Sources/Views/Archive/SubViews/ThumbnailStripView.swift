@@ -38,7 +38,7 @@ struct ThumbnailStripView: View {
         // 현재 선택된 사진의 ID와 비교
         let isSelected = photo.id == viewModel.currentPhoto?.id
         
-        return AsyncPhotoImageView(photo) // Photo 객체를 직접 받도록 초기화 개선
+        return AsyncPhotoImageView(fileName: photo.fileName)
             .scaledToFill()
             .frame(width: isSelected ? 32 : 22, height: 32)
             .clipped()
