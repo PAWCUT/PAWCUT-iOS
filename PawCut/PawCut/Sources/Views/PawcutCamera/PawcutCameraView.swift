@@ -266,7 +266,7 @@ struct PawcutCameraView: View {
                                 message: "소리를 설정에서 변경할 수 있어요!"
                             )
                         }
-                        .padding(.top, 50)
+                        .padding(.top, 48)
                         .padding(.trailing, -120)
                         Spacer()
                     }
