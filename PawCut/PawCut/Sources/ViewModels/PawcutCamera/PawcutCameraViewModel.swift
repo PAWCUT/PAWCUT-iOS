@@ -35,7 +35,7 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
     private let navigationManager = NavigationManager.shared
 
     let totalShots: Int = 8
-    
+
     let zoomOptions: [ZoomOption] = [
         ZoomOption(id: "0.5", title: ".5"),
         ZoomOption(id: "1.0", title: "1x"),
@@ -73,11 +73,11 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
         loopTimer?.invalidate()
         tooltipTimer?.invalidate()
     }
-    
-     func tapBackButton() {
-         DispatchQueue.main.async {
-             self.navigationManager.popUntil(to: 2)
-         }
+
+    func tapBackButton() {
+        DispatchQueue.main.async {
+            self.navigationManager.popUntil(to: 2)
+        }
     }
 
     func startLoopedCountdown() {
@@ -85,7 +85,7 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
             self?.performCapture()
         }
     }
-    
+
     func performCapture() {
         showShutter = true
 
@@ -97,9 +97,13 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
                 self?.currentShotIndex = self?.capturedImages.count ?? 0
 
                 if self?.capturedImages.count == 8 {
+                    self?.audioPlayer?.stop()
                     self?.saveImagesToUserDefaults()
+                    
                     DispatchQueue.main.async {
-                        self?.navigationManager.navigate(to: .main(.pawcutSelection))
+                        self?.navigationManager.navigate(
+                            to: .main(.pawcutSelection)
+                        )
                     }
                     return
                 }
@@ -108,7 +112,7 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
             self?.startLoopedCountdown()
         }
     }
-    
+
     func cancelCountdown() {
         countdownTimer?.invalidate()
         loopTimer?.invalidate()
@@ -130,7 +134,7 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
 
     func toggleCamera() {
         cameraPosition = (cameraPosition == .front) ? .back : .front
- 
+
         if cameraPosition == .front {
             isZoomedIn = false
             currentZoomLevel = 1.0
@@ -266,6 +270,25 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
     }
 
     func playPlasticBagSound() {
+        let petStorage = PetStorage()
+        let currentPetType = petStorage.getPetType()
+        if let savedFileName = petStorage.getSelectedAudioFileName(
+            for: currentPetType
+        ),
+            let savedAudioFile = AudioFile(rawValue: savedFileName)
+        {
+            if let soundURL = Bundle.main.url(
+                forResource: savedAudioFile.rawValue,
+                withExtension: "mp3"
+            ) {
+                do {
+                    audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+                    audioPlayer?.play()
+                    return
+                } catch {
+                }
+            }
+        }
         let extensions = ["wav", "mp3", "m4a"]
 
         for ext in extensions {
@@ -393,7 +416,9 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
         }
     }
 
-    private func getCameraDevice(for zoomLevel: String = "1.0") -> AVCaptureDevice? {
+    private func getCameraDevice(for zoomLevel: String = "1.0")
+        -> AVCaptureDevice?
+    {
         switch cameraPosition {
         case .front:
             return AVCaptureDevice.default(
@@ -407,11 +432,12 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
                     .builtInUltraWideCamera,
                     for: .video,
                     position: .back
-                ) ?? AVCaptureDevice.default(
-                    .builtInWideAngleCamera,
-                    for: .video,
-                    position: .back
                 )
+                    ?? AVCaptureDevice.default(
+                        .builtInWideAngleCamera,
+                        for: .video,
+                        position: .back
+                    )
             } else {
                 return AVCaptureDevice.default(
                     .builtInWideAngleCamera,
