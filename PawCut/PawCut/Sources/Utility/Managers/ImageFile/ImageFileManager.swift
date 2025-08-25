@@ -271,10 +271,6 @@ extension ImageFileManager {
                     cache.removeObject(forKey: fileURL.lastPathComponent as NSString)
                 }
             }
-            
-            // TODO: 경로가 저장된 Photo DB도 삭제하는 로직 필요
-            // modelContext.delete() ... save()...
-            
         } catch {
             throw ImageFileError.deleteFileFailed
         }

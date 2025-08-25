@@ -10,8 +10,9 @@ import SwiftUI
 enum MainDestination: NavigationDestination {
     case home
     case archive
-    case pawcutFrameSelection
-    case pawcutSelection
+    case photoDetails(date: Date, index: Int)
+    case pawcutFrameSelection(images: [UIImage])
+    case pawcutSelection(images: [UIImage])
     case setting
     case soundSetting
     case fixPetInfo
@@ -27,8 +28,10 @@ enum MainDestination: NavigationDestination {
             MainView()
         case .archive:
             ArchiveView()
-        case .pawcutFrameSelection:
-            PawcutFrameView()
+        case .photoDetails(let date, let index):
+            PhotoDetailsView(initialDate: date, initialIndex: index)
+        case .pawcutFrameSelection(let images):
+            PawcutFrameView(images: images)
         case .setting:
             SettingView()
         case .soundSetting:
@@ -37,8 +40,8 @@ enum MainDestination: NavigationDestination {
             FixPetInfoView()
         case .petInfo:
             PetInfoView()
-        case .pawcutSelection:
-            PawcutSelectionView()
+        case .pawcutSelection(let images):
+            PawcutSelectionView(images: images)
         case .tip:
             PawcutTipView()
         case .ready:

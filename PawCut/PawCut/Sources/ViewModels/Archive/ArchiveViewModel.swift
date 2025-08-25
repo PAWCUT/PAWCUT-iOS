@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
 @MainActor
 final class ArchiveViewModel: ObservableObject {
@@ -17,10 +18,22 @@ final class ArchiveViewModel: ObservableObject {
     
     private let navigationManager = NavigationManager.shared
     private let petStorage: PetStorage = PetStorage()
+    private let imageFileManager = ImageFileManager.shared
+    private var modelContext: ModelContext?
     
     @Published var showGrid = false
     @Published var currentDate: Date = Date()
     @Published var currentIndex: Int = 0
+    
+    // 사진이 없다면 이 로직으로 올 수 없겠지만 혹시 오류가 날까봐
+    // 디폴트는 오늘의 달로 처리
+    @Published var calendarRange: (startYear: Int, startMonth: Int, endYear: Int, endMonth: Int) = {
+        let calendar = Calendar.current
+        let today = Date()
+        let year = calendar.component(.year, from: today)
+        let month = calendar.component(.month, from: today)
+        return (year, month, year, month)
+    }()
     
     var isEmpty: Bool {
         photos.isEmpty
@@ -31,7 +44,12 @@ final class ArchiveViewModel: ObservableObject {
     }
     
     init() {
-        loadData()
+        // setupModelContext에서 로딩 처리
+    }
+    
+    func setupModelContext(_ context: ModelContext) {
+        self.modelContext = context
+        loadPhotosFromDatabase()
     }
     
     func toggleDisplay() {
@@ -41,7 +59,7 @@ final class ArchiveViewModel: ObservableObject {
     }
     
     func refreshData() {
-        loadData()
+        loadPhotosFromDatabase()
     }
     
     func goToDetails(date: Date, index: Int) {
@@ -57,19 +75,41 @@ final class ArchiveViewModel: ObservableObject {
     func getPetType() -> PetType {
         petStorage.getPetType()
     }
+    
+    func updateCalendarRange() {
+        let calendar = Calendar.current
+        let today = Date()
+        
+        let endYear = calendar.component(.year, from: today)
+        let endMonth = calendar.component(.month, from: today)
+        
+        let newRange: (startYear: Int, startMonth: Int, endYear: Int, endMonth: Int)
+        
+        // 이미지가 없다면 현재 달만 표시
+        if sortedDates.isEmpty {
+            newRange = (endYear, endMonth, endYear, endMonth)
+        } else {
+            // 이미지가 있다면 제일 오래된 이미지부터 현재 달까지
+            let oldestDate = sortedDates.first! // 이미지가 하나라도 있는지 검사
+            let startYear = calendar.component(.year, from: oldestDate)
+            let startMonth = calendar.component(.month, from: oldestDate)
+            newRange = (startYear, startMonth, endYear, endMonth)
+        }
+        
+        // 범위가 변경된 경우에만 업데이트
+        if calendarRange.startYear != newRange.startYear ||
+           calendarRange.startMonth != newRange.startMonth ||
+           calendarRange.endYear != newRange.endYear ||
+           calendarRange.endMonth != newRange.endMonth {
+            calendarRange = newRange
+        }
+    }
 }
 
 private extension ArchiveViewModel {
     
-    func loadData() {
-        isLoading = true
-        
-        // Mock 데이터 로딩 시뮬레이션
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.photos = Photo.mockPhotos
-            self.updateGroupedPhotos()
-            self.isLoading = false
-        }
+    func navigateToPhotoDetails(date: Date, index: Int) {
+        navigationManager.navigate(to: .main(.photoDetails(date: date, index: index)))
     }
     
     func updateGroupedPhotos() {
@@ -77,35 +117,36 @@ private extension ArchiveViewModel {
             Calendar.current.startOfDay(for: photo.createdAt)
         }
     }
-    
-    func navigateToPhotoDetails(date: Date, index: Int) {
-//        navigationManager.navigate(to: .main(.photoDetails(date: date, index: index)))
-    }
-    
-    func createGroupedPhotosBinding() -> Binding<[Date: [Photo]]> {
-        Binding(
-            get: { self.groupedPhotos },
-            set: { self.groupedPhotos = $0 }
-        )
-    }
-    
-    func createCurrentDateBinding() -> Binding<Date> {
-        Binding(
-            get: { self.currentDate },
-            set: { self.currentDate = $0 }
-        )
-    }
-    
-    func createCurrentIndexBinding() -> Binding<Int> {
-        Binding(
-            get: { self.currentIndex },
-            set: { self.currentIndex = $0 }
-        )
-    }
 }
 
+// TODO: SwiftData 처리를 extension 으로 해둠. 추후 처리 필요
 extension ArchiveViewModel {
-    // TODO: 실제 데이터 가져올 때 쓸 것
-    func loadPhotosFromDatabase() async {
+    
+    func loadPhotosFromDatabase() {
+        guard let modelContext = modelContext else { return }
+        
+        isLoading = true
+        
+        Task {
+            do {
+                let descriptor = FetchDescriptor<Photo>(
+                    sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
+                )
+                let fetchedPhotos = try modelContext.fetch(descriptor)
+                
+                await MainActor.run {
+                    self.photos = fetchedPhotos
+                    self.updateGroupedPhotos()
+                    self.updateCalendarRange()
+                    self.isLoading = false
+                }
+                
+            } catch {
+                await MainActor.run {
+                    print("사진 로딩 실패: \(error)")
+                    self.isLoading = false
+                }
+            }
+        }
     }
 }

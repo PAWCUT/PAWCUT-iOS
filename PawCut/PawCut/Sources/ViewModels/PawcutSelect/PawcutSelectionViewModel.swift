@@ -4,12 +4,8 @@ import SwiftUI
 class PawcutSelectionViewModel: ObservableObject {
     private let navigationManager = NavigationManager.shared
 
-    @Published private(set) var sourceImages: [UIImage] = []
+    @Published private(set) var sourceImages: [UIImage]
     @Published private(set) var selectedIndices: [Int] = []
-
-    init(images: [UIImage]) {
-        self.sourceImages = images
-    }
 
     let maxSelection = 4
 
@@ -18,7 +14,11 @@ class PawcutSelectionViewModel: ObservableObject {
     var selectedImagesInOrder: [UIImage] {
         selectedIndices.map { sourceImages[$0] }
     }
-
+    
+    init(sourceImages: [UIImage]) {
+        self.sourceImages = sourceImages
+    }
+    
     func toggleSelection(at index: Int) {
         if let i = selectedIndices.firstIndex(of: index) {
             // 이미 선택되어 있으면 해제
@@ -36,11 +36,10 @@ class PawcutSelectionViewModel: ObservableObject {
 
     func selectionOrder(_ index: Int) -> Int? {
         selectedIndices.firstIndex(of: index).map { $0 + 1 }  // 1부터 보이게
-
     }
 
     func tapNextButton() {
-        navigationManager.navigate(to: .main(.pawcutFrameSelection))
+        navigationManager.navigate(to: .main(.pawcutFrameSelection(images: selectedImagesInOrder)))
     }
 
     func tapBackButton() {

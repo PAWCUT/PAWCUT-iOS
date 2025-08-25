@@ -196,7 +196,6 @@ struct PhotoDetailsView: View {
     
     private func setupViewModel() {
         viewModel.setupModelContext(modelContext)
-        viewModel.loadPhotosFromDatabase()
     }
 }
 

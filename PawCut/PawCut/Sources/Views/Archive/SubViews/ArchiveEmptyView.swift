@@ -32,8 +32,8 @@ struct ArchiveEmptyView: View {
                 )
             }
             
-            // TODO: 포우컷 카메라 화면으로 이동
             PawTakeCutButton("포우컷 촬영하러 가기") {
+                navigationManager.navigate(to: .main(.camera))
             }
             .padding(.horizontal, 116)
             

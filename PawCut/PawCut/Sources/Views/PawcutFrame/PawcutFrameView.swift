@@ -2,11 +2,12 @@ import SwiftUI
 
 struct PawcutFrameView: View {
     @StateObject private var viewModel: PawcutFrameViewModel
-
     @Environment(\.modelContext) var modelContext
     
     init(images: [UIImage]) {
-        _viewModel = StateObject(wrappedValue: PawcutFrameViewModel(images: images))
+        self._viewModel = StateObject(
+            wrappedValue: PawcutFrameViewModel(selectedImages: images)
+        )
     }
 
     var body: some View {
@@ -102,7 +103,6 @@ struct PawcutFrameView: View {
 
                             viewModel.isBottomSheetPresented = true
                         }
-
                     }
                 }
 
@@ -126,6 +126,7 @@ struct PawcutFrameView: View {
                         viewModel.tapHomeButton()
                     },
                     cancelAction: {
+                        viewModel.tapCancelButton()
                     }
                 )
             }
@@ -133,6 +134,7 @@ struct PawcutFrameView: View {
         .navigationBarBackButtonHidden()
     }
 }
-//#Preview {
-//    PawcutFrameView()
-//}
+
+#Preview {
+    PawcutFrameView(images: [])
+}
