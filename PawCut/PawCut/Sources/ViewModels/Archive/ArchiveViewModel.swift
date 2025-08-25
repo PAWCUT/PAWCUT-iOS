@@ -43,10 +43,6 @@ final class ArchiveViewModel: ObservableObject {
         groupedPhotos.keys.sorted(by: <)
     }
     
-    init() {
-        // setupModelContext에서 로딩 처리
-    }
-    
     func setupModelContext(_ context: ModelContext) {
         self.modelContext = context
         loadPhotosFromDatabase()
@@ -130,7 +126,7 @@ extension ArchiveViewModel {
         Task {
             do {
                 let descriptor = FetchDescriptor<Photo>(
-                    sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
+                    sortBy: [SortDescriptor(\.createdAt, order: .forward)]
                 )
                 let fetchedPhotos = try modelContext.fetch(descriptor)
                 

@@ -48,18 +48,38 @@ extension ImageFileManager {
         
         let fileURL = documentsDirectory.appendingPathComponent(finalFileName)
         
-        // JPEG 데이터 변환
-        guard let imageData = image.jpegData(compressionQuality: compressionQuality ) else {
+        // 알파 채널 제거 후 JPEG 변환
+        let processedImage = removeAlphaChannel(from: image)
+        
+        guard let imageData = processedImage.jpegData(compressionQuality: compressionQuality) else {
             throw ImageFileError.imageConversionFailed
         }
         
         // 파일 저장
         do {
             try imageData.write(to: fileURL)
-            cache.setObject(image, forKey: finalFileName as NSString)
+            cache.setObject(processedImage, forKey: finalFileName as NSString)
             return finalFileName
         } catch {
             throw ImageFileError.saveToSandboxFailed
+        }
+    }
+
+    // 알파 채널 제거 메서드 추가
+    private func removeAlphaChannel(from image: UIImage) -> UIImage {
+        let size = image.size
+        
+        let format = UIGraphicsImageRendererFormat()
+        format.opaque = true // 알파 채널 제거
+        format.scale = image.scale
+        
+        let renderer = UIGraphicsImageRenderer(size: size, format: format)
+        
+        return renderer.image { context in
+            context.cgContext.setFillColor(UIColor.white.cgColor)
+            context.cgContext.fill(CGRect(origin: .zero, size: size))
+            
+            image.draw(in: CGRect(origin: .zero, size: size))
         }
     }
     
@@ -142,7 +162,7 @@ extension ImageFileManager {
         }.sorted { url1, url2 in
             let date1 = (try? url1.resourceValues(forKeys: [.creationDateKey]))?.creationDate ?? Date.distantPast
             let date2 = (try? url2.resourceValues(forKeys: [.creationDateKey]))?.creationDate ?? Date.distantPast
-            return date1 > date2
+            return date1 < date2 //오름차순
         }
         
         return fileURLs.map { $0.lastPathComponent }
