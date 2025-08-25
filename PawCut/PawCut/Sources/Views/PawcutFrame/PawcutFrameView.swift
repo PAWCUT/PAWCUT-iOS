@@ -1,7 +1,13 @@
 import SwiftUI
 
 struct PawcutFrameView: View {
-    @StateObject private var viewModel = PawcutFrameViewModel()
+    @StateObject private var viewModel: PawcutFrameViewModel
+    
+    init(images: [UIImage]) {
+        self._viewModel = StateObject(
+            wrappedValue: PawcutFrameViewModel(selectedImages: images)
+        )
+    }
 
     var body: some View {
         ZStack {
@@ -82,8 +88,7 @@ struct PawcutFrameView: View {
                     let renderer = ImageRenderer(content: exportView)
                     renderer.scale = UIScreen.main.scale
 
-                    if let uiImage = renderer.uiImage {
-                        viewModel.saveCurrentPawcut(rendered: uiImage)
+                    if renderer.uiImage != nil {
                         viewModel.isBottomSheetPresented = true
                     }
                 }
@@ -92,8 +97,6 @@ struct PawcutFrameView: View {
                     if viewModel.selectedFrameIndex == nil {
                         viewModel.selectedFrameIndex = 0
                     }
-                    
-                    viewModel.loadSelectedImages()
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
             }
@@ -110,6 +113,7 @@ struct PawcutFrameView: View {
                         viewModel.tapHomeButton()
                     },
                     cancelAction: {
+                        viewModel.tapCancelButton()
                     }
                 )
             }
@@ -118,5 +122,5 @@ struct PawcutFrameView: View {
     }
 }
 #Preview {
-    PawcutFrameView()
+    PawcutFrameView(images: [])
 }

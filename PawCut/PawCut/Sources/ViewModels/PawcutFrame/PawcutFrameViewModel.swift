@@ -4,9 +4,13 @@ import SwiftUI
 class PawcutFrameViewModel: ObservableObject {
     private let navigationManager = NavigationManager.shared
 
-    @Published var selectedImages: [UIImage] = []
+    @Published var selectedImages: [UIImage]
     @Published var isBottomSheetPresented = false
     @Published var selectedFrameIndex: Int? = nil
+    
+    init(selectedImages: [UIImage]) {
+        self.selectedImages = selectedImages
+    }
     
     var frameScrollImageNames: [String] = [
         "snow_scroll", "ink_scroll", "cobalt_scroll", "peek_scroll",
@@ -35,23 +39,6 @@ class PawcutFrameViewModel: ObservableObject {
         guard let index = selectedFrameIndex else { return nil }
         return UIImage(named: frameImageNames[index])
     }
-
-    func loadSelectedImages() {
-        if let dataArray = UserDefaults.standard.array(
-            forKey: "pawcut_selected_images"
-        ) as? [Data] {
-            let images = dataArray.compactMap { UIImage(data: $0) }
-            self.selectedImages = images
-            return
-        }
-    }
-
-    func saveCurrentPawcut(rendered: UIImage) {
-        if let data = rendered.jpegData(compressionQuality: 0.9) {
-            UserDefaults.standard.set(data, forKey: "pawcut_photo")
-            UserDefaults.standard.set(Date(), forKey: "pawcut_photo_date")
-        }
-    }
     
     func tapBackButton() {
         navigationManager.pop()
@@ -59,5 +46,9 @@ class PawcutFrameViewModel: ObservableObject {
     
     func tapHomeButton() {
         navigationManager.popToRoot()
+    }
+    
+    func tapCancelButton() {
+        isBottomSheetPresented = false
     }
 }

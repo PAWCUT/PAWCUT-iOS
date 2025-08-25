@@ -39,7 +39,7 @@ class PawcutSelectionViewModel: ObservableObject {
     }
 
     func tapNextButton() {
-        navigationManager.navigate(to: .main(.pawcutFrameSelection))
+        navigationManager.navigate(to: .main(.pawcutFrameSelection(images: selectedImagesInOrder)))
     }
 
     func tapBackButton() {
