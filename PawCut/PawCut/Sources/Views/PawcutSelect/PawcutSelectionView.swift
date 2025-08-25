@@ -2,59 +2,72 @@ import SwiftUI
 
 struct PawcutSelectionView: View {
     @StateObject private var viewModel = PawcutSelectionViewModel()
-
+    @State private var showBackAlert = false
+    
     var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                Button(action: {
-                    viewModel.tapBackButton()
-                }) {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 17, weight: .semibold))
+        ZStack {
+            VStack(spacing: 0) {
+                HStack {
+                    Button(action: {
+                        showBackAlert = true
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundColor(.grayScale01)
+                    }
+                    .frame(width: 33, height: 44)
+
+                    Spacer()
+                }
+
+                PawcutGridImagePreview(
+                    images: viewModel.selectedImagesInOrder,
+                    frameOverlay: nil,
+                    style: .selection
+                )
+                .padding(.top, 38)
+
+                HStack(spacing: 0) {
+                    Text("사진 선택하기")
+                        .pretendardFont(size: ._18, weight: .semibold)
                         .foregroundColor(.grayScale01)
+                    Text("(\(viewModel.selectedCount)/\(viewModel.maxSelection))")
+                        .pretendardFont(size: ._18, weight: .semibold)
+                        .foregroundColor(.pointPurple01)
+                        .padding(.leading, 4)
+                    Spacer()
                 }
-                .frame(width: 33, height: 44)
+                .padding(.top, 68)
+                .padding(.horizontal, 21)
 
-                Spacer()
-            }
-
-            PawcutGridImagePreview(
-                images: viewModel.selectedImagesInOrder,
-                frameOverlay: nil,
-                style: .selection
-            )
-            .padding(.top, 38)
-
-            HStack(spacing: 0) {
-                Text("사진 선택하기")
-                    .pretendardFont(size: ._18, weight: .semibold)
-                    .foregroundColor(.grayScale01)
-                Text("(\(viewModel.selectedCount)/\(viewModel.maxSelection))")
-                    .pretendardFont(size: ._18, weight: .semibold)
-                    .foregroundColor(.pointPurple01)
-                    .padding(.leading, 4)
-                Spacer()
-            }
-            .padding(.top, 68)
-            .padding(.horizontal, 21)
-
-            SelectableImageScrollView(viewModel: viewModel)
-            
-            if viewModel.selectedCount == 4 {
-                PawPrimaryButton("다음") {
-                    viewModel.tapNextButton()
-                }
-            } else {
-                PawSecondaryButton("다음") {
-                    viewModel.tapNextButton()
+                SelectableImageScrollView(viewModel: viewModel)
+                
+                if viewModel.selectedCount == 4 {
+                    PawPrimaryButton("다음") {
+                        viewModel.tapNextButton()
+                    }
+                } else {
+                    PawSecondaryButton("다음") {
+                        viewModel.tapNextButton()
+                    }
                 }
             }
+            .frame(maxHeight: .infinity, alignment: .top)
+            .onAppear {
+                viewModel.loadSavedData()
+            }
+            .navigationBarBackButtonHidden()
         }
-        .frame(maxHeight: .infinity, alignment: .top)
-        .onAppear {
-            viewModel.loadSavedData()
-        }
-        .navigationBarBackButtonHidden()
+        .pawAlert(
+            isShowing: $showBackAlert,
+            title: "이전 화면으로 돌아가시겠어요?",
+            message: "선택 중인 사진이 사라질 수 있어요.",
+            confirmTitle: "돌아가기",
+            cancelTitle: "취소",
+            onConfirm: {
+                viewModel.tapBackButton()
+            }
+        )
     }
 }
 
