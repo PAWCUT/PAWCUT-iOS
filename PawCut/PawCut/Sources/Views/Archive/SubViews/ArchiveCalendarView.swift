@@ -20,6 +20,10 @@ struct ArchiveCalendarView: View {
         let endMonth: Int
     }
     
+    private var thumbnailImages: [Date: String] {
+        viewModel.createThumbnailImages()
+    }
+    
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
@@ -29,9 +33,11 @@ struct ArchiveCalendarView: View {
                         startMonth: calendarRange.startMonth,
                         to: calendarRange.endYear,
                         endMonth: calendarRange.endMonth,
-                        dateImages: viewModel.createThumbnailImages(),
+                        dateImages: thumbnailImages,
                         onNavigate: { date in
-                            viewModel.goToDetails(date: date, index: 0)
+                            if thumbnailImages.keys.contains(date)  {
+                                viewModel.goToDetails(date: date, index: 0)
+                            }
                         }
                     )
                     .frame(maxHeight: .infinity)
