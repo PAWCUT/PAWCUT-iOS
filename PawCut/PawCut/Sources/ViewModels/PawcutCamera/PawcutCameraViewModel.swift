@@ -31,9 +31,9 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
     @Published var showSoundTooltip: Bool = true
     @Published var soundButtonScale: CGFloat = 1.0
     // 사운드 재생
-    private var audioPlayer: AVAudioPlayer?
     private let navigationManager = NavigationManager.shared
-
+    private let audioManager = AudioManager()
+    
     let totalShots: Int = 8
     
     let zoomOptions: [ZoomOption] = [
@@ -41,16 +41,16 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
         ZoomOption(id: "1.0", title: "1x"),
         ZoomOption(id: "2.0", title: "2"),
     ]
-
+    
     enum CameraPosition {
         case front, back
     }
-
+    
     struct ZoomOption: Identifiable, Hashable {
         let id: String
         let title: String
     }
-
+    
     // MARK: - Private Properties
     private var photoOutput: AVCapturePhotoOutput?
     private var videoOutput: AVCaptureVideoDataOutput?
@@ -59,14 +59,14 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
     private var countdownTimer: Timer?
     private var loopTimer: Timer?
     private var tooltipTimer: Timer?
-
+    
     override init() {
         super.init()
         setupCamera()
         setupTooltipTimer()
         startSoundButtonAnimation()
     }
-
+    
     deinit {
         session.stopRunning()
         countdownTimer?.invalidate()
@@ -74,12 +74,12 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
         tooltipTimer?.invalidate()
     }
     
-     func tapBackButton() {
-         DispatchQueue.main.async {
-             self.navigationManager.popUntil(to: 2)
-         }
+    func tapBackButton() {
+        DispatchQueue.main.async {
+            self.navigationManager.popUntil(to: 2)
+        }
     }
-
+    
     func startLoopedCountdown() {
         startCountdown { [weak self] in
             self?.performCapture()
@@ -88,23 +88,27 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
     
     func performCapture() {
         showShutter = true
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.showShutter = false
-
+            
             if let image = self?.rawImage {
                 self?.capturedImages.append(image)
                 self?.currentShotIndex = self?.capturedImages.count ?? 0
-
+                
                 if self?.capturedImages.count == 8 {
+                    self?.audioManager.stopAudio()
                     self?.saveImagesToUserDefaults()
+                    
                     DispatchQueue.main.async {
-                        self?.navigationManager.navigate(to: .main(.pawcutSelection))
+                        self?.navigationManager.navigate(
+                            to: .main(.pawcutSelection)
+                        )
                     }
                     return
                 }
             }
-
+            
             self?.startLoopedCountdown()
         }
     }
@@ -115,43 +119,43 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
         isCountingDown = false
         countdownNumber = nil
     }
-
+    
     func pauseCountdown() {
         countdownTimer?.invalidate()
         countdownTimer = nil
         isCountingDown = false
     }
-
+    
     func extendCountdown() {
         if let current = countdownNumber {
             countdownNumber = current + 3
         }
     }
-
+    
     func toggleCamera() {
         cameraPosition = (cameraPosition == .front) ? .back : .front
- 
+        
         if cameraPosition == .front {
             isZoomedIn = false
             currentZoomLevel = 1.0
         } else {
             selectedZoomId = "1.0"
         }
-
+        
         configureCameraSession()
     }
-
+    
     func toggleFlash() {
         isFlashEnabled.toggle()
         updateFlashMode()
     }
-
+    
     private func updateFlashMode() {
         guard let camera = currentCamera, camera.hasTorch else { return }
-
+        
         do {
             try camera.lockForConfiguration()
-
+            
             if isFlashEnabled {
                 if camera.isTorchModeSupported(.on) {
                     camera.torchMode = .on
@@ -161,13 +165,13 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
                     camera.torchMode = .off
                 }
             }
-
+            
             camera.unlockForConfiguration()
         } catch {
             // 토치 설정 실패
         }
     }
-
+    
     func setZoom(_ zoomId: String) {
         selectedZoomId = zoomId
         if zoomId == "0.5" {
@@ -176,16 +180,16 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
             switchToWideCamera(zoomLevel: zoomId)
         }
     }
-
+    
     private func switchToUltraWideCamera() {
         guard let newCamera = getCameraDevice(for: "0.5") else { return }
-
+        
         session.beginConfiguration()
-
+        
         if let currentInput = currentInput {
             session.removeInput(currentInput)
         }
-
+        
         do {
             let input = try AVCaptureDeviceInput(device: newCamera)
             if session.canAddInput(input) {
@@ -196,33 +200,33 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
         } catch {
             // 카메라 전환 실패
         }
-
+        
         session.commitConfiguration()
     }
-
+    
     private func switchToWideCamera(zoomLevel: String) {
         guard let newCamera = getCameraDevice(for: zoomLevel) else { return }
-
+        
         session.beginConfiguration()
-
+        
         if let currentInput = currentInput {
             session.removeInput(currentInput)
         }
-
+        
         do {
             let input = try AVCaptureDeviceInput(device: newCamera)
             if session.canAddInput(input) {
                 session.addInput(input)
                 currentInput = input
                 currentCamera = newCamera
-
+                
                 // 줌 설정
                 let zoomFactor: CGFloat
                 switch zoomLevel {
                 case "2.0": zoomFactor = 2.0
                 default: zoomFactor = 1.0
                 }
-
+                
                 try newCamera.lockForConfiguration()
                 newCamera.videoZoomFactor = min(
                     max(zoomFactor, newCamera.minAvailableVideoZoomFactor),
@@ -233,19 +237,19 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
         } catch {
             // 카메라 전환 실패
         }
-
+        
         session.commitConfiguration()
     }
-
+    
     func toggleFrontZoom() {
         guard cameraPosition == .front, let camera = currentCamera else {
             return
         }
-
+        
         isZoomedIn.toggle()
         let targetZoom: CGFloat = isZoomedIn ? 1.5 : 1.0
         currentZoomLevel = targetZoom
-
+        
         do {
             try camera.lockForConfiguration()
             camera.videoZoomFactor = min(
@@ -257,36 +261,29 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
             // 전면 줌 설정 실패
         }
     }
-
+    
     func hideSoundTooltip() {
         tooltipTimer?.invalidate()
         withAnimation(.easeInOut(duration: 0.3)) {
             showSoundTooltip = false
         }
     }
-
-    func playPlasticBagSound() {
-        let extensions = ["wav", "mp3", "m4a"]
-
-        for ext in extensions {
-            if let soundURL = Bundle.main.url(
-                forResource: "plastic_bag_sound",
-                withExtension: ext
-            ) {
-                do {
-                    audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
-                    audioPlayer?.play()
-                    print("plastic_bag_sound.\(ext) 재생 성공")
-                    return
-                } catch {
-                    print("plastic_bag_sound.\(ext) 재생 실패: \(error)")
-                }
-            }
+    
+    func playSound() {
+        let petStorage = PetStorage()
+        let currentPetType = petStorage.getPetType()
+        
+        if let savedFileName = petStorage.getSelectedAudioFileName(for: currentPetType),
+           let savedAudioFile = AudioFile(rawValue: savedFileName) {
+            audioManager.playAudio(audioFile: savedAudioFile)
+            return
         }
+        
+        // 로컬에 오디오 파일이 없을 경우 실행됩니다.
+        let defaultAudio = AudioFile.plasticBag
+        audioManager.playAudio(audioFile: defaultAudio)
     }
-
-    // MARK: - Private Methods
-
+    
     private func saveImagesToUserDefaults() {
         let imageDataArray = capturedImages.compactMap { image in
             image.jpegData(compressionQuality: 0.8)
@@ -294,13 +291,13 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
         UserDefaults.standard.set(imageDataArray, forKey: "captured_photos")
         UserDefaults.standard.set(Date(), forKey: "photo_capture_date")
     }
-
+    
     private func startSoundButtonAnimation() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.soundButtonScale = 1.2
         }
     }
-
+    
     private func setupTooltipTimer() {
         tooltipTimer = Timer.scheduledTimer(
             withTimeInterval: 3.0,
@@ -313,7 +310,7 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
             }
         }
     }
-
+    
     private func setupCamera() {
         checkCameraPermission { [weak self] granted in
             self?.cameraPermissionGranted = granted
@@ -322,7 +319,7 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
             }
         }
     }
-
+    
     private func checkCameraPermission(completion: @escaping (Bool) -> Void) {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
@@ -337,38 +334,38 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
             completion(false)
         }
     }
-
+    
     private func configureCameraSession() {
         session.beginConfiguration()
         session.sessionPreset = .photo
-
+        
         guard let camera = getCameraDevice() else {
             session.commitConfiguration()
             return
         }
-
+        
         do {
             let input = try AVCaptureDeviceInput(device: camera)
-
+            
             if let currentInput = currentInput {
                 session.removeInput(currentInput)
             }
-
+            
             if session.canAddInput(input) {
                 session.addInput(input)
                 currentInput = input
                 currentCamera = camera
             }
-
+            
             if photoOutput == nil {
                 photoOutput = AVCapturePhotoOutput()
                 if let photoOutput = photoOutput,
-                    session.canAddOutput(photoOutput)
+                   session.canAddOutput(photoOutput)
                 {
                     session.addOutput(photoOutput)
                 }
             }
-
+            
             if videoOutput == nil {
                 videoOutput = AVCaptureVideoDataOutput()
                 videoOutput?.setSampleBufferDelegate(
@@ -376,24 +373,26 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
                     queue: DispatchQueue(label: "camera.preview")
                 )
                 if let videoOutput = videoOutput,
-                    session.canAddOutput(videoOutput)
+                   session.canAddOutput(videoOutput)
                 {
                     session.addOutput(videoOutput)
                 }
             }
-
+            
         } catch {
             // 카메라 설정 실패
         }
-
+        
         session.commitConfiguration()
-
+        
         DispatchQueue.global(qos: .background).async { [weak self] in
             self?.session.startRunning()
         }
     }
-
-    private func getCameraDevice(for zoomLevel: String = "1.0") -> AVCaptureDevice? {
+    
+    private func getCameraDevice(for zoomLevel: String = "1.0")
+    -> AVCaptureDevice?
+    {
         switch cameraPosition {
         case .front:
             return AVCaptureDevice.default(
@@ -407,7 +406,8 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
                     .builtInUltraWideCamera,
                     for: .video,
                     position: .back
-                ) ?? AVCaptureDevice.default(
+                )
+                ?? AVCaptureDevice.default(
                     .builtInWideAngleCamera,
                     for: .video,
                     position: .back
@@ -421,17 +421,17 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
             }
         }
     }
-
+    
     private func startCountdown(completion: @escaping () -> Void) {
         isCountingDown = true
         countdownNumber = 6
-
+        
         countdownTimer = Timer.scheduledTimer(
             withTimeInterval: 1.0,
             repeats: true
         ) { [weak self] timer in
             guard let self = self else { return }
-
+            
             if let current = self.countdownNumber {
                 if current <= 1 {
                     timer.invalidate()
@@ -444,18 +444,18 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
             }
         }
     }
-
+    
     private func capturePhoto() {
         guard let photoOutput = photoOutput else { return }
-
+        
         let settings = AVCapturePhotoSettings()
-
+        
         if isFlashEnabled, currentCamera?.hasFlash == true {
             settings.flashMode = .on
         } else {
             settings.flashMode = .off
         }
-
+        
         photoOutput.capturePhoto(with: settings, delegate: self)
     }
 }
@@ -463,7 +463,7 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
 // MARK: - AVCapturePhotoCaptureDelegate
 
 extension PawcutCameraViewModel: AVCapturePhotoCaptureDelegate {
-
+    
     func photoOutput(
         _ output: AVCapturePhotoOutput,
         didFinishProcessingPhoto photo: AVCapturePhoto,
@@ -471,10 +471,10 @@ extension PawcutCameraViewModel: AVCapturePhotoCaptureDelegate {
     ) {
         guard error == nil else { return }
         guard let photoData = photo.fileDataRepresentation() else { return }
-
+        
         PHPhotoLibrary.requestAuthorization { status in
             guard status == .authorized else { return }
-
+            
             PHPhotoLibrary.shared().performChanges({
                 let creationRequest = PHAssetCreationRequest.forAsset()
                 creationRequest.addResource(
@@ -491,7 +491,7 @@ extension PawcutCameraViewModel: AVCapturePhotoCaptureDelegate {
 
 // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
 extension PawcutCameraViewModel: AVCaptureVideoDataOutputSampleBufferDelegate {
-
+    
     func captureOutput(
         _ output: AVCaptureOutput,
         didOutput sampleBuffer: CMSampleBuffer,
@@ -499,18 +499,18 @@ extension PawcutCameraViewModel: AVCaptureVideoDataOutputSampleBufferDelegate {
     ) {
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         else { return }
-
+        
         // 카메라 방향 설정
         if connection.isVideoOrientationSupported {
             connection.videoOrientation = .portrait
         }
-
+        
         let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
         let context = CIContext()
-
+        
         guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent)
         else { return }
-
+        
         DispatchQueue.main.async { [weak self] in
             self?.rawImage = UIImage(cgImage: cgImage)
         }
