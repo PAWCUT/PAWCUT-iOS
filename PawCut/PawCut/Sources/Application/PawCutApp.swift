@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct PawCutApp: App {
@@ -35,7 +36,7 @@ struct PawCutApp: App {
                 hideSplash()
             }
             .animation(.easeInOut(duration: 0.8), value: showSplash)
-        }
+        }.modelContainer(for: [Photo.self])
     }
 }
 
