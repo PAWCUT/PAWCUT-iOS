@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import Photos
 
 @MainActor
 final class PhotoDetailsViewModel: ObservableObject {
@@ -50,6 +51,20 @@ final class PhotoDetailsViewModel: ObservableObject {
         
         Task {
             do {
+                // 권한 확인
+                let authStatus = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+                let permissionStatus = PhotoPermissionStatus(from: authStatus)
+                
+                // 권한이 없으면 toast
+                guard permissionStatus.canSavePhoto else {
+                    await MainActor.run {
+                        showToastMessage(permissionStatus.userMessage)
+                        HapticManager.shared.triggerError()
+                    }
+                    return
+                }
+                
+                // 권한이 있으면 이미지 로드 시도
                 guard let image = await imageFileManager.loadImage(fileName: currentPhoto.fileName) else {
                     await MainActor.run {
                         showToastMessage("사진을 불러올 수 없어요.")
@@ -58,6 +73,7 @@ final class PhotoDetailsViewModel: ObservableObject {
                     return
                 }
                 
+                // 저장 시도
                 try await imageFileManager.saveToPhotoLibrary(image: image)
                 
                 await MainActor.run {
@@ -67,7 +83,7 @@ final class PhotoDetailsViewModel: ObservableObject {
                 
             } catch {
                 await MainActor.run {
-                    showToastMessage("저장이 실패되었어요.")
+                    showToastMessage("저장에 실패했어요.")
                     HapticManager.shared.triggerError()
                 }
             }
