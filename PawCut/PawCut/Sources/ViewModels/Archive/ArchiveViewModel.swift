@@ -25,12 +25,26 @@ final class ArchiveViewModel: ObservableObject {
     @Published var currentDate: Date = Date()
     @Published var currentIndex: Int = 0
     
+    // 사진이 없다면 이 로직으로 올 수 없겠지만 혹시 오류가 날까봐
+    // 디폴트는 오늘의 달로 처리
+    @Published var calendarRange: (startYear: Int, startMonth: Int, endYear: Int, endMonth: Int) = {
+        let calendar = Calendar.current
+        let today = Date()
+        let year = calendar.component(.year, from: today)
+        let month = calendar.component(.month, from: today)
+        return (year, month, year, month)
+    }()
+    
     var isEmpty: Bool {
         photos.isEmpty
     }
     
     var sortedDates: [Date] {
         groupedPhotos.keys.sorted(by: <)
+    }
+    
+    init() {
+        // setupModelContext에서 로딩 처리
     }
     
     func setupModelContext(_ context: ModelContext) {
@@ -60,6 +74,35 @@ final class ArchiveViewModel: ObservableObject {
     
     func getPetType() -> PetType {
         petStorage.getPetType()
+    }
+    
+    func updateCalendarRange() {
+        let calendar = Calendar.current
+        let today = Date()
+        
+        let endYear = calendar.component(.year, from: today)
+        let endMonth = calendar.component(.month, from: today)
+        
+        let newRange: (startYear: Int, startMonth: Int, endYear: Int, endMonth: Int)
+        
+        // 이미지가 없다면 현재 달만 표시
+        if sortedDates.isEmpty {
+            newRange = (endYear, endMonth, endYear, endMonth)
+        } else {
+            // 이미지가 있다면 제일 오래된 이미지부터 현재 달까지
+            let oldestDate = sortedDates.first! // 이미지가 하나라도 있는지 검사
+            let startYear = calendar.component(.year, from: oldestDate)
+            let startMonth = calendar.component(.month, from: oldestDate)
+            newRange = (startYear, startMonth, endYear, endMonth)
+        }
+        
+        // 범위가 변경된 경우에만 업데이트
+        if calendarRange.startYear != newRange.startYear ||
+           calendarRange.startMonth != newRange.startMonth ||
+           calendarRange.endYear != newRange.endYear ||
+           calendarRange.endMonth != newRange.endMonth {
+            calendarRange = newRange
+        }
     }
 }
 
@@ -94,11 +137,13 @@ extension ArchiveViewModel {
                 await MainActor.run {
                     self.photos = fetchedPhotos
                     self.updateGroupedPhotos()
+                    self.updateCalendarRange()
                     self.isLoading = false
                 }
                 
             } catch {
                 await MainActor.run {
+                    print("사진 로딩 실패: \(error)")
                     self.isLoading = false
                 }
             }
