@@ -99,7 +99,7 @@ extension PhotoDetailsViewModel {
         Task {
             do {
                 let descriptor = FetchDescriptor<Photo>(
-                    sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
+                    sortBy: [SortDescriptor(\.createdAt, order: .forward)]
                 )
                 let allPhotos = try modelContext.fetch(descriptor)
                 
