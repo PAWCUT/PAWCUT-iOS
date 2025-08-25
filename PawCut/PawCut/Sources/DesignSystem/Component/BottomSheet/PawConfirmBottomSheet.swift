@@ -95,7 +95,7 @@ struct PawConfirmBottomSheet: View {
 
             HeaderPetImage(type: petType)
         }
-        .frame(height: 286)
+        .frame(height: 286, alignment: .bottom)
     }
 
     private var bodyContent: some View {
