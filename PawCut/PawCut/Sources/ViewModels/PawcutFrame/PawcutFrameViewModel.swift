@@ -3,7 +3,6 @@ import SwiftUI
 @MainActor
 class PawcutFrameViewModel: ObservableObject {
     private let navigationManager = NavigationManager.shared
-
     @Published var selectedImages: [UIImage]
     @Published var isBottomSheetPresented = false
     @Published var selectedFrameIndex: Int? = nil
@@ -26,6 +25,10 @@ class PawcutFrameViewModel: ObservableObject {
         "ginkgo_frame",
     ]
 
+    init(images: [UIImage]) {
+        self.selectedImages = images
+    }
+    
     var selectedFrameDisplayName: String? {
         guard let index = selectedFrameIndex else { return nil }
         let name = frameScrollImageNames[index].replacingOccurrences(

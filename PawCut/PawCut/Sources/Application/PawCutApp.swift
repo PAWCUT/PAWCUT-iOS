@@ -36,7 +36,8 @@ struct PawCutApp: App {
                 hideSplash()
             }
             .animation(.easeInOut(duration: 0.8), value: showSplash)
-        }.modelContainer(for: [Photo.self])
+        }
+        .modelContainer(for: [Photo.self])
     }
 }
 
