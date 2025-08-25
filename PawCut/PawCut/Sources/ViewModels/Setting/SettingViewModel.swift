@@ -26,6 +26,6 @@ class SettingViewModel: ObservableObject {
     }
 
     func navigateToServiceTerms() {
-        navigationManager.navigate(to: .main(.terms))
+        customerInquiryURL = URL(string: "https://posacademy.notion.site/2552b843d5af8049ba23cd11aa0051c6?source=copy_link")
     }
 }
