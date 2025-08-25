@@ -7,32 +7,16 @@ class PawcutSelectionViewModel: ObservableObject {
     @Published private(set) var sourceImages: [UIImage] = []
     @Published private(set) var selectedIndices: [Int] = []
 
+    init(images: [UIImage]) {
+        self.sourceImages = images
+    }
+
     let maxSelection = 4
 
     var selectedCount: Int { selectedIndices.count }
     var sourceImagesCount: Int { sourceImages.count }
     var selectedImagesInOrder: [UIImage] {
         selectedIndices.map { sourceImages[$0] }
-    }
-
-    func loadSavedData() {
-        if let dataArray = UserDefaults.standard.array(
-            forKey: "captured_photos"
-        ) as? [Data] {
-            let images = dataArray.compactMap { UIImage(data: $0) }
-            sourceImages = images
-            selectedIndices.removeAll()
-        }
-    }
-    
-    func saveSelectedImages() {
-        guard selectedIndices.count == maxSelection else { return }
-
-        let dataArray: [Data] = selectedImagesInOrder.compactMap {
-            $0.jpegData(compressionQuality: 0.9)
-        }
-
-        UserDefaults.standard.set(dataArray, forKey: "pawcut_selected_images")
     }
 
     func toggleSelection(at index: Int) {
@@ -56,7 +40,6 @@ class PawcutSelectionViewModel: ObservableObject {
     }
 
     func tapNextButton() {
-        saveSelectedImages()
         navigationManager.navigate(to: .main(.pawcutFrameSelection))
     }
 

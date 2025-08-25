@@ -1,7 +1,13 @@
 import SwiftUI
 
 struct PawcutFrameView: View {
-    @StateObject private var viewModel = PawcutFrameViewModel()
+    @StateObject private var viewModel: PawcutFrameViewModel
+
+    @Environment(\.modelContext) var modelContext
+    
+    init(images: [UIImage]) {
+        _viewModel = StateObject(wrappedValue: PawcutFrameViewModel(images: images))
+    }
 
     var body: some View {
         ZStack {
@@ -46,7 +52,8 @@ struct PawcutFrameView: View {
                         ) { index, name in
 
                             let image = UIImage(named: name)
-                            let isSelected = index == viewModel.selectedFrameIndex
+                            let isSelected =
+                                index == viewModel.selectedFrameIndex
 
                             if let image = image {
                                 Image(uiImage: image)
@@ -57,7 +64,8 @@ struct PawcutFrameView: View {
                                         Circle()
                                             .strokeBorder(
                                                 isSelected
-                                                    ? Color.pointPurple01 : .clear,
+                                                    ? Color.pointPurple01
+                                                    : .clear,
                                                 lineWidth: 2
                                             )
                                     )
@@ -83,8 +91,18 @@ struct PawcutFrameView: View {
                     renderer.scale = UIScreen.main.scale
 
                     if let uiImage = renderer.uiImage {
-                        viewModel.saveCurrentPawcut(rendered: uiImage)
-                        viewModel.isBottomSheetPresented = true
+                        // TODO: SwiftData 저장
+                        Task {
+                            let fileName = try await ImageFileManager.shared
+                                .saveImage(uiImage)
+
+                            let photo = Photo(fileName: fileName)
+                            modelContext.insert(photo)
+                            try! modelContext.save()
+
+                            viewModel.isBottomSheetPresented = true
+                        }
+
                     }
                 }
 
@@ -92,12 +110,10 @@ struct PawcutFrameView: View {
                     if viewModel.selectedFrameIndex == nil {
                         viewModel.selectedFrameIndex = 0
                     }
-                    
-                    viewModel.loadSelectedImages()
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
             }
-            
+
             if viewModel.isBottomSheetPresented {
                 PawConfirmBottomSheet(
                     .dog,
@@ -117,6 +133,6 @@ struct PawcutFrameView: View {
         .navigationBarBackButtonHidden()
     }
 }
-#Preview {
-    PawcutFrameView()
-}
+//#Preview {
+//    PawcutFrameView()
+//}

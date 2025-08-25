@@ -1,7 +1,13 @@
 import SwiftUI
 
 struct PawcutSelectionView: View {
-    @StateObject private var viewModel = PawcutSelectionViewModel()
+    @StateObject private var viewModel: PawcutSelectionViewModel
+
+    init(images: [UIImage]) {
+        _viewModel = StateObject(
+            wrappedValue: PawcutSelectionViewModel(images: images)
+        )
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -39,7 +45,7 @@ struct PawcutSelectionView: View {
             .padding(.horizontal, 21)
 
             SelectableImageScrollView(viewModel: viewModel)
-            
+
             if viewModel.selectedCount == 4 {
                 PawPrimaryButton("다음") {
                     viewModel.tapNextButton()
@@ -51,13 +57,10 @@ struct PawcutSelectionView: View {
             }
         }
         .frame(maxHeight: .infinity, alignment: .top)
-        .onAppear {
-            viewModel.loadSavedData()
-        }
         .navigationBarBackButtonHidden()
     }
 }
 
-#Preview {
-    PawcutSelectionView()
-}
+//#Preview {
+//    PawcutSelectionView()
+//}

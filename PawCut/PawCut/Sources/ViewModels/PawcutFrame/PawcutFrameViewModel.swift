@@ -3,7 +3,8 @@ import SwiftUI
 @MainActor
 class PawcutFrameViewModel: ObservableObject {
     private let navigationManager = NavigationManager.shared
-
+    private let dataManager = SwiftDataManager.shared
+    
     @Published var selectedImages: [UIImage] = []
     @Published var isBottomSheetPresented = false
     @Published var selectedFrameIndex: Int? = nil
@@ -22,6 +23,10 @@ class PawcutFrameViewModel: ObservableObject {
         "ginkgo_frame",
     ]
 
+    init(images: [UIImage]) {
+        self.selectedImages = images
+    }
+    
     var selectedFrameDisplayName: String? {
         guard let index = selectedFrameIndex else { return nil }
         let name = frameScrollImageNames[index].replacingOccurrences(
@@ -34,23 +39,6 @@ class PawcutFrameViewModel: ObservableObject {
     var selectedFrameImage: UIImage? {
         guard let index = selectedFrameIndex else { return nil }
         return UIImage(named: frameImageNames[index])
-    }
-
-    func loadSelectedImages() {
-        if let dataArray = UserDefaults.standard.array(
-            forKey: "pawcut_selected_images"
-        ) as? [Data] {
-            let images = dataArray.compactMap { UIImage(data: $0) }
-            self.selectedImages = images
-            return
-        }
-    }
-
-    func saveCurrentPawcut(rendered: UIImage) {
-        if let data = rendered.jpegData(compressionQuality: 0.9) {
-            UserDefaults.standard.set(data, forKey: "pawcut_photo")
-            UserDefaults.standard.set(Date(), forKey: "pawcut_photo_date")
-        }
     }
     
     func tapBackButton() {
