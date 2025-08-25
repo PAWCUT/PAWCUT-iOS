@@ -10,7 +10,6 @@ import SwiftUI
 
 struct PawcutCameraView: View {
     @StateObject private var viewModel = PawcutCameraViewModel()
-    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         ZStack {
@@ -21,7 +20,11 @@ struct PawcutCameraView: View {
         }
         .toolbar(.hidden, for: .navigationBar)
         .onAppear {
-            viewModel.startLoopedCountdown()
+        }
+        .onChange(of: viewModel.session.isRunning) { _, isRunning in
+            if isRunning {
+                viewModel.startLoopedCountdown()
+            }
         }
         .onDisappear {
             viewModel.cancelCountdown()
@@ -91,7 +94,7 @@ struct PawcutCameraView: View {
         VStack {
             HStack {
                 Button(action: {
-                    dismiss()
+                    viewModel.tapBackButton()
                 }) {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 17, weight: .medium))

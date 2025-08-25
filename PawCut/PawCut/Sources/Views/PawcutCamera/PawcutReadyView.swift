@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct PawcutReadyView: View {
+    
+    @StateObject private var viewModel = PawcutReadyViewModel()
+    
     var body: some View {
         ZStack {
             Color.grayScale06
@@ -17,7 +20,6 @@ struct PawcutReadyView: View {
                 Spacer()
 
                 VStack(spacing: 28) {
-
                     Image("onboarding_1")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
@@ -32,6 +34,7 @@ struct PawcutReadyView: View {
                 Spacer()
             }
         }
+        .onAppear(perform: viewModel.moveToNext)
         .navigationBarHidden(true)
     }
 }

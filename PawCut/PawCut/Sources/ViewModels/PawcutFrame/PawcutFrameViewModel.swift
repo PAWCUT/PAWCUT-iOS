@@ -58,6 +58,6 @@ class PawcutFrameViewModel: ObservableObject {
     }
     
     func tapHomeButton() {
-        navigationManager.navigate(to: .main(.home))
+        navigationManager.popToRoot()
     }
 }

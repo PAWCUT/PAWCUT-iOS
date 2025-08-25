@@ -10,7 +10,6 @@ import SwiftUI
 enum MainDestination: NavigationDestination {
     case home
     case archive
-    case photoDetails(date: Date, index: Int)
     case pawcutFrameSelection
     case pawcutSelection
     case setting
@@ -19,6 +18,9 @@ enum MainDestination: NavigationDestination {
     case inquiry
     case terms
     case petInfo
+    case tip
+    case ready
+    case camera
     
     @ViewBuilder
     func view() -> some View {
@@ -27,8 +29,6 @@ enum MainDestination: NavigationDestination {
             MainView()
         case .archive:
             ArchiveView()
-        case .photoDetails(let date, let index):
-            PhotoDetailsView(initialDate: date, initialIndex: index)
         case .pawcutFrameSelection:
             PawcutFrameView()
         case .setting:
@@ -45,6 +45,12 @@ enum MainDestination: NavigationDestination {
             PetInfoView()
         case .pawcutSelection:
             PawcutSelectionView()
+        case .tip:
+            PawcutTipView()
+        case .ready:
+            PawcutReadyView()
+        case .camera:
+            PawcutCameraView()
         }
     }
 }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-protocol NavigationDestination: Hashable {
+protocol NavigationDestination: Hashable, CaseIterable {
     associatedtype ViewType: View
     @ViewBuilder func view() -> ViewType
 }
