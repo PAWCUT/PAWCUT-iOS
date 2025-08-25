@@ -98,12 +98,10 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
                 
                 if self?.capturedImages.count == 8 {
                     self?.audioManager.stopAudio()
-                    self?.saveImagesToUserDefaults()
                     
                     DispatchQueue.main.async {
-                        self?.navigationManager.navigate(
-                            to: .main(.pawcutSelection)
-                        )
+                        self?.navigationManager
+                            .navigate(to: .main(.pawcutSelection(images: self?.capturedImages ?? [])))
                     }
                     return
                 }
@@ -282,14 +280,6 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
         // 로컬에 오디오 파일이 없을 경우 실행됩니다.
         let defaultAudio = AudioFile.plasticBag
         audioManager.playAudio(audioFile: defaultAudio)
-    }
-    
-    private func saveImagesToUserDefaults() {
-        let imageDataArray = capturedImages.compactMap { image in
-            image.jpegData(compressionQuality: 0.8)
-        }
-        UserDefaults.standard.set(imageDataArray, forKey: "captured_photos")
-        UserDefaults.standard.set(Date(), forKey: "photo_capture_date")
     }
     
     private func startSoundButtonAnimation() {
