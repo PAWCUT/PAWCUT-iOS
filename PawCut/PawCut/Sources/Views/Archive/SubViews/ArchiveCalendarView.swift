@@ -9,21 +9,26 @@ import SwiftUI
 
 struct ArchiveCalendarView: View {
     @ObservedObject var viewModel: ArchiveViewModel
+    @State private var calendarRange: CalendarRange = CalendarRange(startYear: 2025, startMonth: 1, endYear: 2025, endMonth: 12)
     
-    // TODO: 추후 생성날짜의 달 ~ 오늘 기준의 달 로 커스텀
+    @State private var isInitial: Bool = true // 처음에만 scroll 하단
+    
+    struct CalendarRange {
+        let startYear: Int
+        let startMonth: Int
+        let endYear: Int
+        let endMonth: Int
+    }
+    
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
                 VStack(spacing: 0) {
-                    
-                    // TODO: viewModel 또는 사용자 정보에서 최초 생성 연, 월 가져오기
-                    let range = calendarRange(fromYear: 2025, fromMonth: 6)
-                    
                     PawCalendarView.navigation(
-                        from: range.startYear,
-                        startMonth: range.startMonth,
-                        to: range.endYear,
-                        endMonth: range.endMonth,
+                        from: calendarRange.startYear,
+                        startMonth: calendarRange.startMonth,
+                        to: calendarRange.endYear,
+                        endMonth: calendarRange.endMonth,
                         dateImages: viewModel.createThumbnailImages(),
                         onNavigate: { date in
                             viewModel.goToDetails(date: date, index: 0)
@@ -35,20 +40,19 @@ struct ArchiveCalendarView: View {
                     Rectangle()
                         .fill(Color.clear)
                         .frame(height: 1)
-                        .id("bottom")
+                        .id("bottom_scroll")
                 }
             }
             .onAppear {
-                proxy.scrollTo("bottom", anchor: .bottom)
-            }
-            .onChange(of: viewModel.groupedPhotos) { _, _ in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    proxy.scrollTo("bottom", anchor: .bottom)
+                if isInitial {
+                    proxy.scrollTo("bottom_scroll", anchor: .bottom)
+                    isInitial = false
                 }
             }
         }
     }
     
+    // TODO: 제일 오래된 사진 조회 후 가져오기
     private func calendarRange(fromYear: Int, fromMonth: Int) -> (startYear: Int, startMonth: Int, endYear: Int, endMonth: Int) {
         let calendar = Calendar.current
         let today = Date()
@@ -58,4 +62,9 @@ struct ArchiveCalendarView: View {
         
         return (startYear: fromYear, startMonth: fromMonth, endYear: endYear, endMonth: endMonth)
     }
+}
+
+#Preview {
+    let mockViewModel = ArchiveViewModel()
+    ArchiveCalendarView(viewModel: mockViewModel)
 }

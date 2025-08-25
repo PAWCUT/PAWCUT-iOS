@@ -9,23 +9,21 @@ import SwiftUI
 
 struct PhotoDetailsView: View {
     @Environment(\.modelContext) private var modelContext
-    @StateObject private var viewModel = PhotoDetailsViewModel()
-    // TODO: ViewModel로 분리할 것
+    @StateObject private var viewModel: PhotoDetailsViewModel
     @StateObject private var navigationManager = NavigationManager.shared
     
-    // MARK: - Bindings
-    @Binding var groupedPhotos: [Date: [Photo]]
-    @Binding var currentDate: Date
-    @Binding var currentIndex: Int
+    // 줌 상태를 추적하는 상태 변수
+    @State private var isZoomedIn: Bool = false
     
-    init(
-        groupedPhotos: Binding<[Date: [Photo]]>,
-        currentDate: Binding<Date>,
-        currentIndex: Binding<Int>
-    ) {
-        self._groupedPhotos = groupedPhotos
-        self._currentDate = currentDate
-        self._currentIndex = currentIndex
+    // 전체 사진 목록
+    private var allPhotos: [Photo] {
+        viewModel.sortedDates.flatMap { date in
+            viewModel.groupedPhotos[date.startOfDay] ?? []
+        }
+    }
+    
+    init(initialDate: Date, initialIndex: Int) {
+        _viewModel = StateObject(wrappedValue: PhotoDetailsViewModel(initialDate: initialDate, initialIndex: initialIndex))
     }
     
     var body: some View {
@@ -33,41 +31,29 @@ struct PhotoDetailsView: View {
             Color.grayScale06.ignoresSafeArea()
             
             VStack(spacing: 0) {
-                headerView
-                    .padding(.top, 11)
-                    .padding(.horizontal)
-                    .padding(.bottom, 26)
+                if !isZoomedIn {
+                    headerView
+                        .padding(.top, 11)
+                        .padding(.horizontal)
+                        .padding(.bottom, 26)
+                }
                 
-                imageSliderView
+                imageGalleryView
                     .padding(.bottom, 20)
                 
-                thumbnailStripView
-                    .padding(.bottom, 58)
-                
-                bottomControlsView
-                    .padding(.horizontal, 45)
-                    .padding(.bottom, 40)
+                if !isZoomedIn {
+                    ThumbnailStripView(viewModel: viewModel)
+                        .padding(.bottom, 58)
+                    
+                    bottomControlsView
+                        .padding(.horizontal, 45)
+                        .padding(.bottom, 40)
+                }
             }
         }
         .navigationBarHidden(true)
         .onAppear {
             setupViewModel()
-        }
-        .onChange(of: groupedPhotos) { _, _ in
-            syncWithViewModel()
-        }
-        .onChange(of: currentDate) { _, _ in
-            syncWithViewModel()
-        }
-        .onChange(of: currentIndex) { _, _ in
-            syncWithViewModel()
-        }
-        // ViewModel의 변경사항을 Binding에 동기화
-        .onChange(of: viewModel.currentDate) { _, newValue in
-            currentDate = newValue
-        }
-        .onChange(of: viewModel.currentIndex) { _, newValue in
-            currentIndex = newValue
         }
         .toast(isShowing: $viewModel.showToast, message: viewModel.toastMessage, iconName: "toast_icon", duration: 2.0)
         .pawAlert(
@@ -80,6 +66,55 @@ struct PhotoDetailsView: View {
                 viewModel.deleteCurrentImage()
             }
         )
+    }
+    
+    private var imageGalleryView: some View {
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack(spacing: 0) {
+                    ForEach(allPhotos, id: \.id) { photo in
+                        ZoomableAsyncPhotoImageView(fileName: photo.fileName) { newScale in
+                            isZoomedIn = newScale > 1.0
+                        }
+                        .aspectRatio(contentMode: .fit)
+                        .sideTapNavigationGesture(onTapLeft: {
+                            if !isZoomedIn {
+                                moveToPreviousImage()
+                            }
+                        }, onTapRight: {
+                            if !isZoomedIn {
+                                moveToNextImage()
+                            }
+                        }, edgeRatio: 0.2)
+                        .containerRelativeFrame(.horizontal)
+                        .id(photo.id)
+                    }
+                }
+            }
+            .scrollTargetBehavior(.paging)
+            .scrollDisabled(isZoomedIn) // 줌인 상태에서 스크롤 비활성화
+            .onAppear {
+                DispatchQueue.main.async {
+                    if let photo = viewModel.currentPhoto,
+                       let index = allPhotos.firstIndex(where: { $0.id == photo.id }) {
+                        proxy.scrollTo(allPhotos[index].id, anchor: .center)
+                    }
+                }
+            }
+            .onChange(of: viewModel.currentPhoto) { oldValue, newPhoto in
+                DispatchQueue.main.async {
+                    if let newPhoto = newPhoto {
+                        if oldValue == nil {
+                            proxy.scrollTo(newPhoto.id, anchor: .center)
+                        } else {
+                            withAnimation {
+                                proxy.scrollTo(newPhoto.id, anchor: .center)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
     private var headerView: some View {
@@ -103,40 +138,6 @@ struct PhotoDetailsView: View {
                 }
             }
         )
-        
-    }
-    
-    private var imageSliderView: some View {
-        TabView(selection: $viewModel.currentIndex) {
-            ForEach(viewModel.currentPhotos.indices, id: \.self) { index in
-                AsyncPhotoImageView(
-                    fileName: viewModel.currentPhotos[index].fileName
-                )
-                // TODO: 현제 템플릿으로 가로를 채우면 화면이 깨짐
-                .aspectRatio(contentMode: .fit)
-                .tag(index)
-                // Instagram 스타일 전환 효과
-                .transition(.scale(scale: 0.9).combined(with: .opacity))
-            }
-        }
-        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-        .frame(maxWidth: .infinity)
-        .sideTapNavigationGesture(
-            onTapLeft: {
-                moveToPreviousImage()
-            },
-            onTapRight: {
-                moveToNextImage()
-            },
-            edgeRatio: 0.15
-        )
-    }
-    
-    private var thumbnailStripView: some View {
-        ThumbnailStripView(
-            viewModel: viewModel
-        )
-        .frame(height: 24)
     }
     
     private var bottomControlsView: some View {
@@ -167,80 +168,38 @@ struct PhotoDetailsView: View {
         }
     }
     
-    /// 이전 이미지로 이동
     private func moveToPreviousImage() {
-        withAnimation(.easeInOut(duration: 0.3)) {
-            if viewModel.currentIndex > 0 {
-                viewModel.currentIndex -= 1
-            } else {
-                // 현재 날짜의 첫 번째 이미지인 경우, 이전 날짜의 마지막 이미지로 이동
-                moveToPreviousDate()
-            }
+        if let currentPhoto = viewModel.currentPhoto,
+           let currentAllIndex = allPhotos.firstIndex(where: { $0.id == currentPhoto.id }),
+           currentAllIndex > 0 {
+            let previousPhoto = allPhotos[currentAllIndex - 1]
+            let previousDate = previousPhoto.createdAt.startOfDay
+            let previousIndexInDate = viewModel.groupedPhotos[previousDate]?.firstIndex(where: { $0.id == previousPhoto.id }) ?? 0
+            
+            viewModel.currentDate = previousDate
+            viewModel.currentIndex = previousIndexInDate
         }
     }
     
-    /// 다음 이미지로 이동
     private func moveToNextImage() {
-        withAnimation(.easeInOut(duration: 0.3)) {
-            if viewModel.currentIndex < viewModel.currentPhotos.count - 1 {
-                viewModel.currentIndex += 1
-            } else {
-                // 현재 날짜의 마지막 이미지인 경우, 다음 날짜의 첫 번째 이미지로 이동
-                moveToNextDate()
-            }
-        }
-    }
-    
-    /// 이전 날짜로 이동
-    private func moveToPreviousDate() {
-        let sortedDates = viewModel.sortedDates
-        if let currentDateIndex = sortedDates.firstIndex(of: viewModel.currentDate),
-           currentDateIndex < sortedDates.count - 1 {
-            let previousDate = sortedDates[currentDateIndex + 1] // 최신순이므로 +1이 이전 날짜
-            if let previousDatePhotos = viewModel.groupedPhotos[previousDate], !previousDatePhotos.isEmpty {
-                viewModel.currentDate = previousDate
-                viewModel.currentIndex = previousDatePhotos.count - 1 // 마지막 이미지로 이동
-            }
-        }
-    }
-    
-    /// 다음 날짜로 이동
-    private func moveToNextDate() {
-        let sortedDates = viewModel.sortedDates
-        if let currentDateIndex = sortedDates.firstIndex(of: viewModel.currentDate),
-           currentDateIndex > 0 {
-            let nextDate = sortedDates[currentDateIndex - 1] // 최신순이므로 -1이 다음 날짜
-            if let nextDatePhotos = viewModel.groupedPhotos[nextDate], !nextDatePhotos.isEmpty {
-                viewModel.currentDate = nextDate
-                viewModel.currentIndex = 0 // 첫 번째 이미지로 이동
-            }
+        if let currentPhoto = viewModel.currentPhoto,
+           let currentAllIndex = allPhotos.firstIndex(where: { $0.id == currentPhoto.id }),
+           currentAllIndex < allPhotos.count - 1 {
+            let nextPhoto = allPhotos[currentAllIndex + 1]
+            let nextDate = nextPhoto.createdAt.startOfDay
+            let nextIndexInDate = viewModel.groupedPhotos[nextDate]?.firstIndex(where: { $0.id == nextPhoto.id }) ?? 0
+            
+            viewModel.currentDate = nextDate
+            viewModel.currentIndex = nextIndexInDate
         }
     }
     
     private func setupViewModel() {
         viewModel.setupModelContext(modelContext)
-        syncWithViewModel()
-    }
-    
-    private func syncWithViewModel() {
-        viewModel.groupedPhotos = groupedPhotos
-        viewModel.currentDate = currentDate
-        viewModel.currentIndex = currentIndex
-        viewModel.updateCurrentPhotosAndIndex()
+        viewModel.loadPhotosFromDatabase()
     }
 }
 
 #Preview {
-    @Previewable @State var groupedPhotos = Photo.mockGroupedPhotos
-    @Previewable @State var currentDate = Date()
-    @Previewable @State var currentIndex = 0
-    
-    NavigationStack {
-        PhotoDetailsView(
-            groupedPhotos: $groupedPhotos,
-            currentDate: $currentDate,
-            currentIndex: $currentIndex
-        )
-    }
+    PhotoDetailsView(initialDate: Date(), initialIndex: 0)
 }
-

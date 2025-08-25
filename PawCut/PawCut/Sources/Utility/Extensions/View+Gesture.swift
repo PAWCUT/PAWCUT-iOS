@@ -60,29 +60,14 @@ extension View {
     /// Pinch Zoom
     /// - Parameters:
     ///   - scale: 확대/축소 비율 바인딩
-    ///   - lastScaleValue: 마지막 스케일 값 바인딩
     ///   - minScale: 최소 확대 비율 (기본값: 1.0)
-    ///   - maxScale: 최대 확대 비율 (기본값: 3.0)
+    ///   - maxScale: 최대 확대 비율 (기본값: 4.0)
     func pinchZoomGesture(
         scale: Binding<CGFloat>,
-        lastScaleValue: Binding<CGFloat>,
         minScale: CGFloat = 1.0,
         maxScale: CGFloat = 4.0
     ) -> some View {
-        self.gesture(
-            MagnificationGesture()
-                .onChanged { value in
-                    let delta = value / lastScaleValue.wrappedValue
-                    lastScaleValue.wrappedValue = value
-                    scale.wrappedValue *= delta
-                }
-                .onEnded { _ in
-                    lastScaleValue.wrappedValue = 1.0
-                    withAnimation {
-                        scale.wrappedValue = max(minScale, min(scale.wrappedValue, maxScale))
-                    }
-                }
-        )
+        self.modifier(PinchZoomModifier(scale: scale, minScale: minScale, maxScale: maxScale))
     }
     
     /// Double Tab
@@ -147,5 +132,31 @@ extension View {
                 }
             }
         }
+    }
+}
+
+
+private struct PinchZoomModifier: ViewModifier {
+    @Binding var scale: CGFloat
+    let minScale: CGFloat
+    let maxScale: CGFloat
+    
+    @State private var initialScale: CGFloat = 1.0
+    
+    func body(content: Content) -> some View {
+        content
+            .gesture(
+                MagnificationGesture()
+                    .onChanged { value in
+                        let newScale = initialScale * value
+                        self.scale = newScale
+                    }
+                    .onEnded { _ in
+                        withAnimation {
+                            self.scale = max(self.minScale, min(self.scale, self.maxScale))
+                        }
+                        self.initialScale = self.scale
+                    }
+            )
     }
 }
