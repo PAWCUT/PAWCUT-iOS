@@ -5,8 +5,6 @@
 //  Created by donghee on 8/18/25.
 //
 
-
-
 import SwiftUI
 
 struct FixPetInfoView: View {
@@ -14,16 +12,16 @@ struct FixPetInfoView: View {
     
     var body: some View {
         VStack {
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 0) {
                 PawTitleLabel
                     .bold24(
                         "반려동물의\n정보를 입력해주세요.",
                         alignment: .leading,
                         lineLimit: 2
                     )
-                    .frame(height: 70,alignment: .topLeading)
+                    .frame(height: 70, alignment: .topLeading)
                     .padding(.bottom, 44)
-                    .padding(.top, 36)
+                    .padding(.top, 80)
                 
                 PawTitleLabel
                     .semi14(
@@ -32,6 +30,7 @@ struct FixPetInfoView: View {
                         alignment: .leading,
                         lineLimit: 2
                     )
+                    .padding(.bottom, 8)
                 
                 PawTextField(
                     "이름을 입력해 주세요.",
@@ -51,11 +50,14 @@ struct FixPetInfoView: View {
                         alignment: .leading,
                         lineLimit: 2
                     )
+                    .padding(.bottom, 8)
+                
                 HStack(spacing: 12) {
                     PawChoiceButton(
                         "강아지",
                         isEnabled: viewModel.isDogEnabled,
-                        horizontalPadding: 0
+                        horizontalPadding: 0,
+                        verticalPadding: 0
                     ) {
                         viewModel.selectDog()
                     }
@@ -63,18 +65,20 @@ struct FixPetInfoView: View {
                     PawChoiceButton(
                         "고양이",
                         isEnabled: viewModel.isCatEnabled,
-                        horizontalPadding: 0
+                        horizontalPadding: 0,
+                        verticalPadding: 0
                     ) {
                         viewModel.selectCat()
                     }
                 }
+                
                 Spacer()
             }
             .padding(20)
             
             Spacer()
             
-            PawPrimaryButton("저장하기", isEnabled: viewModel.isValidInput) {
+            PawPrimaryButton("시작하기", isEnabled: viewModel.isValidInput) {
                 viewModel.tapSaveButton()
             }
         }

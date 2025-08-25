@@ -12,7 +12,9 @@ struct SecondOnboardingView: View {
     @StateObject private var viewModel = SecondOnboardingViewModel()
     
     var body: some View {
-        VStack{
+        VStack {
+            Spacer()
+            
             PawTitleLabel
                 .bold24(
                     "특별한 날에는,\n포우-컷으로 남겨보세요",
@@ -28,14 +30,16 @@ struct SecondOnboardingView: View {
                     alignment: .center,
                     lineLimit: 2
                 )
-                .padding(.bottom, 97)
+            
+            Spacer()
             
             ImageComponent(
                 imageName: "onboarding_2",
                 size: CGSize(width: 180, height: 258)
             )
-            .padding(.bottom,94)
             
+            Spacer()
+
             PageControl(numberOfPages: 3, currentPage: viewModel.currentPage)
             
             PawPrimaryButton("다음"){

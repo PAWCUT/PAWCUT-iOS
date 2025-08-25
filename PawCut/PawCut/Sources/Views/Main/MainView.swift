@@ -30,9 +30,9 @@ struct MainView: View {
                 }
             }
             .padding(.horizontal, 20)
-            .padding(.vertical, 43)
+            .padding(.bottom, 43)
             
-            HStack{
+            HStack {
                 PawTitleLabel.bold24(
                     viewModel.getPetName() + "와 함께 행복한\n추억을 남겨 보세요!",
                     alignment: .leading,
@@ -40,18 +40,19 @@ struct MainView: View {
                 )
                 Spacer()
             }
-            .padding(.horizontal,20)
+            .padding(.horizontal, 20)
+            
             Spacer()
-            VStack{
-                Spacer()
-                ImageComponent(
-                    imageName: "main_photo",
-                    size: CGSize(width: 308, height: 369)
-                )
-                Spacer()
-                PawPrimaryButton("촬영하기") {
-                    viewModel.tapCaptureButton()
-                }
+            
+            ImageComponent(
+                imageName: "main_photo",
+                size: CGSize(width: 308, height: 369)
+            )
+            
+            Spacer()
+            
+            PawPrimaryButton("촬영하기") {
+                viewModel.tapCaptureButton()
             }
         }
         .navigationTitle("")

@@ -13,6 +13,8 @@ struct FirstOnboardingView: View {
 
     var body: some View {
         VStack{
+            Spacer()
+            
             PawTitleLabel
                 .bold24(
                     "귀가 쫑긋! \n그 찰나를 담아보세요",
@@ -28,13 +30,15 @@ struct FirstOnboardingView: View {
                     alignment: .center,
                     lineLimit: 2
                 )
-                .padding(.bottom,102)
+            
+            Spacer()
             
             ImageComponent(
                 imageName: "onboarding_1",
                 size: CGSize(width: 220, height: 251)
             )
-            .padding(.bottom,96)
+            
+            Spacer()
             
             PageControl(numberOfPages: 3, currentPage: viewModel.currentPage)
             
