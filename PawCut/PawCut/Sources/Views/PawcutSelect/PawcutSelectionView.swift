@@ -1,8 +1,12 @@
 import SwiftUI
 
 struct PawcutSelectionView: View {
-    @StateObject private var viewModel = PawcutSelectionViewModel()
+    @StateObject var viewModel: PawcutSelectionViewModel
     @State private var showBackAlert = false
+    
+    init(images: [UIImage]) {
+        self._viewModel = StateObject(wrappedValue: PawcutSelectionViewModel(sourceImages: images))
+    }
     
     var body: some View {
         ZStack {
@@ -53,9 +57,6 @@ struct PawcutSelectionView: View {
                 }
             }
             .frame(maxHeight: .infinity, alignment: .top)
-            .onAppear {
-                viewModel.loadSavedData()
-            }
             .navigationBarBackButtonHidden()
         }
         .pawAlert(
@@ -71,6 +72,6 @@ struct PawcutSelectionView: View {
     }
 }
 
-#Preview {
-    PawcutSelectionView()
-}
+//#Preview {
+//    PawcutSelectionView()
+//}

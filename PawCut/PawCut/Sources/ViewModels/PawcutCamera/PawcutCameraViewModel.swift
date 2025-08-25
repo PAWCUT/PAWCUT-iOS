@@ -100,9 +100,8 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
                     self?.audioManager.stopAudio()
                     
                     DispatchQueue.main.async {
-                        self?.navigationManager.navigate(
-                            to: .main(.pawcutSelection)
-                        )
+                        self?.navigationManager
+                            .navigate(to: .main(.pawcutSelection(images: self?.capturedImages ?? [])))
                     }
                     return
                 }
