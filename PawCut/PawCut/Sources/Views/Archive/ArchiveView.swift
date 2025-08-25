@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct ArchiveView: View {
+    @Environment(\.modelContext) private var modelContext
     @StateObject private var viewModel = ArchiveViewModel()
     
     var body: some View {
@@ -41,6 +42,9 @@ struct ArchiveView: View {
         }
         .refreshable {
             viewModel.refreshData()
+        }
+        .onAppear {
+            viewModel.setupModelContext(modelContext)
         }
     }
 }

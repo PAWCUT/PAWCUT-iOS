@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
 @MainActor
 final class ArchiveViewModel: ObservableObject {
@@ -17,6 +18,8 @@ final class ArchiveViewModel: ObservableObject {
     
     private let navigationManager = NavigationManager.shared
     private let petStorage: PetStorage = PetStorage()
+    private let imageFileManager = ImageFileManager.shared
+    private var modelContext: ModelContext?
     
     @Published var showGrid = false
     @Published var currentDate: Date = Date()
@@ -30,8 +33,9 @@ final class ArchiveViewModel: ObservableObject {
         groupedPhotos.keys.sorted(by: <)
     }
     
-    init() {
-        loadData()
+    func setupModelContext(_ context: ModelContext) {
+        self.modelContext = context
+        loadPhotosFromDatabase()
     }
     
     func toggleDisplay() {
@@ -41,7 +45,7 @@ final class ArchiveViewModel: ObservableObject {
     }
     
     func refreshData() {
-        loadData()
+        loadPhotosFromDatabase()
     }
     
     func goToDetails(date: Date, index: Int) {
@@ -61,15 +65,8 @@ final class ArchiveViewModel: ObservableObject {
 
 private extension ArchiveViewModel {
     
-    func loadData() {
-        isLoading = true
-        
-        // Mock 데이터 로딩 시뮬레이션
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.photos = Photo.mockPhotos
-            self.updateGroupedPhotos()
-            self.isLoading = false
-        }
+    func navigateToPhotoDetails(date: Date, index: Int) {
+        navigationManager.navigate(to: .main(.photoDetails(date: date, index: index)))
     }
     
     func updateGroupedPhotos() {
@@ -77,35 +74,34 @@ private extension ArchiveViewModel {
             Calendar.current.startOfDay(for: photo.createdAt)
         }
     }
-    
-    func navigateToPhotoDetails(date: Date, index: Int) {
-        navigationManager.navigate(to: .main(.photoDetails(date: date, index: index)))
-    }
-    
-    func createGroupedPhotosBinding() -> Binding<[Date: [Photo]]> {
-        Binding(
-            get: { self.groupedPhotos },
-            set: { self.groupedPhotos = $0 }
-        )
-    }
-    
-    func createCurrentDateBinding() -> Binding<Date> {
-        Binding(
-            get: { self.currentDate },
-            set: { self.currentDate = $0 }
-        )
-    }
-    
-    func createCurrentIndexBinding() -> Binding<Int> {
-        Binding(
-            get: { self.currentIndex },
-            set: { self.currentIndex = $0 }
-        )
-    }
 }
 
+// TODO: SwiftData 처리를 extension 으로 해둠. 추후 처리 필요
 extension ArchiveViewModel {
-    // TODO: 실제 데이터 가져올 때 쓸 것
-    func loadPhotosFromDatabase() async {
+    
+    func loadPhotosFromDatabase() {
+        guard let modelContext = modelContext else { return }
+        
+        isLoading = true
+        
+        Task {
+            do {
+                let descriptor = FetchDescriptor<Photo>(
+                    sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
+                )
+                let fetchedPhotos = try modelContext.fetch(descriptor)
+                
+                await MainActor.run {
+                    self.photos = fetchedPhotos
+                    self.updateGroupedPhotos()
+                    self.isLoading = false
+                }
+                
+            } catch {
+                await MainActor.run {
+                    self.isLoading = false
+                }
+            }
+        }
     }
 }
