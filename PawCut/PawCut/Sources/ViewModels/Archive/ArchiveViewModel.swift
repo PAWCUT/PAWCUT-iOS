@@ -79,7 +79,7 @@ private extension ArchiveViewModel {
     }
     
     func navigateToPhotoDetails(date: Date, index: Int) {
-//        navigationManager.navigate(to: .main(.photoDetails(date: date, index: index)))
+        navigationManager.navigate(to: .main(.photoDetails(date: date, index: index)))
     }
     
     func createGroupedPhotosBinding() -> Binding<[Date: [Photo]]> {
