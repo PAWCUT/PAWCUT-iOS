@@ -22,21 +22,12 @@ final class PhotoDetailsViewModel: ObservableObject {
     @Published var showToast: Bool = false
     @Published var toastMessage: String = ""
     
-    
     init(initialDate: Date = Date(), initialIndex: Int = 0) {
-        // 초기값 설정
         self.currentDate = initialDate.startOfDay
         self.currentIndex = initialIndex
     }
     
-    //TODO: 실제 SwiftData 에서 가져오도록 함 modelContext....
-    func loadPhotosFromDatabase() {
-        self.groupedPhotos = Photo.mockGroupedPhotos
-        updateCurrentPhotosAndIndex()
-    }
-    
     var sortedDates: [Date] {
-        // 오래된 순으로 정렬
         groupedPhotos.keys.sorted(by: <)
     }
     
@@ -49,15 +40,9 @@ final class PhotoDetailsViewModel: ObservableObject {
         return currentPhotos[currentIndex]
     }
     
-    init(modelContext: ModelContext? = nil) {
-        // currentDate를 startOfDay로 정규화
-        self.currentDate = Date().startOfDay
-        print(currentDate.koreanYearMonthDateString)
-        self.modelContext = modelContext
-    }
-    
     func setupModelContext(_ context: ModelContext) {
         self.modelContext = context
+        loadPhotosFromDatabase()
     }
     
     func saveCurrentImage() {
@@ -89,78 +74,95 @@ final class PhotoDetailsViewModel: ObservableObject {
         }
     }
     
-    
-    // 현재 이미지 삭제
     func deleteCurrentImage() {
         guard let currentPhoto = currentPhoto else { return }
         
         Task {
-            do {
-                try await imageFileManager.deleteFile(fileName: currentPhoto.fileName)
-                
-                await MainActor.run {
-                    updateAfterDeletion()
-                    showToastMessage("사진이 삭제되었습니다.")
-                    HapticManager.shared.triggerSuccess()
-                }
-            } catch {
-                await MainActor.run {
-                    showToastMessage("사진 삭제에 실패했습니다.")
-                    HapticManager.shared.triggerError()
-                }
-            }
-        }
-    }
-    
-    /// 삭제 후 UI 업데이트
-    private func updateAfterDeletion() {
-        let normalizedCurrentDate = currentDate.startOfDay
-        
-        // 현재 날짜의 사진 목록 업데이트
-        var updatedPhotos = groupedPhotos[normalizedCurrentDate] ?? []
-        if currentIndex < updatedPhotos.count {
-            updatedPhotos.remove(at: currentIndex)
-        }
-        
-        if updatedPhotos.isEmpty {
-            // 현재 날짜에 더 이상 사진이 없으면 날짜 제거
-            groupedPhotos.removeValue(forKey: normalizedCurrentDate)
-            
-            // 다른 날짜로 이동
-            if !sortedDates.isEmpty {
-                currentDate = sortedDates.first!.startOfDay
-                currentIndex = 0
-            }
-        } else {
-            // 현재 날짜 사진 목록 업데이트
-            groupedPhotos[normalizedCurrentDate] = updatedPhotos
-            
-            // 인덱스 조정
-            if currentIndex >= updatedPhotos.count {
-                currentIndex = max(0, updatedPhotos.count - 1)
-            }
-        }
-    }
-    
-    /// 현재 사진과 인덱스 업데이트
-    func updateCurrentPhotosAndIndex() {
-        let normalizedCurrentDate = currentDate.startOfDay
-        let photos = groupedPhotos[normalizedCurrentDate] ?? []
-        
-        if photos.isEmpty {
-            // 현재 날짜에 사진이 없으면 가장 최근 날짜로 이동
-            if let firstDate = sortedDates.first,
-               let firstDatePhotos = groupedPhotos[firstDate.startOfDay], !firstDatePhotos.isEmpty {
-                currentDate = firstDate.startOfDay
-                currentIndex = 0
-            }
-        } else if currentIndex >= photos.count {
-            currentIndex = max(0, photos.count - 1)
+            await deletePhoto(currentPhoto)
         }
     }
     
     private func showToastMessage(_ message: String) {
         toastMessage = message
         showToast = true
+    }
+}
+
+// TODO: SwiftData 처리
+// PhotoDetailsViewModel, ArchiveViewModel 로직이 중복되므로 추후 통일 해야함
+extension PhotoDetailsViewModel {
+    
+    func loadPhotosFromDatabase() {
+        guard let modelContext = modelContext else { return }
+        
+        Task {
+            do {
+                let descriptor = FetchDescriptor<Photo>(
+                    sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
+                )
+                let allPhotos = try modelContext.fetch(descriptor)
+                
+                await MainActor.run {
+                    let calendar = Calendar.current
+                    var newGroupedPhotos: [Date: [Photo]] = [:]
+                    
+                    for photo in allPhotos {
+                        let dayKey = calendar.startOfDay(for: photo.createdAt)
+                        if newGroupedPhotos[dayKey] == nil {
+                            newGroupedPhotos[dayKey] = []
+                        }
+                        newGroupedPhotos[dayKey]?.append(photo)
+                    }
+                    
+                    self.groupedPhotos = newGroupedPhotos
+                    self.updateCurrentPhotosAndIndex()
+                }
+                
+            } catch {
+                await MainActor.run {
+                    print("사진 로딩 실패: \(error)")
+                }
+            }
+        }
+    }
+    
+    private func updateCurrentPhotosAndIndex() {
+        let normalizedCurrentDate = currentDate.startOfDay
+        
+        if groupedPhotos[normalizedCurrentDate]?.isEmpty != false {
+            if let latestDate = sortedDates.last {
+                currentDate = latestDate
+                currentIndex = 0
+            }
+        }
+        
+        let photosCount = currentPhotos.count
+        if currentIndex >= photosCount {
+            currentIndex = max(0, photosCount - 1)
+        }
+    }
+    
+    func deletePhoto(_ photo: Photo) async {
+        guard let modelContext = modelContext else { return }
+        
+        do {
+            // 실제 파일 삭제
+            try await imageFileManager.deleteFile(fileName: photo.fileName)
+            
+            // SwiftData 삭제
+            modelContext.delete(photo)
+            try modelContext.save()
+            
+            await MainActor.run {
+                loadPhotosFromDatabase()
+                showToastMessage("사진이 삭제되었습니다.")
+                HapticManager.shared.triggerSuccess()
+            }
+        } catch {
+            await MainActor.run {
+                showToastMessage("사진 삭제에 실패했습니다.")
+                HapticManager.shared.triggerError()
+            }
+        }
     }
 }
