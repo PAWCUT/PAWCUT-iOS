@@ -52,7 +52,7 @@ final class PhotoDetailsViewModel: ObservableObject {
             do {
                 guard let image = await imageFileManager.loadImage(fileName: currentPhoto.fileName) else {
                     await MainActor.run {
-                        showToastMessage("이미지를 불러올 수 없습니다")
+                        showToastMessage("사진을 불러올 수 없어요.")
                         HapticManager.shared.triggerError()
                     }
                     return
@@ -61,13 +61,13 @@ final class PhotoDetailsViewModel: ObservableObject {
                 try await imageFileManager.saveToPhotoLibrary(image: image)
                 
                 await MainActor.run {
-                    showToastMessage("사진이 저장되었습니다")
+                    showToastMessage("저장이 완료되었어요.")
                     HapticManager.shared.triggerSaveComplete()
                 }
                 
             } catch {
                 await MainActor.run {
-                    showToastMessage("사진 저장에 실패했습니다")
+                    showToastMessage("저장이 실패되었어요.")
                     HapticManager.shared.triggerError()
                 }
             }
@@ -88,12 +88,13 @@ final class PhotoDetailsViewModel: ObservableObject {
     }
 }
 
-// TODO: SwiftData 처리
-// PhotoDetailsViewModel, ArchiveViewModel 로직이 중복되므로 추후 통일 해야함
+// TODO: SwiftData 처리를 extension 으로 해둠. 추후 처리 필요
 extension PhotoDetailsViewModel {
     
     func loadPhotosFromDatabase() {
-        guard let modelContext = modelContext else { return }
+        guard let modelContext = modelContext else {
+            return
+        }
         
         Task {
             do {
@@ -116,12 +117,14 @@ extension PhotoDetailsViewModel {
                     
                     self.groupedPhotos = newGroupedPhotos
                     self.updateCurrentPhotosAndIndex()
+                    
+                    if self.groupedPhotos.isEmpty {
+                        NavigationManager.shared.pop()
+                    }
+                    
+                    HapticManager.shared.triggerSuccess()
                 }
                 
-            } catch {
-                await MainActor.run {
-                    print("사진 로딩 실패: \(error)")
-                }
             }
         }
     }
@@ -146,21 +149,23 @@ extension PhotoDetailsViewModel {
         guard let modelContext = modelContext else { return }
         
         do {
-            // 실제 파일 삭제
+            // 1. 파일 삭제
             try await imageFileManager.deleteFile(fileName: photo.fileName)
             
-            // SwiftData 삭제
+            // SwiftData에서 삭제
             modelContext.delete(photo)
             try modelContext.save()
             
             await MainActor.run {
+                
+                self.showToastMessage("사진이 삭제되었어요.")
+                // 갱신
                 loadPhotosFromDatabase()
-                showToastMessage("사진이 삭제되었습니다.")
                 HapticManager.shared.triggerSuccess()
             }
         } catch {
             await MainActor.run {
-                showToastMessage("사진 삭제에 실패했습니다.")
+                showToastMessage("사진을 삭제할 수 없어요.")
                 HapticManager.shared.triggerError()
             }
         }
