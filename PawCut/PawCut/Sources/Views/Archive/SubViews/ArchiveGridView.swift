@@ -39,7 +39,7 @@ struct ArchiveGridView: View {
                                     gridHeight: gridHeight,
                                     showDateOverlay: index == 0,
                                     onTap: {
-                                        viewModel.selectPhoto(photo, at: index, date: date)
+                                        viewModel.goToDetails(date: date, index: index)
                                     }
                                 )
                             }
@@ -77,7 +77,7 @@ struct PhotoGridCell: View {
                 .fill(.clear)
             
             AsyncPhotoImageView(fileName: photo.fileName)
-                .frame(height: gridWidth, alignment: .bottom)
+                .frame(width: gridWidth, alignment: .bottom)
         }
         .frame(width: gridWidth, height: gridHeight)
         .clipped()

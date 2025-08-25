@@ -109,9 +109,8 @@ struct PhotoDetailsView: View {
     private var imageSliderView: some View {
         TabView(selection: $viewModel.currentIndex) {
             ForEach(viewModel.currentPhotos.indices, id: \.self) { index in
-                AsyncPhotoImageView.fillWidth(
-                    fileName: viewModel.currentPhotos[index].fileName,
-                    isZoomEnabled: true
+                AsyncPhotoImageView(
+                    fileName: viewModel.currentPhotos[index].fileName
                 )
                 // TODO: 현제 템플릿으로 가로를 채우면 화면이 깨짐
                 .aspectRatio(contentMode: .fit)
@@ -228,67 +227,6 @@ struct PhotoDetailsView: View {
         viewModel.currentDate = currentDate
         viewModel.currentIndex = currentIndex
         viewModel.updateCurrentPhotosAndIndex()
-    }
-}
-
-// MARK: - Thumbnail Strip View
-struct ThumbnailStripView: View {
-    @ObservedObject var viewModel: PhotoDetailsViewModel
-    
-    var body: some View {
-        ScrollViewReader { proxy in
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 3) {
-                    ForEach(viewModel.currentPhotos, id: \.id) { photo in
-                        thumbnailCell(for: photo, proxy: proxy)
-                    }
-                }
-                // TODO: 현재 인덱스를 가운데로 둘 것인지?
-                // TODO: 사용자 제스쳐로 이동되면 currentIndex를 바꾸도록 작업해야함
-                //                .padding(.horizontal, UIScreen.main.bounds.width / 2 - 6)
-                .frame(minWidth: UIScreen.main.bounds.width)
-            }
-            .onAppear {
-                // 초기 로딩 시 현재 인덱스를 센터로 이동
-                scrollToCurrentIndex(proxy: proxy)
-            }
-            .onChange(of: viewModel.currentIndex) { _, _ in
-                // 인덱스 변경 시 센터로 이동
-                scrollToCurrentIndex(proxy: proxy)
-            }
-            .onChange(of: viewModel.currentDate) { _, _ in
-                // 날짜 변경 시에도 센터로 이동
-                scrollToCurrentIndex(proxy: proxy)
-            }
-        }
-    }
-    
-    private func thumbnailCell(for photo: Photo, proxy: ScrollViewProxy) -> some View {
-        let isSelected = viewModel.currentPhotos.indices.contains(viewModel.currentIndex) &&
-        viewModel.currentPhotos[viewModel.currentIndex].id == photo.id
-        
-        return AsyncPhotoImageView.thumbnail(fileName: photo.fileName)
-            .frame(width: isSelected ? 32 : 22, height: 32)
-            .aspectRatio(contentMode: .fill)
-            .clipped()
-            .onTapGesture {
-                if let index = viewModel.currentPhotos.firstIndex(where: { $0.id == photo.id }) {
-                    viewModel.currentIndex = index
-                    // 탭 시에도 센터로 이동
-                    scrollToCurrentIndex(proxy: proxy)
-                }
-            }
-            .id(photo.id)
-    }
-    
-    private func scrollToCurrentIndex(proxy: ScrollViewProxy) {
-        guard viewModel.currentIndex < viewModel.currentPhotos.count else { return }
-        
-        let currentPhoto = viewModel.currentPhotos[viewModel.currentIndex]
-        
-        withAnimation(.easeInOut(duration: 0.3)) {
-            proxy.scrollTo(currentPhoto.id, anchor: .center)
-        }
     }
 }
 

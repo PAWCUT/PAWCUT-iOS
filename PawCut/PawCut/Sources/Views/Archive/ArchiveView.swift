@@ -14,8 +14,7 @@ struct ArchiveView: View {
     var body: some View {
         VStack(spacing: 0) {
             if viewModel.groupedPhotos.isEmpty {
-                // TODO: 사용자가 설정한 타입 가져와야함
-                ArchiveEmptyView(petType: .cat)
+                ArchiveEmptyView(petType: viewModel.getPetType())
             } else {
                 if viewModel.showGrid {
                     ArchiveGridView(viewModel: viewModel)
