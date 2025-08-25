@@ -269,7 +269,7 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
         }
     }
     
-    func playPlasticBagSound() {
+    func playSound() {
         let petStorage = PetStorage()
         let currentPetType = petStorage.getPetType()
         

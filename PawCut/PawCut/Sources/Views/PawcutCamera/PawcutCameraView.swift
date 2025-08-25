@@ -105,7 +105,7 @@ struct PawcutCameraView: View {
                 Spacer()
                 
                 Button(action: {
-                    viewModel.playPlasticBagSound()
+                    viewModel.playSound()
                 }) {
                     ImageComponent(
                         imageName: "pawcut_sound",
