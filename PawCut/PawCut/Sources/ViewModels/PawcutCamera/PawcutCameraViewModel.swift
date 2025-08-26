@@ -485,26 +485,28 @@ extension PawcutCameraViewModel: AVCapturePhotoCaptureDelegate {
 extension PawcutCameraViewModel: AVCaptureVideoDataOutputSampleBufferDelegate {
     
     func captureOutput(
-        _ output: AVCaptureOutput,
-        didOutput sampleBuffer: CMSampleBuffer,
-        from connection: AVCaptureConnection
-    ) {
-        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-        else { return }
-        
-        // 카메라 방향 설정
-        if connection.isVideoOrientationSupported {
-            connection.videoOrientation = .portrait
+            _ output: AVCaptureOutput,
+            didOutput sampleBuffer: CMSampleBuffer,
+            from connection: AVCaptureConnection
+        ) {
+            guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+
+            if connection.isVideoOrientationSupported {
+                connection.videoOrientation = .portrait
+            }
+            
+            let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+            let context = CIContext()
+            
+            guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else { return }
+            
+            let uiImage = UIImage(cgImage: cgImage)
+            let finalImage: UIImage
+            
+            finalImage = cameraPosition == .front ? UIImage(cgImage: cgImage, scale: uiImage.scale, orientation: .upMirrored) : uiImage
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.rawImage = finalImage
+            }
         }
-        
-        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-        let context = CIContext()
-        
-        guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent)
-        else { return }
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.rawImage = UIImage(cgImage: cgImage)
-        }
-    }
 }
