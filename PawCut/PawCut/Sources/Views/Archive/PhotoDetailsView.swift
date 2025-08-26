@@ -12,10 +12,12 @@ struct PhotoDetailsView: View {
     @StateObject private var viewModel: PhotoDetailsViewModel
     @StateObject private var navigationManager = NavigationManager.shared
     
-    // 줌 상태를 추적하는 상태 변수
     @State private var isZoomedIn: Bool = false
     
-    // 전체 사진 목록
+    // 스크롤 위치 추적
+    @State private var scrollPosition: Photo.ID?
+    
+    // 전체 사진
     private var allPhotos: [Photo] {
         viewModel.sortedDates.flatMap { date in
             viewModel.groupedPhotos[date.startOfDay] ?? []
@@ -69,48 +71,46 @@ struct PhotoDetailsView: View {
     }
     
     private var imageGalleryView: some View {
-        ScrollViewReader { proxy in
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 0) {
-                    ForEach(allPhotos, id: \.id) { photo in
-                        ZoomableAsyncPhotoImageView(fileName: photo.fileName) { newScale in
-                            isZoomedIn = newScale > 1.0
-                        }
-                        .aspectRatio(contentMode: .fit)
-                        .sideTapNavigationGesture(onTapLeft: {
-                            if !isZoomedIn {
-                                moveToPreviousImage()
-                            }
-                        }, onTapRight: {
-                            if !isZoomedIn {
-                                moveToNextImage()
-                            }
-                        }, edgeRatio: 0.2)
-                        .containerRelativeFrame(.horizontal)
-                        .id(photo.id)
+        ScrollView(.horizontal, showsIndicators: false) {
+            LazyHStack(spacing: 0) {
+                ForEach(allPhotos, id: \.id) { photo in
+                    ZoomableAsyncPhotoImageView(fileName: photo.fileName) { newScale in
+                        isZoomedIn = newScale > 1.0
                     }
+                    .aspectRatio(contentMode: .fit)
+                    .sideTapNavigationGesture(onTapLeft: {
+                        if !isZoomedIn {
+                            moveToPreviousImage()
+                        }
+                    }, onTapRight: {
+                        if !isZoomedIn {
+                            moveToNextImage()
+                        }
+                    }, edgeRatio: 0.2)
+                    .containerRelativeFrame(.horizontal)
+                    .id(photo.id)
                 }
             }
-            .scrollTargetBehavior(.paging)
-            .scrollDisabled(isZoomedIn) // 줌인 상태에서 스크롤 비활성화
-            .onAppear {
-                DispatchQueue.main.async {
-                    if let photo = viewModel.currentPhoto,
-                       let index = allPhotos.firstIndex(where: { $0.id == photo.id }) {
-                        proxy.scrollTo(allPhotos[index].id, anchor: .center)
-                    }
-                }
+            .scrollTargetLayout()
+        }
+        .scrollTargetBehavior(.paging)
+        .scrollPosition(id: $scrollPosition)
+        .scrollDisabled(isZoomedIn)
+        .onAppear {
+            if let currentPhoto = viewModel.currentPhoto {
+                scrollPosition = currentPhoto.id
             }
-            .onChange(of: viewModel.currentPhoto) { oldValue, newPhoto in
-                DispatchQueue.main.async {
-                    if let newPhoto = newPhoto {
-                        if oldValue == nil {
-                            proxy.scrollTo(newPhoto.id, anchor: .center)
-                        } else {
-                            withAnimation {
-                                proxy.scrollTo(newPhoto.id, anchor: .center)
-                            }
-                        }
+        }
+        .onChange(of: scrollPosition) { _, newScrollPosition in
+            updateViewModelFromScrollPosition(newScrollPosition)
+        }
+        .onChange(of: viewModel.currentPhoto) { oldValue, newPhoto in
+            if let newPhoto = newPhoto, scrollPosition != newPhoto.id {
+                if oldValue == nil {
+                    scrollPosition = newPhoto.id
+                } else {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        scrollPosition = newPhoto.id
                     }
                 }
             }
@@ -168,6 +168,17 @@ struct PhotoDetailsView: View {
         }
     }
     
+    private func updateViewModelFromScrollPosition(_ newScrollPosition: Photo.ID?) {
+        guard let photoId = newScrollPosition,
+              let photo = allPhotos.first(where: { $0.id == photoId }) else { return }
+        
+        let newDate = photo.createdAt.startOfDay
+        let newIndex = viewModel.groupedPhotos[newDate]?.firstIndex(where: { $0.id == photoId }) ?? 0
+        
+        viewModel.currentDate = newDate
+        viewModel.currentIndex = newIndex
+    }
+    
     private func moveToPreviousImage() {
         if let currentPhoto = viewModel.currentPhoto,
            let currentAllIndex = allPhotos.firstIndex(where: { $0.id == currentPhoto.id }),
@@ -202,3 +213,4 @@ struct PhotoDetailsView: View {
 #Preview {
     PhotoDetailsView(initialDate: Date(), initialIndex: 0)
 }
+
