@@ -16,7 +16,7 @@ struct PawcutTipView: View {
         ("tip_picture", "사진은 기본으로 8장이 연속 촬영돼요."),
         ("tip_hand", "설정에서 카메라 접근을 먼저 허용해 주세요."),
         ("tip_arrow", "뒤로가기 버튼으로 촬영을 중단할 수 있어요."),
-        ("camera_sound", "음성을 통해 강아지의 시선을 ~~~~")
+        ("camera_sound", "음성을 통해 강아지의 시선을 집중시켜 보세요.")
     ]
     
     var body: some View {
@@ -34,7 +34,7 @@ struct PawcutTipView: View {
                         .padding(.top, 56)
                         .padding(.leading, 20)
                     
-                    VStack(spacing: 25) {
+                    VStack(alignment: .leading, spacing: 25) {
                         ForEach(tips, id: \.icon) { tip in
                             TipRow(iconName: tip.icon, text: tip.text)
                         }
@@ -68,9 +68,7 @@ struct TipRow: View {
             Text(text)
                 .pretendardFont(size: ._16, weight: .semibold)
                 .foregroundColor(.grayScale02)
-                .fixedSize(horizontal: false, vertical: true)
-            
-            Spacer()
+                .lineLimit(1)
         }
     }
 }
