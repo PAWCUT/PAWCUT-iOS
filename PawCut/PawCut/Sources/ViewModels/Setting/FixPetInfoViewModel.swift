@@ -21,36 +21,56 @@ class FixPetInfoViewModel: ObservableObject {
     
     init() {
         self.petStorage = PetStorage()
+        loadPetInfo()
+    }
+    
+    private func loadPetInfo() {
+        let savedName = petStorage.getPetName()
+        if savedName != "이름 없음" { // 빈 값인지
+            name = savedName
+        }
+        
+        let savedType = petStorage.getPetType()
+        selectedType = savedType
+        
+        switch savedType {
+        case .dog:
+            isDogEnabled = true
+            isCatEnabled = false
+        case .cat:
+            isDogEnabled = false
+            isCatEnabled = true
+        }
     }
     
     var isValidInput: Bool {
         !name.isEmpty && name.count <= 5 && selectedType != nil
     }
-
+    
     func updateName(_ newName: String) {
         name = newName
         validateName()
     }
-
+    
     func selectDog() {
         isDogEnabled = true
         isCatEnabled = false
         selectedType = .dog
     }
-
+    
     func selectCat() {
         isDogEnabled = false
         isCatEnabled = true
         selectedType = .cat
     }
-
+    
     func tapSaveButton() {
         guard isValidInput else { return }
         petStorage.setPetName(name)
         petStorage.setPetType(selectedType ?? .dog)
         navigationManager.pop()
     }
-
+    
     private func validateName() {
         if name.count > 5 || name.isEmpty {
             isError = true

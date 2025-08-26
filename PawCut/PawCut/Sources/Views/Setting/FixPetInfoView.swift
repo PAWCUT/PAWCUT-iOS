@@ -78,7 +78,7 @@ struct FixPetInfoView: View {
             
             Spacer()
             
-            PawPrimaryButton("시작하기", isEnabled: viewModel.isValidInput) {
+            PawPrimaryButton("저장하기", isEnabled: viewModel.isValidInput) {
                 viewModel.tapSaveButton()
             }
         }
