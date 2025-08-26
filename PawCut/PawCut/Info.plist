@@ -8,9 +8,5 @@
 		<string>Pretendard-Medium.otf</string>
 		<string>Pretendard-SemiBold.otf</string>
 	</array>
-	<key>NSCameraUsageDescription</key>
-	<string>반려동물 사진을 촬영하기 위해 카메라 접근이 필요합니다.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>촬영한 사진을 저장하기 위해 사진 라이브러리 접근이 필요합니다.</string>
 </dict>
 </plist>
