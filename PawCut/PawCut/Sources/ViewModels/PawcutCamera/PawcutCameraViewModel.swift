@@ -303,9 +303,11 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
     
     private func setupCamera() {
         checkCameraPermission { [weak self] granted in
-            self?.cameraPermissionGranted = granted
-            if granted {
-                self?.configureCameraSession()
+            DispatchQueue.main.async {
+                self?.cameraPermissionGranted = granted
+                if granted {
+                    self?.configureCameraSession()
+                }
             }
         }
     }

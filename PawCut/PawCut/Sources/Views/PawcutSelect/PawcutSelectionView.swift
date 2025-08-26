@@ -46,14 +46,8 @@ struct PawcutSelectionView: View {
 
                 SelectableImageScrollView(viewModel: viewModel)
                 
-                if viewModel.selectedCount == 4 {
-                    PawPrimaryButton("다음") {
-                        viewModel.tapNextButton()
-                    }
-                } else {
-                    PawSecondaryButton("다음") {
-                        viewModel.tapNextButton()
-                    }
+                PawPrimaryButton("다음", isEnabled: viewModel.selectedCount == 4) {
+                    viewModel.tapNextButton()
                 }
             }
             .frame(maxHeight: .infinity, alignment: .top)
