@@ -3,7 +3,7 @@ import SwiftUI
 struct PawcutFrameView: View {
     @StateObject private var viewModel: PawcutFrameViewModel
     @Environment(\.modelContext) var modelContext
-    
+
     init(images: [UIImage]) {
         self._viewModel = StateObject(
             wrappedValue: PawcutFrameViewModel(selectedImages: images)
@@ -25,19 +25,20 @@ struct PawcutFrameView: View {
 
                     Spacer()
                 }
-                
-                Spacer()
-
-                // 상단 이미지 프레임 미리보기
-                PawcutGridImagePreview(
-                    images: viewModel.selectedImages,
-                    frameOverlay: viewModel.selectedFrameImage,
-                    style: .frame
-                )
 
                 Spacer()
 
-                // 선택된 프레임 이름
+                ScrollView {
+                    PawcutGridImagePreview(
+                        images: viewModel.selectedImages,
+                        frameOverlay: viewModel.selectedFrameImage,
+                        style: .frame
+                    )
+                    .frame(maxWidth: .infinity)
+                }
+
+                Spacer()
+
                 HStack(spacing: 0) {
                     Text(viewModel.selectedFrameDisplayName ?? "")
                         .pretendardFont(size: ._18, weight: .bold)
@@ -46,8 +47,6 @@ struct PawcutFrameView: View {
                 }
                 .padding(.horizontal, 21)
 
-
-                // 선택된 프레임 썸네일
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         ForEach(
@@ -83,7 +82,6 @@ struct PawcutFrameView: View {
                 }
                 .padding(.top, 31)
                 .padding(.leading, 4)
-                
 
                 PawPrimaryButton("저장하기") {
                     let exportView = PawcutGridImagePreview(
