@@ -23,13 +23,20 @@ struct PawcutSelectionView: View {
 
                     Spacer()
                 }
-
-                PawcutGridImagePreview(
-                    images: viewModel.selectedImagesInOrder,
-                    frameOverlay: nil,
-                    style: .selection
-                )
-                .padding(.top, 38)
+                
+                Spacer()
+                
+                ScrollView {
+                    PawcutGridImagePreview(
+                        images: viewModel.selectedImagesInOrder,
+                        frameOverlay: nil,
+                        style: .selection
+                    )
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 38)
+                }
+                
+                Spacer()
 
                 HStack(spacing: 0) {
                     Text("사진 선택하기")
@@ -41,7 +48,7 @@ struct PawcutSelectionView: View {
                         .padding(.leading, 4)
                     Spacer()
                 }
-                .padding(.top, 68)
+
                 .padding(.horizontal, 21)
 
                 SelectableImageScrollView(viewModel: viewModel)
@@ -64,4 +71,8 @@ struct PawcutSelectionView: View {
             }
         )
     }
+}
+
+#Preview {
+    PawcutSelectionView(images: [UIImage(named: "onboarding_1")!])
 }

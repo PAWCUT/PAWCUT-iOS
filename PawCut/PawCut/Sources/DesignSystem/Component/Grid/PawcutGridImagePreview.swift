@@ -65,13 +65,15 @@ struct PawcutGridImagePreview: View {
                                     height: style.metrics.imagesHeight
                                 )
                                 .clipped()
-                                .overlay(
-                                    Rectangle()
-                                        .strokeBorder(
-                                            Color("GrayScale01"),
-                                            lineWidth: 1
-                                        )
-                                )
+                                .overlay {
+                                    if style == .selection {
+                                        Rectangle()
+                                            .strokeBorder(
+                                                Color("GrayScale01"),
+                                                lineWidth: 1
+                                            )
+                                    }
+                                }
                         } else {
                             Rectangle()
                                 .fill(Color.gray.opacity(0.2))
@@ -79,13 +81,15 @@ struct PawcutGridImagePreview: View {
                                     width: style.metrics.imagesWidth,
                                     height: style.metrics.imagesHeight
                                 )
-                                .overlay(
-                                    Rectangle()
-                                        .strokeBorder(
-                                            Color("GrayScale01"),
-                                            lineWidth: 1
-                                        )
-                                )
+                                .overlay {
+                                    if style == .selection {
+                                        Rectangle()
+                                            .strokeBorder(
+                                                Color("GrayScale01"),
+                                                lineWidth: 1
+                                            )
+                                    }
+                                }
                         }
                     }
                 }

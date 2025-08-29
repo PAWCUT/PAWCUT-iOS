@@ -3,7 +3,7 @@ import SwiftUI
 struct PawcutFrameView: View {
     @StateObject private var viewModel: PawcutFrameViewModel
     @Environment(\.modelContext) var modelContext
-    
+
     init(images: [UIImage]) {
         self._viewModel = StateObject(
             wrappedValue: PawcutFrameViewModel(selectedImages: images)
@@ -26,25 +26,26 @@ struct PawcutFrameView: View {
                     Spacer()
                 }
 
-                // 상단 이미지 프레임 미리보기
-                PawcutGridImagePreview(
-                    images: viewModel.selectedImages,
-                    frameOverlay: viewModel.selectedFrameImage,
-                    style: .frame
-                )
-                .padding(.top, 48)
+                ScrollView {
+                    PawcutGridImagePreview(
+                        images: viewModel.selectedImages,
+                        frameOverlay: viewModel.selectedFrameImage,
+                        style: .frame
+                    )
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 42)
+                }
 
-                // 선택된 프레임 이름
+                Spacer()
+
                 HStack(spacing: 0) {
                     Text(viewModel.selectedFrameDisplayName ?? "")
                         .pretendardFont(size: ._18, weight: .bold)
                         .foregroundColor(.grayScale01)
 
                 }
-                .padding(.top, 48)
                 .padding(.horizontal, 21)
 
-                // 선택된 프레임 썸네일
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         ForEach(
@@ -76,9 +77,9 @@ struct PawcutFrameView: View {
                             }
                         }
                     }
-                    .padding(.top, 38)
                     .padding(.horizontal)
                 }
+                .padding(.top, 31)
                 .padding(.leading, 4)
 
                 PawPrimaryButton("저장하기") {
@@ -105,13 +106,11 @@ struct PawcutFrameView: View {
                         }
                     }
                 }
-
                 .onAppear {
                     if viewModel.selectedFrameIndex == nil {
                         viewModel.selectedFrameIndex = 0
                     }
                 }
-                .frame(maxHeight: .infinity, alignment: .top)
             }
 
             if viewModel.isBottomSheetPresented {
