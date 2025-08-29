@@ -25,6 +25,8 @@ struct PawcutFrameView: View {
 
                     Spacer()
                 }
+                
+                Spacer()
 
                 // 상단 이미지 프레임 미리보기
                 PawcutGridImagePreview(
@@ -32,7 +34,8 @@ struct PawcutFrameView: View {
                     frameOverlay: viewModel.selectedFrameImage,
                     style: .frame
                 )
-                .padding(.top, 48)
+
+                Spacer()
 
                 // 선택된 프레임 이름
                 HStack(spacing: 0) {
@@ -41,8 +44,8 @@ struct PawcutFrameView: View {
                         .foregroundColor(.grayScale01)
 
                 }
-                .padding(.top, 48)
                 .padding(.horizontal, 21)
+
 
                 // 선택된 프레임 썸네일
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -76,10 +79,11 @@ struct PawcutFrameView: View {
                             }
                         }
                     }
-                    .padding(.top, 38)
                     .padding(.horizontal)
                 }
+                .padding(.top, 31)
                 .padding(.leading, 4)
+                
 
                 PawPrimaryButton("저장하기") {
                     let exportView = PawcutGridImagePreview(
@@ -105,13 +109,11 @@ struct PawcutFrameView: View {
                         }
                     }
                 }
-
                 .onAppear {
                     if viewModel.selectedFrameIndex == nil {
                         viewModel.selectedFrameIndex = 0
                     }
                 }
-                .frame(maxHeight: .infinity, alignment: .top)
             }
 
             if viewModel.isBottomSheetPresented {
