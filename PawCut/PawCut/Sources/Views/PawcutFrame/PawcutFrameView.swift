@@ -26,8 +26,6 @@ struct PawcutFrameView: View {
                     Spacer()
                 }
 
-                Spacer()
-
                 ScrollView {
                     PawcutGridImagePreview(
                         images: viewModel.selectedImages,
@@ -35,6 +33,7 @@ struct PawcutFrameView: View {
                         style: .frame
                     )
                     .frame(maxWidth: .infinity)
+                    .padding(.top, 42)
                 }
 
                 Spacer()
