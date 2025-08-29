@@ -25,12 +25,16 @@ struct PawcutSelectionView: View {
                 }
                 
                 Spacer()
-
-                PawcutGridImagePreview(
-                    images: viewModel.selectedImagesInOrder,
-                    frameOverlay: nil,
-                    style: .selection
-                )
+                
+                ScrollView {
+                    PawcutGridImagePreview(
+                        images: viewModel.selectedImagesInOrder,
+                        frameOverlay: nil,
+                        style: .selection
+                    )
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 38)
+                }
                 
                 Spacer()
 
