@@ -1,159 +1,47 @@
 name: Trello Sync
+
 on:
-  issues: { types: [opened, closed, reopened] }
-  pull_request: { types: [opened, closed] }  # opened=In Progress, closed(merged)=Done
+  issues:
+    types: [opened, closed]
 
 jobs:
   trello-sync:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-
-      # ===== Issues 공통 =====
-      - name: Prep (issues)
-        if: github.event_name == 'issues'
-        id: prep_issue
-        run: |
-          echo "TITLE=$(printf '%s' "${{ github.event.issue.title }}" | sed 's/"/\\"/g')" >> $GITHUB_OUTPUT
-          echo "NUMBER=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
-          echo "HTML_URL=${{ github.event.issue.html_url }}" >> $GITHUB_OUTPUT
-          echo "ACTION=${{ github.event.action }}" >> $GITHUB_OUTPUT
-
-      - name: Create Trello card (issue opened → To do)
-        if: github.event_name == 'issues' && steps.prep_issue.outputs.ACTION == 'opened'
+      - name: Create Trello card (on issue opened)
+        if: github.event.action == 'opened'
         env:
           TRELLO_KEY: ${{ secrets.TRELLO_KEY }}
           TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
           TODO_LIST_ID: ${{ secrets.TRELLO_TODO_LIST_ID }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
         run: |
-          NUMBER="${{ steps.prep_issue.outputs.NUMBER }}"
-          TITLE="${{ steps.prep_issue.outputs.TITLE }}"
-          HTML_URL="${{ steps.prep_issue.outputs.HTML_URL }}"
+          NUMBER=${{ github.event.issue.number }}
+          TITLE="${{ github.event.issue.title }}"
           CARD_NAME="[#$NUMBER] $TITLE"
-          CARD_DESC="GitHub Issue: $HTML_URL"
-          RES=$(curl -s -X POST "https://api.trello.com/1/cards" \
-            --data-urlencode "key=$TRELLO_KEY" --data-urlencode "token=$TRELLO_TOKEN" \
+          CARD_DESC="GitHub Issue: ${{ github.event.issue.html_url }}"
+
+          curl -s -X POST "https://api.trello.com/1/cards" \
+            --data-urlencode "key=$TRELLO_KEY" \
+            --data-urlencode "token=$TRELLO_TOKEN" \
             --data-urlencode "idList=$TODO_LIST_ID" \
-            --data-urlencode "name=$CARD_NAME" --data-urlencode "desc=$CARD_DESC")
-          SHORT=$(python3 - << 'PY' <<< "$RES"
-import sys,json; print(json.load(sys.stdin).get("shortLink",""))
-PY
-)
-          curl -s -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/$GH_REPO/issues/$NUMBER/comments" \
-            -d "$(jq -n --arg body "Linked Trello card: https://trello.com/c/$SHORT" '{body:$body}')"
+            --data-urlencode "name=$CARD_NAME" \
+            --data-urlencode "desc=$CARD_DESC"
 
-      - name: Helper script
-        run: |
-          cat > find_card_by_issue.py << 'PY'
-import sys,json,re
-data=json.load(sys.stdin); issue=sys.argv[1]
-pat=re.compile(rf"^\[\#{re.escape(issue)}\]\s")
-for c in data.get("cards",[]): 
-    if pat.search(c.get("name","")): print(c["id"]); sys.exit(0)
-print("")
-PY
-
-      - name: Issue closed → Done
-        if: github.event_name == 'issues' && steps.prep_issue.outputs.ACTION == 'closed'
+      - name: Move Trello card to Done (on issue closed)
+        if: github.event.action == 'closed'
         env:
           TRELLO_KEY: ${{ secrets.TRELLO_KEY }}
           TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
           DONE_LIST_ID: ${{ secrets.TRELLO_DONE_LIST_ID }}
         run: |
-          N="${{ steps.prep_issue.outputs.NUMBER }}"
-          Q="%5B%23${N}%5D"
-          S=$(curl -s "https://api.trello.com/1/search?key=$TRELLO_KEY&token=$TRELLO_TOKEN&query=$Q&modelTypes=cards&partial=false")
-          ID=$(python3 find_card_by_issue.py "$N" <<< "$S")
-          [ -z "$ID" ] && exit 0
-          curl -s -X PUT "https://api.trello.com/1/cards/$ID" \
-            --data-urlencode "key=$TRELLO_KEY" --data-urlencode "token=$TRELLO_TOKEN" \
-            --data-urlencode "idList=$DONE_LIST_ID" >/dev/null
-
-      - name: Issue reopened → To do
-        if: github.event_name == 'issues' && steps.prep_issue.outputs.ACTION == 'reopened'
-        env:
-          TRELLO_KEY: ${{ secrets.TRELLO_KEY }}
-          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
-          TODO_LIST_ID: ${{ secrets.TRELLO_TODO_LIST_ID }}
-        run: |
-          N="${{ steps.prep_issue.outputs.NUMBER }}"
-          Q="%5B%23${N}%5D"
-          S=$(curl -s "https://api.trello.com/1/search?key=$TRELLO_KEY&token=$TRELLO_TOKEN&query=$Q&modelTypes=cards&partial=false")
-          ID=$(python3 find_card_by_issue.py "$N" <<< "$S")
-          [ -z "$ID" ] && exit 0
-          curl -s -X PUT "https://api.trello.com/1/cards/$ID" \
-            --data-urlencode "key=$TRELLO_KEY" --data-urlencode "token=$TRELLO_TOKEN" \
-            --data-urlencode "idList=$TODO_LIST_ID" >/dev/null
-
-      # ===== PR 이벤트 =====
-      - name: PR opened → In Progress
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          TRELLO_KEY: ${{ secrets.TRELLO_KEY }}
-          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
-          INPROGRESS_LIST_ID: ${{ secrets.TRELLO_INPROGRESS_LIST_ID }}
-        run: |
-          # PR 타임라인에서 참조된 이슈 번호 추출 (Closes/Resolves/Fixes)
-          TL=$(curl -s -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/$GH_REPO/issues/$PR_NUMBER/timeline?per_page=100")
-          echo "$TL" > tl.json
-          ISSUES=$(python3 - << 'PY'
-import json; d=json.load(open("tl.json")); s=set()
-for e in d:
-  issue=e.get("source",{}).get("issue") or e.get("issue")
-  if isinstance(issue,dict) and "number" in issue: s.add(str(issue["number"]))
-print(",".join(sorted(s)))
-PY
-)
-          [ -z "$ISSUES" ] && exit 0
-          IFS=',' read -ra A <<< "$ISSUES"
-          for N in "${A[@]}"; do
-            Q="%5B%23${N}%5D"
-            S=$(curl -s "https://api.trello.com/1/search?key=$TRELLO_KEY&token=$TRELLO_TOKEN&query=$Q&modelTypes=cards&partial=false")
-            ID=$(python3 find_card_by_issue.py "$N" <<< "$S")
-            [ -z "$ID" ] && continue
-            curl -s -X PUT "https://api.trello.com/1/cards/$ID" \
-              --data-urlencode "key=$TRELLO_KEY" --data-urlencode "token=$TRELLO_TOKEN" \
-              --data-urlencode "idList=$INPROGRESS_LIST_ID" >/dev/null
-          done
-
-      - name: PR merged → Done
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
-        env:
-          # 동일 로직, 목적지는 DONE
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          TRELLO_KEY: ${{ secrets.TRELLO_KEY }}
-          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
-          DONE_LIST_ID: ${{ secrets.TRELLO_DONE_LIST_ID }}
-        run: |
-          TL=$(curl -s -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/$GH_REPO/issues/$PR_NUMBER/timeline?per_page=100")
-          echo "$TL" > tl.json
-          ISSUES=$(python3 - << 'PY'
-import json; d=json.load(open("tl.json")); s=set()
-for e in d:
-  issue=e.get("source",{}).get("issue") or e.get("issue")
-  if isinstance(issue,dict) and "number" in issue: s.add(str(issue["number"]))
-print(",".join(sorted(s)))
-PY
-)
-          [ -z "$ISSUES" ] && exit 0
-          IFS=',' read -ra A <<< "$ISSUES"
-          for N in "${A[@]}"; do
-            Q="%5B%23${N}%5D"
-            S=$(curl -s "https://api.trello.com/1/search?key=$TRELLO_KEY&token=$TRELLO_TOKEN&query=$Q&modelTypes=cards&partial=false")
-            ID=$(python3 find_card_by_issue.py "$N" <<< "$S")
-            [ -z "$ID" ] && continue
-            curl -s -X PUT "https://api.trello.com/1/cards/$ID" \
-              --data-urlencode "key=$TRELLO_KEY" --data-urlencode "token=$TRELLO_TOKEN" \
-              --data-urlencode "idList=$DONE_LIST_ID" >/dev/null
-          done
+          ISSUE_NUM=${{ github.event.issue.number }}
+          QUERY="%5B%23${ISSUE_NUM}%5D"
+          SEARCH=$(curl -s "https://api.trello.com/1/search?key=$TRELLO_KEY&token=$TRELLO_TOKEN&query=$QUERY&modelTypes=cards")
+          CARD_ID=$(echo "$SEARCH" | jq -r '.cards[0].id')
+          if [ "$CARD_ID" != "null" ]; then
+            curl -s -X PUT "https://api.trello.com/1/cards/$CARD_ID" \
+              --data-urlencode "key=$TRELLO_KEY" \
+              --data-urlencode "token=$TRELLO_TOKEN" \
+              --data-urlencode "idList=$DONE_LIST_ID"
+          fi
