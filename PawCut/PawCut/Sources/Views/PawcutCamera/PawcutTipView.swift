@@ -11,12 +11,12 @@ struct PawcutTipView: View {
     @StateObject private var viewModel = PawcutTipViewModel()
     
     let tips: [(icon: String, text: String)] = [
-        ("tip_camera", "'촬영하기'를 누르면 바로 촬영이 시작돼요."),
-        ("tip_clock", "6초 타이머가 자동으로 작동해요."),
-        ("tip_picture", "사진은 기본으로 8장이 연속 촬영돼요."),
-        ("tip_hand", "설정에서 카메라 접근을 먼저 허용해 주세요."),
-        ("tip_arrow", "뒤로가기 버튼으로 촬영을 중단할 수 있어요."),
-        ("camera_sound", "음성을 통해 강아지의 시선을 집중시켜 보세요.")
+        ("ic_tip_camera", "'촬영하기'를 누르면 바로 촬영이 시작돼요."),
+        ("ic_tip_clock", "6초 타이머가 자동으로 작동해요."),
+        ("ic_tip_picture", "사진은 기본으로 8장이 연속 촬영돼요."),
+        ("ic_tip_hand", "설정에서 카메라 접근을 먼저 허용해 주세요."),
+        ("ic_tip_arrow", "뒤로가기 버튼으로 촬영을 중단할 수 있어요."),
+        ("ic_camera_sound", "음성을 통해 강아지의 시선을 집중시켜 보세요.")
     ]
     
     var body: some View {
