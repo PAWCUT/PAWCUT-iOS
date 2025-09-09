@@ -13,19 +13,6 @@ struct PawcutFrameView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                HStack {
-                    Button(action: {
-                        viewModel.tapBackButton()
-                    }) {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 17, weight: .semibold))
-                            .foregroundColor(.grayScale01)
-                    }
-                    .frame(width: 33, height: 44)
-
-                    Spacer()
-                }
-
                 ScrollView {
                     PawcutGridImagePreview(
                         images: viewModel.selectedImages,
@@ -130,7 +117,6 @@ struct PawcutFrameView: View {
                 )
             }
         }
-        .navigationBarBackButtonHidden()
     }
 }
 

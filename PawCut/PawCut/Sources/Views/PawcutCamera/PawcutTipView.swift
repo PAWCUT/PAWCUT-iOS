@@ -25,10 +25,6 @@ struct PawcutTipView: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                PawBackButtonNavigationBar {
-                    viewModel.tapBackButton()
-                }
-                
                 VStack(alignment: .leading, spacing: 0) {
                     PawTitleLabel("촬영 전에 확인해주세요!", style: .bold24, color: .grayScale01)
                         .padding(.top, 56)
@@ -50,7 +46,6 @@ struct PawcutTipView: View {
                 }
             }
         }
-        .navigationBarBackButtonHidden()
     }
 }
 

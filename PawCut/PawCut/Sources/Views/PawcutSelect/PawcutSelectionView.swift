@@ -11,17 +11,8 @@ struct PawcutSelectionView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                HStack {
-                    Button(action: {
-                        showBackAlert = true
-                    }) {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 17, weight: .semibold))
-                            .foregroundColor(.grayScale01)
-                    }
-                    .frame(width: 33, height: 44)
-
-                    Spacer()
+                PawBackButtonNavigationBar {
+                    showBackAlert = true
                 }
                 
                 Spacer()

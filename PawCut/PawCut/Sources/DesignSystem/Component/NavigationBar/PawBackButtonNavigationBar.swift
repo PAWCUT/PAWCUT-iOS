@@ -14,10 +14,11 @@ struct PawBackButtonNavigationBar: View {
         HStack {
             Button(action: backAction) {
                 Image(systemName: "chevron.left")
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.system(size: 22, weight: .semibold))
                     .foregroundColor(.grayScale01)
             }
-            .frame(width: 33, height: 44)
+            .frame(width: 36, height: 44)
+            .contentShape(Rectangle())
             
             Spacer()
         }

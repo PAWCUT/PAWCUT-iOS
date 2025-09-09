@@ -19,8 +19,6 @@ struct PawcutCameraView: View {
             uiOverlayLayer
         }
         .toolbar(.hidden, for: .navigationBar)
-        .onAppear {
-        }
         .onChange(of: viewModel.session.isRunning) { _, isRunning in
             if isRunning {
                 viewModel.startLoopedCountdown()
@@ -97,10 +95,11 @@ struct PawcutCameraView: View {
                     viewModel.tapBackButton()
                 }) {
                     Image(systemName: "chevron.left")
-                        .font(.system(size: 17, weight: .medium))
+                        .font(.system(size: 18, weight: .semibold))
                         .foregroundColor(.white)
                 }
-                .frame(width: 33, height: 44)
+                .frame(height: 44)
+                .contentShape(Rectangle())
                 
                 Spacer()
                 
@@ -137,7 +136,7 @@ struct PawcutCameraView: View {
                 }
                 .frame(width: 36, height: 42)
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 16)
             .padding(.top, 0)
             Spacer()
         }
@@ -255,6 +254,7 @@ struct PawcutCameraView: View {
             }
         }
     }
+    
     private var tooltipView: some View {
         Group {
             if viewModel.showSoundTooltip {
