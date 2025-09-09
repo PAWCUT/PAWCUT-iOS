@@ -9,7 +9,7 @@ import Foundation
 
 @MainActor
 class HomeViewModel: ObservableObject {
-    private let petName: String
+    @Published var petName: String = ""
     private let navigationManager = NavigationManager.shared
     private let petStorage: PetStorage = PetStorage()
     
@@ -37,5 +37,9 @@ class HomeViewModel: ObservableObject {
     
     func getPetName() -> String {
         return self.petName
+    }
+    
+    func updatePetInfo() {
+        petName = petStorage.getPetName()
     }
 }
