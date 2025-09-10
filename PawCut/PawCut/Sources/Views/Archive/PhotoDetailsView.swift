@@ -120,7 +120,7 @@ struct PhotoDetailsView: View {
     private var headerView: some View {
         HStack {
             Button(action: {
-                
+                navigationManager.pop()
             }) {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 17, weight: .semibold))
