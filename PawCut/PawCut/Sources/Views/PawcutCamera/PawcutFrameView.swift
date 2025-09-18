@@ -1,3 +1,10 @@
+//
+//  PawcutCamera.swift
+//  PawCut
+//
+//  Created by 해피제이 on 8/12/25.
+//
+
 import SwiftUI
 
 struct PawcutFrameView: View {
@@ -12,6 +19,7 @@ struct PawcutFrameView: View {
 
     var body: some View {
         ZStack {
+            // TODO: 컴포넌트 분리
             VStack(spacing: 0) {
                 ScrollView {
                     PawcutGridImagePreview(
@@ -25,6 +33,7 @@ struct PawcutFrameView: View {
 
                 Spacer()
 
+                // TODO: HStack 제거, 디자인 시스템 적용
                 HStack(spacing: 0) {
                     Text(viewModel.selectedFrameDisplayName ?? "")
                         .pretendardFont(size: ._18, weight: .bold)
@@ -36,6 +45,7 @@ struct PawcutFrameView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         ForEach(
+                            // TODO: 왜 Array 써야하지?
                             Array(viewModel.frameScrollImageNames.enumerated()),
                             id: \.offset
                         ) { index, name in
@@ -94,6 +104,7 @@ struct PawcutFrameView: View {
                     }
                 }
                 .onAppear {
+                    // TODO: 로직 분리
                     if viewModel.selectedFrameIndex == nil {
                         viewModel.selectedFrameIndex = 0
                     }

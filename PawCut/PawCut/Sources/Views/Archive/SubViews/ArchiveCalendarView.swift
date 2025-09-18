@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ArchiveCalendarView: View {
+    // TODO: Bye
     @ObservedObject var viewModel: ArchiveViewModel
     @State private var isInitial: Bool = true // 처음에만 scroll 하단
     
@@ -41,6 +42,7 @@ struct ArchiveCalendarView: View {
                 }
             }
             .onAppear {
+                // TODO: 분리
                 if isInitial {
                     proxy.scrollTo("bottom_scroll", anchor: .bottom)
                     isInitial = false

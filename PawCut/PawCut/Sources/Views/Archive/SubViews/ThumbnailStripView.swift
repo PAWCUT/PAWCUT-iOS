@@ -9,10 +9,12 @@ import SwiftUI
 import SwiftData
 
 struct ThumbnailStripView: View {
+    // TODO: Bye
     @ObservedObject var viewModel: PhotoDetailsViewModel
     @State private var lastHapticIndex: Int = 0 // 마지막 햅틱이 발생한 인덱스
     
     // MARK: - Haptic Manager
+    // TODO: 매니저는 ViewModel에서 쓰기로 합의 봄
     private let hapticManager = HapticManager.shared
     
     var body: some View {
@@ -57,6 +59,7 @@ struct ThumbnailStripView: View {
                     .foregroundColor(.clear)
             )
             .onTapGesture {
+                // TODO: 분리
                 if let index = viewModel.currentPhotos.firstIndex(where: { $0.id == photo.id }) {
                     // 썸네일 탭 시 햅틱 피드백 추가
                     hapticManager.triggerSelection()

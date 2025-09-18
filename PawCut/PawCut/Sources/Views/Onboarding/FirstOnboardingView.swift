@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// TODO: 온보딩 뷰 하나로 융합
 struct FirstOnboardingView: View {
     
     @StateObject private var viewModel = FirstOnboardingViewModel()

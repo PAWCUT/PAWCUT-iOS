@@ -1,3 +1,10 @@
+//
+//  PawcutCamera.swift
+//  PawCut
+//
+//  Created by 해피제이 on 8/12/25.
+//
+
 import SwiftUI
 
 struct PawcutSelectionView: View {
@@ -10,7 +17,9 @@ struct PawcutSelectionView: View {
     
     var body: some View {
         ZStack {
+            // TODO: 컴포넌트 분리
             VStack(spacing: 0) {
+                // TODO: 로직 분리
                 PawBackButtonNavigationBar {
                     showBackAlert = true
                 }
@@ -29,6 +38,7 @@ struct PawcutSelectionView: View {
                 
                 Spacer()
 
+                // TODO: 라벨 컴포넌트 쓰세요
                 HStack(spacing: 0) {
                     Text("사진 선택하기")
                         .pretendardFont(size: ._18, weight: .semibold)
@@ -42,6 +52,7 @@ struct PawcutSelectionView: View {
 
                 .padding(.horizontal, 21)
 
+                // TODO: VIewModel 넘기지 말아
                 SelectableImageScrollView(viewModel: viewModel)
                 
                 PawPrimaryButton("다음", isEnabled: viewModel.selectedCount == 4) {

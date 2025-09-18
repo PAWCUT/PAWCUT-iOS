@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct SelectableImageScrollView: View {
+    // TODO: ViewModel 제거
     @ObservedObject var viewModel: PawcutSelectionViewModel
 
     var body: some View {

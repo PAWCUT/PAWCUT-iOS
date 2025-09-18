@@ -12,6 +12,7 @@ struct SoundSettingView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
+            // TODO: 분리하자!
             HStack {
                 VStack(alignment: .leading) {
                     PawTitleLabel

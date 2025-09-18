@@ -52,6 +52,7 @@ struct PetInfoView: View {
                     )
                     .padding(.bottom, 8)
                 
+                // TODO: 컴포넌트 분리 필요
                 HStack(spacing: 12) {
                     PawChoiceButton(
                         "강아지",

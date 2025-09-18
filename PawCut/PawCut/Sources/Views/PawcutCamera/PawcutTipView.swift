@@ -10,6 +10,7 @@ import SwiftUI
 struct PawcutTipView: View {
     @StateObject private var viewModel = PawcutTipViewModel()
     
+    // TODO: 이걸 어떻게 좀 해주세요.
     let tips: [(icon: String, text: String)] = [
         ("ic_tip_camera", "'촬영하기'를 누르면 바로 촬영이 시작돼요."),
         ("ic_tip_clock", "6초 타이머가 자동으로 작동해요."),
@@ -25,6 +26,7 @@ struct PawcutTipView: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
+            // TODO: 광로는 VStack을 좋아함.
                 VStack(alignment: .leading, spacing: 0) {
                     PawTitleLabel("촬영 전에 확인해주세요!", style: .bold24, color: .grayScale01)
                         .padding(.top, 56)
@@ -49,6 +51,7 @@ struct PawcutTipView: View {
     }
 }
 
+// TODO: 위치를 옮기자 SubViews
 struct TipRow: View {
     let iconName: String
     let text: String

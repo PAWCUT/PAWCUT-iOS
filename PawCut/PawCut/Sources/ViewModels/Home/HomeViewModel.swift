@@ -7,6 +7,7 @@
 
 import Foundation
 
+// TODO: MainViewModel로 네이밍 변경
 @MainActor
 class HomeViewModel: ObservableObject {
     @Published var petName: String = ""
