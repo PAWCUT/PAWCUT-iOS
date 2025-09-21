@@ -8,10 +8,8 @@
 import SwiftUI
 
 struct ArchiveEmptyView: View {
-
     let petType: PetType
-    // TODO: navigationManager 뷰에서 제거, 클로저 파라미터 추가.
-    private let navigationManager = NavigationManager.shared
+    let didTapTakeCutButton: () -> Void
     
     var body: some View {
         VStack(spacing: 22) {
@@ -34,8 +32,7 @@ struct ArchiveEmptyView: View {
             }
             
             PawTakeCutButton("포우컷 촬영하러 가기") {
-                // TODO: Fix me
-                navigationManager.navigate(to: .main(.camera))
+                didTapTakeCutButton()
             }
             .padding(.horizontal, 116)
             
@@ -46,5 +43,7 @@ struct ArchiveEmptyView: View {
     }
 }
 #Preview {
-    ArchiveEmptyView(petType: .dog)
+    ArchiveEmptyView(petType: .dog) {
+        print("did tap")
+    }
 }

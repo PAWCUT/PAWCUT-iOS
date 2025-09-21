@@ -16,7 +16,9 @@ struct ArchiveView: View {
         VStack(spacing: 0) {
             // TODO: VM bye
             if viewModel.groupedPhotos.isEmpty {
-                ArchiveEmptyView(petType: viewModel.getPetType())
+                ArchiveEmptyView(petType: viewModel.getPetType()) {
+                    viewModel.didTapTakeCutButton()
+                }
             } else {
                 if viewModel.showGrid {
                     ArchiveGridView(viewModel: viewModel)

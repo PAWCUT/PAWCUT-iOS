@@ -58,6 +58,10 @@ final class ArchiveViewModel: ObservableObject {
         loadPhotosFromDatabase()
     }
     
+    func didTapTakeCutButton(){
+        navigationManager.navigate(to: .main(.camera))
+    }
+    
     func goToDetails(date: Date, index: Int) {
         navigateToPhotoDetails(date: date, index: index)
     }
@@ -94,9 +98,9 @@ final class ArchiveViewModel: ObservableObject {
         
         // 범위가 변경된 경우에만 업데이트
         if calendarRange.startYear != newRange.startYear ||
-           calendarRange.startMonth != newRange.startMonth ||
-           calendarRange.endYear != newRange.endYear ||
-           calendarRange.endMonth != newRange.endMonth {
+            calendarRange.startMonth != newRange.startMonth ||
+            calendarRange.endYear != newRange.endYear ||
+            calendarRange.endMonth != newRange.endMonth {
             calendarRange = newRange
         }
     }
