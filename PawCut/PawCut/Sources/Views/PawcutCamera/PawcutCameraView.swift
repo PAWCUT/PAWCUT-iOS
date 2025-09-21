@@ -37,6 +37,7 @@ struct PawcutCameraView: View {
     }
     
     // TODO: 변수로 분리한 친구들 다시 원상 복귀 후, 뷰로 분리
+    
     private var backgroundLayer: some View {
         Color.black.ignoresSafeArea()
     }
@@ -78,7 +79,7 @@ struct PawcutCameraView: View {
             }
         }
     }
-    
+
     private var uiOverlayLayer: some View {
         ZStack {
             topNavigationView
@@ -88,6 +89,7 @@ struct PawcutCameraView: View {
             tooltipView
         }
     }
+    
     
     private var topNavigationView: some View {
         VStack {
@@ -262,14 +264,11 @@ struct PawcutCameraView: View {
                 VStack {
                     HStack {
                         Spacer()
-                        // TODO: 하나인데 왜 스택이?
-                        VStack(spacing: 0) {
                             PawToolTip(
                                 message: "소리를 설정에서 변경할 수 있어요!"
                             )
-                        }
                         .padding(.top, 48)
-                        .padding(.trailing, -120)
+                        .padding(.trailing, -125)
                         Spacer()
                     }
                     Spacer()
