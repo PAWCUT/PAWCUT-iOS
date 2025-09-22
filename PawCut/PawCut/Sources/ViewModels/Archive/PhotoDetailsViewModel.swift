@@ -202,6 +202,8 @@ private extension PhotoDetailsViewModel {
 
             currentDate = nextDate
             currentIndex = nextIndexInDate
+            
+            triggerHaptic(.selection)
         }
     }
 
@@ -217,6 +219,8 @@ private extension PhotoDetailsViewModel {
 
             currentDate = previousDate
             currentIndex = previousIndexInDate
+            
+            triggerHaptic(.selection)
         }
     }
 }
