@@ -7,6 +7,8 @@
 
 import SwiftUI
 import SwiftData
+import FirebaseCore
+import FirebaseAnalytics
 
 @main
 struct PawCutApp: App {
@@ -14,6 +16,7 @@ struct PawCutApp: App {
     
     init() {
         FontSet.registerFonts()
+        configureFirebase()
     }
     
     var body: some Scene {
@@ -48,5 +51,9 @@ extension PawCutApp {
                 showSplash = false
             }
         }
+    }
+    
+    func configureFirebase() {
+        FirebaseApp.configure()
     }
 }
