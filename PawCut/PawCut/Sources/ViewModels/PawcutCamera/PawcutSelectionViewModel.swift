@@ -7,6 +7,8 @@ class PawcutSelectionViewModel: ObservableObject {
     @Published private(set) var sourceImages: [UIImage]
     @Published private(set) var selectedIndices: [Int] = []
 
+    @Published var showBackAlert = false
+
     let maxSelection = 4
 
     var selectedCount: Int { selectedIndices.count }
@@ -14,11 +16,11 @@ class PawcutSelectionViewModel: ObservableObject {
     var selectedImagesInOrder: [UIImage] {
         selectedIndices.map { sourceImages[$0] }
     }
-    
+
     init(sourceImages: [UIImage]) {
         self.sourceImages = sourceImages
     }
-    
+
     func toggleSelection(at index: Int) {
         if let i = selectedIndices.firstIndex(of: index) {
             // 이미 선택되어 있으면 해제
@@ -40,11 +42,21 @@ class PawcutSelectionViewModel: ObservableObject {
 
     func tapNextButton() {
         if selectedCount == 4 {
-            navigationManager.navigate(to: .main(.pawcutFrameSelection(images: selectedImagesInOrder)))
+            navigationManager.navigate(
+                to: .main(.pawcutFrameSelection(images: selectedImagesInOrder))
+            )
         }
     }
 
     func tapBackButton() {
         navigationManager.popUntil(to: 3)
+    }
+
+    func requestBackNavigation() {
+        showBackAlert = true
+    }
+
+    func confirmBackNavigation() {
+        tapBackButton()
     }
 }

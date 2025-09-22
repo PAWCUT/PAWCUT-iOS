@@ -9,7 +9,6 @@ import SwiftUI
 
 struct PawcutSelectionView: View {
     @StateObject var viewModel: PawcutSelectionViewModel
-    @State private var showBackAlert = false
 
     init(images: [UIImage]) {
         self._viewModel = StateObject(
@@ -21,9 +20,8 @@ struct PawcutSelectionView: View {
         ZStack {
             // TODO: 컴포넌트 분리
             VStack(spacing: 0) {
-                // TODO: 로직 분리
                 PawBackButtonNavigationBar {
-                    showBackAlert = true
+                    viewModel.requestBackNavigation()
                 }
 
                 Spacer()
@@ -71,13 +69,13 @@ struct PawcutSelectionView: View {
             .navigationBarBackButtonHidden()
         }
         .pawAlert(
-            isShowing: $showBackAlert,
+            isShowing: $viewModel.showBackAlert,
             title: "이전 화면으로 돌아가시겠어요?",
             message: "선택 중인 사진이 사라질 수 있어요.",
             confirmTitle: "돌아가기",
             cancelTitle: "취소",
             onConfirm: {
-                viewModel.tapBackButton()
+                viewModel.confirmBackNavigation()
             }
         )
     }
