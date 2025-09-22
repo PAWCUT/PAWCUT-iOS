@@ -74,12 +74,10 @@ final class PhotoDetailsViewModel: ObservableObject {
         currentIndex = index
     }
     
-    /// 이전 이미지로 이동
     func didSwipeToNextImage() {
         moveToNextImage()
     }
     
-    /// 다음 이미지로 이동
     func didSwipeToPreviousImage() {
         moveToPreviousImage()
     }
