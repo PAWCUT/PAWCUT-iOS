@@ -21,6 +21,8 @@ struct PageControl: View {
                 Circle()
                     .fill(index == currentPage ? activeColor : inactiveColor)
                     .frame(width: dotSize, height: dotSize)
+                    .scaleEffect(index == currentPage ? 1.2 : 1.0)
+                    .animation(.easeInOut(duration: 0.3), value: currentPage)
             }
         }
     }
