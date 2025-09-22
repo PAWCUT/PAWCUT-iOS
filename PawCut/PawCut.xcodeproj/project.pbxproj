@@ -1,10 +1,3 @@
-// !$*UTF8*$!
-{
-	archiveVersion = 1;
-	classes = {
-	};
-	objectVersion = 77;
-	objects = {
 
 /* Begin PBXBuildFile section */
 		8C622F8C2E8184BC00147138 /* FirebaseAI in Frameworks */ = {isa = PBXBuildFile; productRef = 8C622F8B2E8184BC00147138 /* FirebaseAI */; };
