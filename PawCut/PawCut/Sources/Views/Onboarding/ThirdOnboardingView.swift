@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// TODO: 삭제 예정
 struct ThirdOnboardingView: View {
     
     @StateObject private var viewModel = ThirdOnboardingViewModel()

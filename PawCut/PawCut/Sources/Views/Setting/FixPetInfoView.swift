@@ -12,6 +12,7 @@ struct FixPetInfoView: View {
     
     var body: some View {
         VStack {
+            // TODO: 동희는 VStack을 좋아할까?
             VStack(alignment: .leading, spacing: 0) {
                 PawTitleLabel
                     .bold24(

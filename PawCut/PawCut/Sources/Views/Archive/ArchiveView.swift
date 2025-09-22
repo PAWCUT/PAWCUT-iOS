@@ -14,6 +14,7 @@ struct ArchiveView: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            // TODO: VM bye
             if viewModel.groupedPhotos.isEmpty {
                 ArchiveEmptyView(petType: viewModel.getPetType())
             } else {

@@ -14,7 +14,6 @@ struct SplashView: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 16){
-                
                 Text("귀가 쫑긋, 추억이 찰칵!")
                     .foregroundColor(Color.grayScale06)
                     .font(.pretendard(size: ._16 ,weight: .semibold))

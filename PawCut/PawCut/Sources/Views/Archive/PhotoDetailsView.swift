@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PhotoDetailsView: View {
     @Environment(\.modelContext) private var modelContext
+    // TODO: navManager, VM bye
     @StateObject private var viewModel: PhotoDetailsViewModel
     @StateObject private var navigationManager = NavigationManager.shared
     
@@ -70,6 +71,7 @@ struct PhotoDetailsView: View {
         )
     }
     
+    // TODO: 돌아와요.
     private var imageGalleryView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: 0) {
@@ -105,6 +107,7 @@ struct PhotoDetailsView: View {
             updateViewModelFromScrollPosition(newScrollPosition)
         }
         .onChange(of: viewModel.currentPhoto) { oldValue, newPhoto in
+            // TODO: 분리
             if let newPhoto = newPhoto, scrollPosition != newPhoto.id {
                 if oldValue == nil {
                     scrollPosition = newPhoto.id
@@ -156,6 +159,7 @@ struct PhotoDetailsView: View {
             Spacer()
             
             Button(action: {
+                // TODO: Bye
                 viewModel.showDeleteConfirmation = true
             }) {
                 ImageComponent(imageName: "trash_icon", size: CGSize(width: 20, height: 23))

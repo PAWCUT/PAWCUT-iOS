@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// TODO : iconName 초기값 지정
 struct ToastView: View {
     let message: String
     var iconName: String

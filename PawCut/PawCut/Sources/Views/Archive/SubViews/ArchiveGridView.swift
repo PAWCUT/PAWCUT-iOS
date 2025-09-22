@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ArchiveGridView: View {
+    // TODO: Bye
     @ObservedObject var viewModel: ArchiveViewModel
     
     @State private var isInitial: Bool = true // 처음에만 scroll 하단

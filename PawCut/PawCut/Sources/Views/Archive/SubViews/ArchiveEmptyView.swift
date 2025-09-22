@@ -10,6 +10,7 @@ import SwiftUI
 struct ArchiveEmptyView: View {
 
     let petType: PetType
+    // TODO: navigationManager 뷰에서 제거, 클로저 파라미터 추가.
     private let navigationManager = NavigationManager.shared
     
     var body: some View {
@@ -33,6 +34,7 @@ struct ArchiveEmptyView: View {
             }
             
             PawTakeCutButton("포우컷 촬영하러 가기") {
+                // TODO: Fix me
                 navigationManager.navigate(to: .main(.camera))
             }
             .padding(.horizontal, 116)
