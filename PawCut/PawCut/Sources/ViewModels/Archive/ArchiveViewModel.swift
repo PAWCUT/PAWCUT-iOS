@@ -16,24 +16,22 @@ final class ArchiveViewModel: ObservableObject {
     @Published private(set) var groupedPhotos: [Date: [Photo]] = [:]
     @Published private(set) var isLoading = false
     
-    private let navigationManager = NavigationManager.shared
-    private let petStorage: PetStorage = PetStorage()
-    private let imageFileManager = ImageFileManager.shared
-    private var modelContext: ModelContext?
-    
     @Published var showGrid = false
     @Published var currentDate: Date = Date()
     @Published var currentIndex: Int = 0
     
-    // 사진이 없다면 이 로직으로 올 수 없겠지만 혹시 오류가 날까봐
-    // 디폴트는 오늘의 달로 처리
-    @Published var calendarRange: (startYear: Int, startMonth: Int, endYear: Int, endMonth: Int) = {
+    @Published private(set) var calendarRange: (startYear: Int, startMonth: Int, endYear: Int, endMonth: Int) = {
         let calendar = Calendar.current
         let today = Date()
         let year = calendar.component(.year, from: today)
         let month = calendar.component(.month, from: today)
         return (year, month, year, month)
     }()
+    
+    private let navigationManager = NavigationManager.shared
+    private let petStorage: PetStorage = PetStorage()
+    private let imageFileManager = ImageFileManager.shared
+    private var modelContext: ModelContext?
     
     var isEmpty: Bool {
         photos.isEmpty
@@ -43,40 +41,47 @@ final class ArchiveViewModel: ObservableObject {
         groupedPhotos.keys.sorted(by: <)
     }
     
-    func setupModelContext(_ context: ModelContext) {
+    
+    func willSetupModelContext(_ context: ModelContext) {
         self.modelContext = context
         loadPhotosFromDatabase()
     }
     
-    func toggleDisplay() {
+    func didTapToggleDisplay() {
         withAnimation(.easeInOut(duration: 0.3)) {
             showGrid.toggle()
         }
     }
     
-    func refreshData() {
+    func didTapRefresh() {
         loadPhotosFromDatabase()
     }
     
-    func didTapTakeCutButton(){
-        navigationManager.navigate(to: .main(.camera))
-    }
-    
-    func goToDetails(date: Date, index: Int) {
+    func didTapPhotoDetails(date: Date, index: Int) {
         navigateToPhotoDetails(date: date, index: index)
     }
     
+    func getPetType() -> PetType {
+        return petStorage.getPetType()
+    }
+    
     func createThumbnailImages() -> [Date: String] {
-        groupedPhotos.compactMapValues { photos in
+        return groupedPhotos.compactMapValues { photos in
             photos.first?.fileName
         }
     }
     
-    func getPetType() -> PetType {
-        petStorage.getPetType()
+    func didTapTakeCutButton() {
+        navigateToCamera()
     }
     
-    func updateCalendarRange() {
+    private func updateGroupedPhotos() {
+        groupedPhotos = Dictionary(grouping: photos) { photo in
+            Calendar.current.startOfDay(for: photo.createdAt)
+        }
+    }
+    
+    private func updateCalendarRange() {
         let calendar = Calendar.current
         let today = Date()
         
@@ -106,21 +111,19 @@ final class ArchiveViewModel: ObservableObject {
     }
 }
 
+
 private extension ArchiveViewModel {
-    
     func navigateToPhotoDetails(date: Date, index: Int) {
         navigationManager.navigate(to: .main(.photoDetails(date: date, index: index)))
     }
     
-    func updateGroupedPhotos() {
-        groupedPhotos = Dictionary(grouping: photos) { photo in
-            Calendar.current.startOfDay(for: photo.createdAt)
-        }
+    func navigateToCamera(){
+        navigationManager.navigate(to: .main(.camera))
     }
 }
 
 // TODO: SwiftData 처리를 extension 으로 해둠. 추후 처리 필요
-extension ArchiveViewModel {
+private extension ArchiveViewModel {
     
     func loadPhotosFromDatabase() {
         guard let modelContext = modelContext else { return }
