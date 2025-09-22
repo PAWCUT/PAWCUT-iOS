@@ -14,13 +14,15 @@ struct PageControl: View {
     var inactiveColor: Color = .grayScale03
     var dotSize: CGFloat = 5
     var spacing: CGFloat = 11
-    
+
     var body: some View {
         HStack(spacing: spacing) {
             ForEach(0..<numberOfPages, id: \.self) { index in
                 Circle()
                     .fill(index == currentPage ? activeColor : inactiveColor)
                     .frame(width: dotSize, height: dotSize)
+                    .scaleEffect(index == currentPage ? 1.2 : 1.0)
+                    .animation(.easeInOut(duration: 0.3), value: currentPage)
             }
         }
     }

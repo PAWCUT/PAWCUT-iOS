@@ -7,40 +7,56 @@
 
 import SwiftUI
 
+struct MainHeaderView: View {
+    let viewModel: HomeViewModel
+
+    var body: some View {
+        HStack {
+            ImageComponent(
+                imageName: "logo_black",
+                size: CGSize(width: 83, height: 33)
+            )
+            Spacer()
+
+            IconButton(imageName: "archivebox") {
+                viewModel.tapAchiveButton()
+            }
+            .padding(.trailing, 6)
+
+            IconButton(imageName: "gearshape") {
+                viewModel.tapSettingButton()
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.bottom, 43)
+    }
+}
+
+struct MainTitleView: View {
+    let viewModel: HomeViewModel
+
+    var body: some View {
+        HStack {
+            PawTitleLabel.bold24(
+                viewModel.getPetName().withComleteWordByJongsung+" 함께 행복한\n추억을 남겨 보세요!",
+                alignment: .leading,
+                lineLimit: 2
+            )
+            Spacer()
+        }
+        .padding(.horizontal, 20)
+    }
+}
+
 struct MainView: View {
-    
+
     @StateObject var viewModel = HomeViewModel()
-    
+
     var body: some View {
         VStack {
-            HStack {
-                ImageComponent(
-                    imageName: "logo_black",
-                    size: CGSize(width: 83, height: 33)
-                )
-                Spacer()
-                
-                IconButton(imageName: "archivebox") {
-                    viewModel.tapAchiveButton()
-                }
-                .padding(.trailing, 6)
-                
-                IconButton(imageName: "gearshape") {
-                    viewModel.tapSettingButton()
-                }
-            }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 43)
-            
-            HStack {
-                PawTitleLabel.bold24(
-                    viewModel.getPetName().withComleteWordByJongsung+" 함께 행복한\n추억을 남겨 보세요!",
-                    alignment: .leading,
-                    lineLimit: 2
-                )
-                Spacer()
-            }
-            .padding(.horizontal, 20)
+            MainHeaderView(viewModel: viewModel)
+
+            MainTitleView(viewModel: viewModel)
             
             Spacer()
             

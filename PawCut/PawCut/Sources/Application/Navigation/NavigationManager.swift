@@ -45,7 +45,7 @@ class NavigationManager: ObservableObject {
         if isOnboardingCompleted {
             self.root = .main(.home)
         } else {
-            self.root = .onboarding(.firstOnboarding)
+            self.root = .onboarding(.onboarding)
         }
     }
     
