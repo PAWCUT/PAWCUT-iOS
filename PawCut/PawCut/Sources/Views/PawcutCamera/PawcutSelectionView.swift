@@ -17,57 +17,43 @@ struct PawcutSelectionView: View {
     }
 
     var body: some View {
-        ZStack {
-            // TODO: 컴포넌트 분리
-            VStack(spacing: 0) {
-                PawBackButtonNavigationBar {
-                    viewModel.requestBackNavigation()
-                }
-
-                Spacer()
-
-                ScrollView {
-                    PawcutGridImagePreview(
-                        images: viewModel.selectedImagesInOrder,
-                        frameOverlay: nil,
-                        style: .selection
-                    )
-                    .frame(maxWidth: .infinity)
-                    .padding(.top, 38)
-                }
-
-                Spacer()
-
-                HStack(spacing: 0) {
-                    PawTitleLabel.semi18("사진 선택하기")
-                    PawTitleLabel.semi18(
-                        "(\(viewModel.selectedCount)/\(viewModel.maxSelection))",
-                        color: .pointPurple01
-                    )
-                    .padding(.leading, 4)
-
-                    Spacer()
-                }
-
-                .padding(.horizontal, 21)
-
-                SelectableImageScrollView(
-                    images: viewModel.sourceImages,
-                    selectedIndices: viewModel.selectedIndices,
-                    selectionOrder: { viewModel.selectionOrder($0) },
-                    onToggleSelection: { index in
-                        viewModel.toggleSelection(at: index)
-                    }
-                )
-
-                PawPrimaryButton("다음", isEnabled: viewModel.selectedCount == 4)
-                {
-                    viewModel.tapNextButton()
-                }
+        VStack(spacing: 0) {
+            PawBackButtonNavigationBar {
+                viewModel.requestBackNavigation()
             }
-            .frame(maxHeight: .infinity, alignment: .top)
-            .navigationBarBackButtonHidden()
+
+            Spacer()
+
+            ScrollView {
+                PawcutGridImagePreview(
+                    images: viewModel.selectedImagesInOrder,
+                    frameOverlay: nil,
+                    style: .selection
+                )
+                .frame(maxWidth: .infinity)
+                .padding(.top, 38)
+            }
+
+            Spacer()
+
+            PawcutSelectionHeaderView(
+                selectedCount: viewModel.selectedCount,
+                maxSelection: viewModel.maxSelection
+            )
+
+            SelectableImageScrollView(
+                images: viewModel.sourceImages,
+                selectedIndices: viewModel.selectedIndices,
+                selectionOrder: { viewModel.selectionOrder($0) },
+                onToggleSelection: { viewModel.toggleSelection(at: $0) }
+            )
+
+            PawPrimaryButton("다음", isEnabled: viewModel.selectedCount == 4) {
+                viewModel.tapNextButton()
+            }
         }
+        .frame(maxHeight: .infinity, alignment: .top)
+        .navigationBarBackButtonHidden()
         .pawAlert(
             isShowing: $viewModel.showBackAlert,
             title: "이전 화면으로 돌아가시겠어요?",
