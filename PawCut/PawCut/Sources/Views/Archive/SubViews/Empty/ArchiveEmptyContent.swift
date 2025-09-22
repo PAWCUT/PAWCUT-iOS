@@ -1,5 +1,5 @@
 //
-//  EmptyContent.swift
+//  ArchiveEmptyContent.swift
 //  PawCut
 //
 //  Created by taeni on 9/22/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct EmptyContent: View {
+struct ArchiveEmptyContent: View {
     let stateString: String
     let explainString: String
     
@@ -26,5 +26,5 @@ struct EmptyContent: View {
 }
 
 #Preview {
-    EmptyContent(stateString: "비어있음", explainString: "아직 찍은 사진이 없습니다.\n오늘의 하루를 남겨보세요.")
+    ArchiveEmptyContent(stateString: "비어있음", explainString: "아직 찍은 사진이 없습니다.\n오늘의 하루를 남겨보세요.")
 }

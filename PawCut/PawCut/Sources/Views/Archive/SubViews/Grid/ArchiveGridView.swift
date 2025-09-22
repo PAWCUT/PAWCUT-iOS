@@ -37,7 +37,7 @@ struct ArchiveGridView: View {
                     ForEach(sortedDates, id: \.self) { date in
                         if let photos = groupedPhotos[date] {
                             ForEach(Array(photos.enumerated()), id: \.element.id) { index, photo in
-                                PhotoGridCell(
+                                ArchivePhotoGridCell(
                                     photo: photo,
                                     gridWidth: gridWidth,
                                     gridHeight: gridHeight,

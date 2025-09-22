@@ -20,7 +20,7 @@ struct ArchiveEmptyView: View {
                 size: CGSize(width: 100, height: 100)
             )
             
-            EmptyContent(
+            ArchiveEmptyContent(
                 stateString: "비어있음",
                 explainString: "아직 찍은 사진이 없습니다.\n오늘의 하루를 남겨보세요."
             )

@@ -1,5 +1,5 @@
 //
-//  PhotoGridCell.swift
+//  ArchivePhotoGridCell.swift
 //  PawCut
 //
 //  Created by taeni on 9/22/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PhotoGridCell: View {
+struct ArchivePhotoGridCell: View {
     let photo: Photo
     let gridWidth: CGFloat
     let gridHeight: CGFloat
@@ -25,7 +25,7 @@ struct PhotoGridCell: View {
         }
         .frame(width: gridWidth, height: gridHeight)
         .overlay(
-            showDateOverlay ? PhotoDateOverlay(date: photo.createdAt) : nil,
+            showDateOverlay ? ArchivePhotoDateOverlay(date: photo.createdAt) : nil,
             alignment: .topLeading
         )
         .onTapGesture {
