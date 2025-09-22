@@ -40,7 +40,6 @@ struct PawcutSelectionView: View {
 
                 Spacer()
 
-                // TODO: 라벨 컴포넌트 쓰세요
                 HStack(spacing: 0) {
                     PawTitleLabel.semi18("사진 선택하기")
                     PawTitleLabel.semi18(
@@ -54,8 +53,14 @@ struct PawcutSelectionView: View {
 
                 .padding(.horizontal, 21)
 
-                // TODO: VIewModel 넘기지 말아
-                SelectableImageScrollView(viewModel: viewModel)
+                SelectableImageScrollView(
+                    images: viewModel.sourceImages,
+                    selectedIndices: viewModel.selectedIndices,
+                    selectionOrder: { viewModel.selectionOrder($0) },
+                    onToggleSelection: { index in
+                        viewModel.toggleSelection(at: index)
+                    }
+                )
 
                 PawPrimaryButton("다음", isEnabled: viewModel.selectedCount == 4)
                 {
