@@ -10,11 +10,13 @@ import SwiftUI
 struct PawcutSelectionView: View {
     @StateObject var viewModel: PawcutSelectionViewModel
     @State private var showBackAlert = false
-    
+
     init(images: [UIImage]) {
-        self._viewModel = StateObject(wrappedValue: PawcutSelectionViewModel(sourceImages: images))
+        self._viewModel = StateObject(
+            wrappedValue: PawcutSelectionViewModel(sourceImages: images)
+        )
     }
-    
+
     var body: some View {
         ZStack {
             // TODO: 컴포넌트 분리
@@ -23,9 +25,9 @@ struct PawcutSelectionView: View {
                 PawBackButtonNavigationBar {
                     showBackAlert = true
                 }
-                
+
                 Spacer()
-                
+
                 ScrollView {
                     PawcutGridImagePreview(
                         images: viewModel.selectedImagesInOrder,
@@ -35,18 +37,18 @@ struct PawcutSelectionView: View {
                     .frame(maxWidth: .infinity)
                     .padding(.top, 38)
                 }
-                
+
                 Spacer()
 
                 // TODO: 라벨 컴포넌트 쓰세요
                 HStack(spacing: 0) {
-                    Text("사진 선택하기")
-                        .pretendardFont(size: ._18, weight: .semibold)
-                        .foregroundColor(.grayScale01)
-                    Text("(\(viewModel.selectedCount)/\(viewModel.maxSelection))")
-                        .pretendardFont(size: ._18, weight: .semibold)
-                        .foregroundColor(.pointPurple01)
-                        .padding(.leading, 4)
+                    PawTitleLabel.semi18("사진 선택하기")
+                    PawTitleLabel.semi18(
+                        "(\(viewModel.selectedCount)/\(viewModel.maxSelection))",
+                        color: .pointPurple01
+                    )
+                    .padding(.leading, 4)
+
                     Spacer()
                 }
 
@@ -54,8 +56,9 @@ struct PawcutSelectionView: View {
 
                 // TODO: VIewModel 넘기지 말아
                 SelectableImageScrollView(viewModel: viewModel)
-                
-                PawPrimaryButton("다음", isEnabled: viewModel.selectedCount == 4) {
+
+                PawPrimaryButton("다음", isEnabled: viewModel.selectedCount == 4)
+                {
                     viewModel.tapNextButton()
                 }
             }
