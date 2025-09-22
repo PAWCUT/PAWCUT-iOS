@@ -10,63 +10,17 @@ import SwiftUI
 struct PawcutTipView: View {
     @StateObject private var viewModel = PawcutTipViewModel()
     
-    // TODO: 이걸 어떻게 좀 해주세요.
-    let tips: [(icon: String, text: String)] = [
-        ("ic_tip_camera", "'촬영하기'를 누르면 바로 촬영이 시작돼요."),
-        ("ic_tip_clock", "6초 타이머가 자동으로 작동해요."),
-        ("ic_tip_picture", "사진은 기본으로 8장이 연속 촬영돼요."),
-        ("ic_tip_hand", "설정에서 카메라 접근을 먼저 허용해 주세요."),
-        ("ic_tip_arrow", "뒤로가기 버튼으로 촬영을 중단할 수 있어요."),
-        ("ic_camera_sound", "음성을 통해 강아지의 시선을 집중시켜 보세요.")
-    ]
-    
     var body: some View {
         ZStack {
             Color.grayScale06
                 .ignoresSafeArea()
-            
             VStack(spacing: 0) {
-            // TODO: 광로는 VStack을 좋아함.
-                VStack(alignment: .leading, spacing: 0) {
-                    PawTitleLabel("촬영 전에 확인해주세요!", style: .bold24, color: .grayScale01)
-                        .padding(.top, 56)
-                        .padding(.leading, 20)
-                    
-                    VStack(alignment: .leading, spacing: 25) {
-                        ForEach(tips, id: \.icon) { tip in
-                            TipRow(iconName: tip.icon, text: tip.text)
-                        }
-                    }
-                    .padding(.top, 60)
-                    .padding(.horizontal, 32)
-                }
-                
+                PawcutTipSubView(tips: viewModel.tips)
                 Spacer()
-                
                 PawPrimaryButton("촬영하기") {
                     viewModel.tapNextButton()
                 }
             }
-        }
-    }
-}
-
-// TODO: 위치를 옮기자 SubViews
-struct TipRow: View {
-    let iconName: String
-    let text: String
-    
-    var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(iconName)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 20, height: 20)
-            
-            Text(text)
-                .pretendardFont(size: ._16, weight: .semibold)
-                .foregroundColor(.grayScale02)
-                .lineLimit(1)
         }
     }
 }
