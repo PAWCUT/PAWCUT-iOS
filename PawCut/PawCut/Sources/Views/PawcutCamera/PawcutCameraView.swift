@@ -13,39 +13,35 @@ struct PawcutCameraView: View {
     
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            Color.grayScale01.ignoresSafeArea()
             
-            Group {
-                if let image = viewModel.rawImage {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(
-                            width: UIScreen.main.bounds.width,
-                            height: UIScreen.main.bounds.width * 4 / 3
-                        )
-                        .clipped()
-                        .offset(y: -40)
-                } else {
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.3))
-                        .frame(
-                            width: UIScreen.main.bounds.width,
-                            height: UIScreen.main.bounds.width * 4 / 3
-                        )
-                        .offset(y: -40)
-                }
+            if let image = viewModel.rawImage {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(
+                        width: UIScreen.main.bounds.width,
+                        height: UIScreen.main.bounds.width * 4 / 3
+                    )
+                    .clipped()
+                    .offset(y: -40)
+            } else {
+                Rectangle()
+                    .fill(Color.grayScale03.opacity(0.3))
+                    .frame(
+                        width: UIScreen.main.bounds.width,
+                        height: UIScreen.main.bounds.width * 4 / 3
+                    )
+                    .offset(y: -40)
             }
-            Group {
-                if viewModel.showShutter {
-                    Color.black.opacity(1)
-                        .ignoresSafeArea()
-                        .transition(.opacity)
-                        .animation(
-                            .easeOut(duration: 0.05),
-                            value: viewModel.showShutter
-                        )
-                }
+            if viewModel.showShutter {
+                Color.grayScale01.opacity(1)
+                    .ignoresSafeArea()
+                    .transition(.opacity)
+                    .animation(
+                        .easeOut(duration: 0.05),
+                        value: viewModel.showShutter
+                    )
             }
             ZStack {
                 VStack {
@@ -55,7 +51,7 @@ struct PawcutCameraView: View {
                         }) {
                             Image(systemName: "chevron.left")
                                 .font(.system(size: 18, weight: .semibold))
-                                .foregroundColor(.white)
+                                .foregroundColor(.grayScale06)
                         }
                         .frame(height: 44)
                         .contentShape(Rectangle())
@@ -99,23 +95,18 @@ struct PawcutCameraView: View {
                     .padding(.top, 0)
                     Spacer()
                 }
-                Text("\(viewModel.currentShotIndex) / 8")
-                    .pretendardFont(size: ._16, weight: .semibold)
+                PawBodyLabel.semi16("\(viewModel.currentShotIndex) / 8", color: .grayScale06)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
-                    .background(Color.white.opacity(0.2))
-                    .foregroundColor(.white)
+                    .background(Color.grayScale06.opacity(0.2))
                     .clipShape(Capsule())
                     .offset(y: -270)
-                Group {
-                    if let timeLeft = viewModel.countdownNumber {
-                        Text("\(timeLeft)")
-                            .font(.system(size: 100, weight: .bold))
-                            .foregroundColor(.white)
-                            .shadow(radius: 5)
-                            .transition(.opacity)
-                            .padding(.bottom, 60)
-                    }
+                if let timeLeft = viewModel.countdownNumber {
+                    PawTitleLabel.bold24("\(timeLeft)", color: .grayScale06)
+                        .font(.system(size: 100, weight: .bold))
+                        .shadow(radius: 5)
+                        .transition(.opacity)
+                        .padding(.bottom, 60)
                 }
                 VStack {
                     Spacer()
@@ -126,14 +117,12 @@ struct PawcutCameraView: View {
                                 Button(action: {
                                     viewModel.setZoom(option.id)
                                 }) {
-                                    Text(option.title)
-                                        .pretendardFont(size: ._14, weight: .semibold)
-                                        .foregroundColor(Color.white)
+                                    PawBodyLabel.semi16(option.title, color: .grayScale06)
                                         .frame(
                                             width: isSelected ? 36 : 24,
                                             height: isSelected ? 36 : 24
                                         )
-                                        .background(Color.white.opacity(0.3))
+                                        .background(Color.grayScale06.opacity(0.3))
                                         .clipShape(Circle())
                                         .shadow(radius: 2)
                                 }
@@ -141,7 +130,7 @@ struct PawcutCameraView: View {
                         }
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(Color.white.opacity(0.1))
+                        .background(Color.grayScale06.opacity(0.1))
                         .cornerRadius(105)
                         .padding(.bottom, 76)
                     } else {
@@ -153,7 +142,7 @@ struct PawcutCameraView: View {
                                 size: CGSize(width: 35, height: 35)
                             )
                             .frame(width: 35, height: 35)
-                            .background(Color.white.opacity(0.35))
+                            .background(Color.grayScale06.opacity(0.35))
                             .clipShape(Circle())
                         }
                         .scaleEffect(viewModel.isZoomedIn ? 1.1 : 1.0)
@@ -191,24 +180,22 @@ struct PawcutCameraView: View {
                     }
                 }
                 .padding(.bottom, 20)
-                Group {
-                    if viewModel.showSoundTooltip {
-                        VStack {
-                            HStack {
-                                Spacer()
-                                PawToolTip(
-                                    message: "소리를 설정에서 변경할 수 있어요!"
-                                )
-                                .padding(.top, 48)
-                                .padding(.trailing, -125)
-                                Spacer()
-                            }
+                if viewModel.showSoundTooltip {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            PawToolTip(
+                                message: "소리를 설정에서 변경할 수 있어요!"
+                            )
+                            .padding(.top, 48)
+                            .padding(.trailing, -125)
                             Spacer()
                         }
-                        .transition(.opacity.combined(with: .scale))
-                        .onTapGesture {
-                            viewModel.hideSoundTooltip()
-                        }
+                        Spacer()
+                    }
+                    .transition(.opacity.combined(with: .scale))
+                    .onTapGesture {
+                        viewModel.hideSoundTooltip()
                     }
                 }
             }
