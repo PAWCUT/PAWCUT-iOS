@@ -16,7 +16,7 @@ struct PhotoDetailsBottomControlView: View {
             BottomControlButton(
                 imageName: "download_icon",
                 imageSize: CGSize(width: 20, height: 24),
-                action: onSaveTap
+                onTap: onSaveTap
             )
             
             Spacer()
@@ -24,7 +24,7 @@ struct PhotoDetailsBottomControlView: View {
             BottomControlButton(
                 imageName: "trash_icon",
                 imageSize: CGSize(width: 20, height: 23),
-                action: onDeleteTap
+                onTap: onDeleteTap
             )
         }
     }

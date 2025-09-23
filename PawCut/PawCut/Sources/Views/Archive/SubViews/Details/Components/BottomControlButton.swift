@@ -10,10 +10,10 @@ import SwiftUI
 struct BottomControlButton: View {
     let imageName: String
     let imageSize: CGSize
-    let action: () -> Void
+    let onTap: () -> Void
     
     var body: some View {
-        Button(action: action) {
+        Button(action: onTap) {
             ImageComponent(imageName: imageName, size: imageSize)
                 .background(
                     Circle()
