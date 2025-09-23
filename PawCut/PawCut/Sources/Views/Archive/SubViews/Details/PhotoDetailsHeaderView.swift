@@ -21,7 +21,14 @@ struct PhotoDetailsHeader: View {
             Spacer()
         }
         .overlay(
-            PhotoDetailsHeaderTitle(currentPhoto: currentPhoto)
+            VStack {
+                if let photo = currentPhoto {
+                    PawTitleLabel.semi16(
+                        photo.createdAt.koreanMonthDateString,
+                        color: .grayScale01
+                    )
+                }
+            }
         )
     }
 }

@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct PhotoDetailsBottomControls: View {
+struct PhotoDetailsBottomControlView: View {
     let onSaveTap: () -> Void
     let onDeleteTap: () -> Void
     
     var body: some View {
         HStack {
-            PhotoDetailsControlButton(
+            BottomControlButton(
                 imageName: "download_icon",
                 imageSize: CGSize(width: 20, height: 24),
                 action: onSaveTap
@@ -21,28 +21,11 @@ struct PhotoDetailsBottomControls: View {
             
             Spacer()
             
-            PhotoDetailsControlButton(
+            BottomControlButton(
                 imageName: "trash_icon",
                 imageSize: CGSize(width: 20, height: 23),
                 action: onDeleteTap
             )
-        }
-    }
-}
-
-struct PhotoDetailsControlButton: View {
-    let imageName: String
-    let imageSize: CGSize
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            ImageComponent(imageName: imageName, size: imageSize)
-                .background(
-                    Circle()
-                        .fill(Color.grayBackground)
-                        .frame(width: 45, height: 45)
-                )
         }
     }
 }

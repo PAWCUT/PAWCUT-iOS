@@ -1,5 +1,5 @@
 //
-//  PhotoDetailsThumbnailCell.swift
+//  ThumbnailStripCell.swift
 //  PawCut
 //
 //  Created by taeni on 9/22/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PhotoDetailsThumbnailCell: View {
+struct ThumbnailStripCell: View {
     let photo: Photo
     let isSelected: Bool
     let onTap: () -> Void
