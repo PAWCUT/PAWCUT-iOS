@@ -13,12 +13,13 @@ protocol PawTypographyStyle {
 }
 
 enum PawTitleStyle: PawTypographyStyle {
-    case bold24, bold20, semi18, semi17, semi16, semi14
+    case bold24, bold20, bold18, semi18, semi17, semi16, semi14
     
     var font: Font {
         switch self {
         case .bold24: return FontSet.pretendard(size: ._24, weight: .bold)
         case .bold20: return FontSet.pretendard(size: ._20, weight: .bold)
+        case .bold18: return FontSet.pretendard(size: ._18, weight: .bold)
         case .semi18: return FontSet.pretendard(size: ._18, weight: .semibold)
         case .semi17: return FontSet.pretendard(size: ._17, weight: .semibold)
         case .semi16: return FontSet.pretendard(size: ._16, weight: .semibold)
