@@ -98,10 +98,7 @@ struct PawcutFrameView: View {
                     }
                 }
                 .onAppear {
-                    // TODO: 로직 분리
-                    if viewModel.selectedFrameIndex == nil {
-                        viewModel.selectedFrameIndex = 0
-                    }
+                    viewModel.selectDefaultFrameIfNeeded()
                 }
             }
 
