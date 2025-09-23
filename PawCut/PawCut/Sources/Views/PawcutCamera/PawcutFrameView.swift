@@ -32,15 +32,9 @@ struct PawcutFrameView: View {
                 }
 
                 Spacer()
-
-                // TODO: HStack 제거, 디자인 시스템 적용
-                HStack(spacing: 0) {
-                    Text(viewModel.selectedFrameDisplayName ?? "")
-                        .pretendardFont(size: ._18, weight: .bold)
-                        .foregroundColor(.grayScale01)
-
-                }
-                .padding(.horizontal, 21)
+                
+                PawTitleLabel.bold18(viewModel.selectedFrameDisplayName ?? "")
+                    .padding(.horizontal, 21)
 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
