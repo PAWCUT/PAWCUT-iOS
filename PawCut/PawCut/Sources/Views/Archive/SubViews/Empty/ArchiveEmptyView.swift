@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ArchiveEmptyView: View {
     let petType: PetType
-    let didTapTakeCutButton: () -> Void
+    let onTap: () -> Void
     
     var body: some View {
         VStack(spacing: 22) {
@@ -20,13 +20,13 @@ struct ArchiveEmptyView: View {
                 size: CGSize(width: 100, height: 100)
             )
             
-            ArchiveEmptyContent(
+            ExplainContents(
                 stateString: "비어있음",
                 explainString: "아직 찍은 사진이 없습니다.\n오늘의 하루를 남겨보세요."
             )
             
             PawTakeCutButton("포우컷 촬영하러 가기") {
-                didTapTakeCutButton()
+                onTap()
             }
             .padding(.horizontal, 116)
             
@@ -41,3 +41,4 @@ struct ArchiveEmptyView: View {
         print("did tap")
     }
 }
+

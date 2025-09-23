@@ -1,5 +1,5 @@
 //
-//  ArchivePhotoGridCell.swift
+//  PhotoGridCell.swift
 //  PawCut
 //
 //  Created by taeni on 9/22/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ArchivePhotoGridCell: View {
+struct PhotoGridCell: View {
     let photo: Photo
     let gridWidth: CGFloat
     let gridHeight: CGFloat
