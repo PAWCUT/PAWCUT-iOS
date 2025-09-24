@@ -1,5 +1,5 @@
 //
-//  EmptyContent.swift
+//  ExplainContents.swift
 //  PawCut
 //
 //  Created by taeni on 9/22/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct EmptyContent: View {
+struct ExplainContents: View {
     let stateString: String
     let explainString: String
     
@@ -26,5 +26,5 @@ struct EmptyContent: View {
 }
 
 #Preview {
-    EmptyContent(stateString: "비어있음", explainString: "아직 찍은 사진이 없습니다.\n오늘의 하루를 남겨보세요.")
+    ExplainContents(stateString: "비어있음", explainString: "아직 찍은 사진이 없습니다.\n오늘의 하루를 남겨보세요.")
 }
