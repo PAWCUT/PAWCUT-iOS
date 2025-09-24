@@ -55,11 +55,13 @@ struct PawcutCameraView: View {
                 .offset(y: -270)
             
             if let timeLeft = viewModel.countdownNumber {
-                PawTitleLabel.bold24("\(timeLeft)", color: .grayScale06)
+                    Text("\(timeLeft)")
                     .font(.system(size: 100, weight: .bold))
+                    .foregroundColor(.white)
                     .shadow(radius: 5)
                     .transition(.opacity)
                     .padding(.bottom, 60)
+
             }
             
             PawcutCameraBottomSubView(viewModel: viewModel)
