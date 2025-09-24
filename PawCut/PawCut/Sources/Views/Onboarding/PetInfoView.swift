@@ -67,7 +67,12 @@ struct PetInfoContentView: View {
                 )
                 .padding(.bottom, 8)
 
-            PetTypeSelectionView<PetInfoViewModel>(viewModel: viewModel)
+            PetTypeSelectionView(
+                isDogEnabled: $viewModel.isDogEnabled,
+                isCatEnabled: $viewModel.isCatEnabled,
+                didSelectDog: { viewModel.didSelectDog() },
+                didSelectCat: { viewModel.didSelectCat() }
+            )
 
             Spacer()
         }

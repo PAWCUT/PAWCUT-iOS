@@ -7,9 +7,6 @@
 
 import Foundation
 
-// MARK: - PetTypeSelectable Extension
-
-extension PetInfoViewModel: PetTypeSelectable {}
 
 @MainActor
 class PetInfoViewModel: ObservableObject {

@@ -7,40 +7,44 @@
 
 import SwiftUI
 
-@MainActor protocol PetTypeSelectable: ObservableObject {
-    var isDogEnabled: Bool { get }
-    var isCatEnabled: Bool { get }
+struct PetTypeSelectionView: View {
+    @Binding var isDogEnabled: Bool
+    @Binding var isCatEnabled: Bool
 
-    func didSelectDog()
-    func didSelectCat()
-}
-
-struct PetTypeSelectionView<ViewModel: PetTypeSelectable>: View {
-    @ObservedObject var viewModel: ViewModel
+    let didSelectDog: () -> Void
+    let didSelectCat: () -> Void
 
     var body: some View {
         HStack(spacing: 12) {
             PawChoiceButton(
                 "강아지",
-                isEnabled: viewModel.isDogEnabled,
+                isEnabled: isDogEnabled,
                 horizontalPadding: 0,
                 verticalPadding: 0
             ) {
-                viewModel.didSelectDog()
+                didSelectDog()
             }
 
             PawChoiceButton(
                 "고양이",
-                isEnabled: viewModel.isCatEnabled,
+                isEnabled: isCatEnabled,
                 horizontalPadding: 0,
                 verticalPadding: 0
             ) {
-                viewModel.didSelectCat()
+                didSelectCat()
             }
         }
     }
 }
 
 #Preview {
-    PetTypeSelectionView(viewModel: PetInfoViewModel())
+    @Previewable @State var isDogEnabled = false
+    @Previewable @State var isCatEnabled = true
+
+    PetTypeSelectionView(
+        isDogEnabled: $isDogEnabled,
+        isCatEnabled: $isCatEnabled,
+        didSelectDog: { isDogEnabled.toggle() },
+        didSelectCat: { isCatEnabled.toggle() }
+    )
 }
