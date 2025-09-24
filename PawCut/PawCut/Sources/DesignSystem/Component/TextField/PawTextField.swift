@@ -34,7 +34,7 @@ struct PawTextField: View {
                 TextField(placeholder, text: $text)
                     .pretendardFont(size: ._14, weight: .semibold)
                     .focused($isFocused)
-                    .foregroundColor(isFocused ? .grayScale01 : .grayScale04)
+                    .foregroundColor(.grayScale01)
                 
                 if isFocused && !text.isEmpty {
                     Button {

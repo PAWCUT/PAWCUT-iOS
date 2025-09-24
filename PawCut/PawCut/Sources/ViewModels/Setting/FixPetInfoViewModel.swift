@@ -7,6 +7,10 @@
 
 import Foundation
 
+// MARK: - PetTypeSelectable Extension
+
+extension FixPetInfoViewModel: PetTypeSelectable {}
+
 @MainActor
 class FixPetInfoViewModel: ObservableObject {
     private let navigationManager = NavigationManager.shared
@@ -52,13 +56,13 @@ class FixPetInfoViewModel: ObservableObject {
         validateName()
     }
     
-    func selectDog() {
+    func didSelectDog() {
         isDogEnabled = true
         isCatEnabled = false
         selectedType = .dog
     }
     
-    func selectCat() {
+    func didSelectCat() {
         isDogEnabled = false
         isCatEnabled = true
         selectedType = .cat

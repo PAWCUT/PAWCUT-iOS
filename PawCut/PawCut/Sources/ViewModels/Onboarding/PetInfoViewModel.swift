@@ -7,6 +7,10 @@
 
 import Foundation
 
+// MARK: - PetTypeSelectable Extension
+
+extension PetInfoViewModel: PetTypeSelectable {}
+
 @MainActor
 class PetInfoViewModel: ObservableObject {
     @Published var name: String = ""
@@ -34,13 +38,13 @@ class PetInfoViewModel: ObservableObject {
         validateName()
     }
 
-    func selectDog() {
+    func didSelectDog() {
         isDogEnabled = true
         isCatEnabled = false
         selectedType = .dog
     }
 
-    func selectCat() {
+    func didSelectCat() {
         isDogEnabled = false
         isCatEnabled = true
         selectedType = .cat

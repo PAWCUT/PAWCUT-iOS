@@ -32,13 +32,13 @@ struct PawChoiceButton: View {
     var body: some View {
         Button(action: action) {
             Text(title)
-                .pretendardFont(size: ._16, weight: .semibold)
+                .pretendardFont(size: ._14, weight: .semibold)
                 .padding(.top, textPadding)
                 .padding(.bottom, textPadding)
                 .foregroundColor(isEnabled ? .pointPurple01 : .grayScale01)
                 .frame(maxWidth: .infinity)
                 .background(
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: 8)
                         .fill(isEnabled ? .pointPurple02 : .grayScale05)
                         .stroke(isEnabled ? .pointPurple01 : .grayScale05, lineWidth: 1)
                 )
