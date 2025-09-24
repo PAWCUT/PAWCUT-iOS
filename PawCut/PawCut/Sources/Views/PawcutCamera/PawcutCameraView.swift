@@ -34,6 +34,7 @@ struct PawcutCameraView: View {
                     )
                     .offset(y: -40)
             }
+            
             if viewModel.showShutter {
                 Color.grayScale01.opacity(1)
                     .ignoresSafeArea()
@@ -43,162 +44,44 @@ struct PawcutCameraView: View {
                         value: viewModel.showShutter
                     )
             }
-            ZStack {
+            
+            PawcutCameraTopSubView(viewModel: viewModel)
+            
+            PawBodyLabel.semi16("\(viewModel.currentShotIndex) / 8", color: .grayScale06)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(Color.grayScale06.opacity(0.2))
+                .clipShape(Capsule())
+                .offset(y: -270)
+            
+            if let timeLeft = viewModel.countdownNumber {
+                PawTitleLabel.bold24("\(timeLeft)", color: .grayScale06)
+                    .font(.system(size: 100, weight: .bold))
+                    .shadow(radius: 5)
+                    .transition(.opacity)
+                    .padding(.bottom, 60)
+            }
+            
+            PawcutCameraBottomSubView(viewModel: viewModel)
+            if viewModel.showSoundTooltip {
                 VStack {
                     HStack {
-                        Button(action: {
-                            viewModel.tapBackButton()
-                        }) {
-                            Image(systemName: "chevron.left")
-                                .font(.system(size: 18, weight: .semibold))
-                                .foregroundColor(.grayScale06)
-                        }
-                        .frame(height: 44)
-                        .contentShape(Rectangle())
-                        
                         Spacer()
-                        
-                        Button(action: {
-                            viewModel.playSound()
-                        }) {
-                            ImageComponent(
-                                imageName: "pawcut_sound",
-                                size: CGSize(width: 22, height: 22)
-                            )
-                            .scaleEffect(viewModel.soundButtonScale)
-                            .animation(
-                                .easeInOut(duration: 1.5).repeatForever(
-                                    autoreverses: true
-                                ),
-                                value: viewModel.soundButtonScale
-                            )
-                        }
-                        
-                        Button(action: {
-                            viewModel.toggleFlash()
-                        }) {
-                            ImageComponent(
-                                imageName: viewModel.isFlashEnabled
-                                ? "flash_light" : "flash_dark",
-                                size: CGSize(width: 22, height: 22)
-                            )
-                            .opacity(viewModel.isFlashEnabled ? 1.0 : 1.0)
-                            .scaleEffect(viewModel.isFlashEnabled ? 1.1 : 1.0)
-                            .animation(
-                                .easeInOut(duration: 0.2),
-                                value: viewModel.isFlashEnabled
-                            )
-                        }
-                        .frame(width: 36, height: 42)
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 0)
-                    Spacer()
-                }
-                PawBodyLabel.semi16("\(viewModel.currentShotIndex) / 8", color: .grayScale06)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(Color.grayScale06.opacity(0.2))
-                    .clipShape(Capsule())
-                    .offset(y: -270)
-                if let timeLeft = viewModel.countdownNumber {
-                    PawTitleLabel.bold24("\(timeLeft)", color: .grayScale06)
-                        .font(.system(size: 100, weight: .bold))
-                        .shadow(radius: 5)
-                        .transition(.opacity)
-                        .padding(.bottom, 60)
-                }
-                VStack {
-                    Spacer()
-                    if viewModel.cameraPosition == .back {
-                        HStack(spacing: 20) {
-                            ForEach(viewModel.zoomOptions, id: \.id) { option in
-                                let isSelected = option.id == viewModel.selectedZoomId
-                                Button(action: {
-                                    viewModel.setZoom(option.id)
-                                }) {
-                                    PawBodyLabel.semi16(option.title, color: .grayScale06)
-                                        .frame(
-                                            width: isSelected ? 36 : 24,
-                                            height: isSelected ? 36 : 24
-                                        )
-                                        .background(Color.grayScale06.opacity(0.3))
-                                        .clipShape(Circle())
-                                        .shadow(radius: 2)
-                                }
-                            }
-                        }
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color.grayScale06.opacity(0.1))
-                        .cornerRadius(105)
-                        .padding(.bottom, 76)
-                    } else {
-                        Button(action: {
-                            viewModel.toggleFrontZoom()
-                        }) {
-                            ImageComponent(
-                                imageName: viewModel.isZoomedIn ? "zoom_out" : "zoom_in",
-                                size: CGSize(width: 35, height: 35)
-                            )
-                            .frame(width: 35, height: 35)
-                            .background(Color.grayScale06.opacity(0.35))
-                            .clipShape(Circle())
-                        }
-                        .scaleEffect(viewModel.isZoomedIn ? 1.1 : 1.0)
-                        .animation(.easeInOut(duration: 0.2), value: viewModel.isZoomedIn)
-                        .padding(.bottom, 76)
-                    }
-                    HStack(spacing: 77) {
-                        Button(action: {
-                            viewModel.extendCountdown()
-                        }) {
-                            ImageComponent(
-                                imageName: "timer_icon",
-                                size: CGSize(width: 48, height: 48)
-                            )
-                        }
-                        
-                        Button(action: {
-                            viewModel.cancelCountdown()
-                            viewModel.performCapture()
-                        }) {
-                            ImageComponent(
-                                imageName: "camera_icon",
-                                size: CGSize(width: 68, height: 82)
-                            )
-                        }
-                        
-                        Button(action: {
-                            viewModel.toggleCamera()
-                        }) {
-                            ImageComponent(
-                                imageName: "stitch_icon",
-                                size: CGSize(width: 48, height: 48)
-                            )
-                        }
-                    }
-                }
-                .padding(.bottom, 20)
-                if viewModel.showSoundTooltip {
-                    VStack {
-                        HStack {
-                            Spacer()
-                            PawToolTip(
-                                message: "소리를 설정에서 변경할 수 있어요!"
-                            )
-                            .padding(.top, 48)
-                            .padding(.trailing, -125)
-                            Spacer()
-                        }
+                        PawToolTip(
+                            message: "소리를 설정에서 변경할 수 있어요!"
+                        )
+                        .padding(.top, 48)
+                        .padding(.trailing, -126)
                         Spacer()
                     }
-                    .transition(.opacity.combined(with: .scale))
-                    .onTapGesture {
-                        viewModel.hideSoundTooltip()
-                    }
+                    Spacer()
+                }
+                .transition(.opacity.combined(with: .scale))
+                .onTapGesture {
+                    viewModel.hideSoundTooltip()
                 }
             }
+            
         }
         .toolbar(.hidden, for: .navigationBar)
         .onChange(of: viewModel.session.isRunning) { _, isRunning in
