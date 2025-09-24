@@ -1,5 +1,5 @@
 //
-//  ArchivePhotoGridCell.swift
+//  PhotoDateOverlay.swift
 //  PawCut
 //
 //  Created by taeni on 9/22/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ArchivePhotoDateOverlay: View {
+struct PhotoDateOverlay: View {
     let date: Date
     
     var body: some View {
