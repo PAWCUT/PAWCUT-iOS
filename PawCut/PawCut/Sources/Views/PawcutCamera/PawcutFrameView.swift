@@ -37,7 +37,7 @@ struct PawcutFrameView: View {
                     .padding(.horizontal, 21)
 
                 PawcutFrameSelectionScrollView(
-                    frameNames: viewModel.frameScrollImageNames,
+                    frames: viewModel.frames,
                     selectedFrameIndex: viewModel.selectedFrameIndex,
                     onSelect: { index in
                         viewModel.selectedFrameIndex = index

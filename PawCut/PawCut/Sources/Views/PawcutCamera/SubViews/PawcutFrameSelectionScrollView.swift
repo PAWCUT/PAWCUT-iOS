@@ -7,26 +7,20 @@
 
 import SwiftUI
 
-
 struct PawcutFrameSelectionScrollView: View {
-    let frameNames: [String]
+    let frames: [FrameType]
     let selectedFrameIndex: Int?
     let onSelect: (Int) -> Void
-    
+
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                ForEach(
-                    // TODO: 왜 Array 써야하지?
-                    Array(frameNames.enumerated()),
-                    id: \.offset
-                ) { index, name in
-
-                    let image = UIImage(named: name)
+                ForEach(frames.indices, id: \.self) { index in
+                    let frame = frames[index]
                     let isSelected =
                         index == selectedFrameIndex
 
-                    if let image = image {
+                    if let image = UIImage(named:frame.frameScrollImageName) {
                         Image(uiImage: image)
                             .resizable()
                             .frame(width: 40, height: 40)
