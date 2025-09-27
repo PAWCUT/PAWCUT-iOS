@@ -21,7 +21,7 @@ struct MainHeaderView: View {
             IconButton(imageName: "archivebox") {
                 viewModel.tapAchiveButton()
             }
-            .padding(.trailing, 6)
+            .padding(.trailing, -4)
 
             IconButton(imageName: "gearshape") {
                 viewModel.tapSettingButton()
