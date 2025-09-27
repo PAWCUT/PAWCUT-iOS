@@ -16,7 +16,7 @@ struct IconButton: View {
     
     init(
         imageName: String,
-        imageSize: CGSize = CGSize(width: 20, height: 20),
+        imageSize: CGSize = CGSize(width: 28, height: 28),
         buttonSize: CGSize = CGSize(width: 30, height: 30),
         action: @escaping () -> Void
     ) {
@@ -38,7 +38,10 @@ struct IconButton: View {
 }
 
 #Preview {
-    IconButton(imageName: "ic_circle") {
+    IconButton(imageName: "gearshape") {
+        
+    }
+    IconButton(imageName: "archivebox") {
         
     }
 }
