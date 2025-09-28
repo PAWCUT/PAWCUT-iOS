@@ -8,17 +8,27 @@
 import SwiftUI
 
 struct PawcutCameraBottomSubView: View {
-    @ObservedObject var viewModel: PawcutCameraViewModel
+
+    let zoomOptions: [PawcutCameraViewModel.ZoomOption]
+    let selectedZoomId: String
+    let cameraPosition: PawcutCameraViewModel.CameraPosition
+    let isZoomedIn: Bool
+
+    let onZoomChange: (String) -> Void
+    let onToggleFrontZoom: () -> Void
+    let onExtendCountdown: () -> Void
+    let onPerformCapture: () -> Void
+    let onToggleCamera: () -> Void
     
     var body: some View {
         VStack {
             Spacer()
-            if viewModel.cameraPosition == .back {
+            if cameraPosition == .back {
                 HStack(spacing: 20) {
-                    ForEach(viewModel.zoomOptions, id: \.id) { option in
-                        let isSelected = option.id == viewModel.selectedZoomId
+                    ForEach(zoomOptions, id: \.id) { option in
+                        let isSelected = option.id == selectedZoomId
                         Button(action: {
-                            viewModel.setZoom(option.id)
+                            onZoomChange(option.id)
                         }) {
                             PawBodyLabel.semi16(option.title, color: .grayScale06)
                                 .frame(
@@ -38,23 +48,23 @@ struct PawcutCameraBottomSubView: View {
                 .padding(.bottom, 76)
             } else {
                 Button(action: {
-                    viewModel.toggleFrontZoom()
+                    onToggleFrontZoom()
                 }) {
                     ImageComponent(
-                        imageName: viewModel.isZoomedIn ? "zoom_out" : "zoom_in",
+                        imageName: isZoomedIn ? "zoom_out" : "zoom_in",
                         size: CGSize(width: 35, height: 35)
                     )
                     .frame(width: 35, height: 35)
                     .background(Color.grayScale06.opacity(0.35))
                     .clipShape(Circle())
                 }
-                .scaleEffect(viewModel.isZoomedIn ? 1.1 : 1.0)
-                .animation(.easeInOut(duration: 0.2), value: viewModel.isZoomedIn)
+                .scaleEffect(isZoomedIn ? 1.1 : 1.0)
+                .animation(.easeInOut(duration: 0.2), value: isZoomedIn)
                 .padding(.bottom, 76)
             }
             HStack(spacing: 77) {
                 Button(action: {
-                    viewModel.extendCountdown()
+                    onExtendCountdown()
                 }) {
                     ImageComponent(
                         imageName: "timer_icon",
@@ -63,8 +73,7 @@ struct PawcutCameraBottomSubView: View {
                 }
                 
                 Button(action: {
-                    viewModel.cancelCountdown()
-                    viewModel.performCapture()
+                    onPerformCapture()
                 }) {
                     ImageComponent(
                         imageName: "camera_icon",
@@ -73,7 +82,7 @@ struct PawcutCameraBottomSubView: View {
                 }
                 
                 Button(action: {
-                    viewModel.toggleCamera()
+                    onToggleCamera()
                 }) {
                     ImageComponent(
                         imageName: "stitch_icon",
@@ -87,5 +96,19 @@ struct PawcutCameraBottomSubView: View {
 }
 
 #Preview {
-    PawcutCameraBottomSubView(viewModel: PawcutCameraViewModel())
+    PawcutCameraBottomSubView(
+        zoomOptions: [
+            PawcutCameraViewModel.ZoomOption(id: "0.5", title: ".5"),
+            PawcutCameraViewModel.ZoomOption(id: "1.0", title: "1x"),
+            PawcutCameraViewModel.ZoomOption(id: "2.0", title: "2")
+        ],
+        selectedZoomId: "1.0",
+        cameraPosition: .back,
+        isZoomedIn: false,
+        onZoomChange: { _ in },
+        onToggleFrontZoom: { },
+        onExtendCountdown: { },
+        onPerformCapture: { },
+        onToggleCamera: { }
+    )
 }

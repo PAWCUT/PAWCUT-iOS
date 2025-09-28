@@ -15,25 +15,17 @@ struct PawcutCameraView: View {
         ZStack {
             Color.grayScale01.ignoresSafeArea()
             
-            if let image = viewModel.rawImage {
-                Image(uiImage: image)
+            (viewModel.rawImage.map { image in
+                AnyView(Image(uiImage: image)
                     .resizable()
-                    .scaledToFill()
-                    .frame(
-                        width: UIScreen.main.bounds.width,
-                        height: UIScreen.main.bounds.width * 4 / 3
-                    )
-                    .clipped()
-                    .offset(y: -40)
-            } else {
-                Rectangle()
-                    .fill(Color.grayScale03.opacity(0.3))
-                    .frame(
-                        width: UIScreen.main.bounds.width,
-                        height: UIScreen.main.bounds.width * 4 / 3
-                    )
-                    .offset(y: -40)
-            }
+                    .scaledToFill())
+            } ?? AnyView(Rectangle().fill(Color.grayScale03.opacity(0.3))))
+            .frame(
+                width: UIScreen.main.bounds.width,
+                height: UIScreen.main.bounds.width * 4 / 3
+            )
+            .clipped()
+            .offset(y: -40)
             
             if viewModel.showShutter {
                 Color.grayScale01.opacity(1)
@@ -54,17 +46,27 @@ struct PawcutCameraView: View {
                 .clipShape(Capsule())
                 .offset(y: -270)
             
-            if let timeLeft = viewModel.countdownNumber {
-                    Text("\(timeLeft)")
-                    .font(.system(size: 100, weight: .bold))
-                    .foregroundColor(.white)
-                    .shadow(radius: 5)
-                    .transition(.opacity)
-                    .padding(.bottom, 60)
-
-            }
+            Text("\(viewModel.countdownNumber ?? 0)")
+                .font(.system(size: 100, weight: .bold))
+                .foregroundColor(.white)
+                .shadow(radius: 5)
+                .transition(.opacity)
+                .padding(.bottom, 60)
             
-            PawcutCameraBottomSubView(viewModel: viewModel)
+            PawcutCameraBottomSubView(
+                zoomOptions: viewModel.zoomOptions,
+                selectedZoomId: viewModel.selectedZoomId,
+                cameraPosition: viewModel.cameraPosition,
+                isZoomedIn: viewModel.isZoomedIn,
+                onZoomChange: { zoomId in viewModel.setZoom(zoomId) },
+                onToggleFrontZoom: { viewModel.toggleFrontZoom() },
+                onExtendCountdown: { viewModel.extendCountdown() },
+                onPerformCapture: {
+                    viewModel.cancelCountdown()
+                    viewModel.performCapture()
+                },
+                onToggleCamera: { viewModel.toggleCamera() }
+            )
             if viewModel.showSoundTooltip {
                 VStack {
                     HStack {
