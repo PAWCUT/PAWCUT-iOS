@@ -12,10 +12,6 @@ class PawcutFrameViewModel: ObservableObject {
     init(selectedImages: [UIImage]) {
         self.selectedImages = selectedImages
     }
-    
-    init(images: [UIImage]) {
-        self.selectedImages = images
-    }
 
     var selectedFrame: FrameType? {
         guard let index = selectedFrameIndex else {return nil}
@@ -28,8 +24,6 @@ class PawcutFrameViewModel: ObservableObject {
 
     var selectedFrameImage: UIImage? {
         selectedFrame.flatMap { UIImage(named: $0.frameImageName) }
-//        guard let index = selectedFrameIndex else { return nil }
-//        return UIImage(named: frameImageNames[index])
     }
 
     func tapBackButton() {
