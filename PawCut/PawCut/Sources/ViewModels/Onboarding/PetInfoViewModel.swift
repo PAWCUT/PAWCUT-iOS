@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 @MainActor
 class PetInfoViewModel: ObservableObject {
     @Published var name: String = ""
@@ -34,13 +35,13 @@ class PetInfoViewModel: ObservableObject {
         validateName()
     }
 
-    func selectDog() {
+    func didSelectDog() {
         isDogEnabled = true
         isCatEnabled = false
         selectedType = .dog
     }
 
-    func selectCat() {
+    func didSelectCat() {
         isDogEnabled = false
         isCatEnabled = true
         selectedType = .cat
