@@ -33,7 +33,7 @@ class HomeViewModel: ObservableObject {
     }
     
     func tapNextButton() {
-        navigationManager.navigate(to: .onboarding(.secondOnboarding))
+        navigationManager.navigate(to: .onboarding(.onboarding))
     }
     
     func getPetName() -> String {

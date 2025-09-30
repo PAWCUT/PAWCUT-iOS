@@ -7,22 +7,14 @@
 import SwiftUI
 
 enum OnboardingDestination: NavigationDestination {
-    case firstOnboarding
-    case secondOnboarding
-    case thirdOnboarding
+    case onboarding
     case petInfo
-    
+
     @ViewBuilder
     func view() -> some View {
         switch self {
-        case .firstOnboarding:
-            FirstOnboardingView()
-        case .secondOnboarding:
-            SecondOnboardingView()
-                .navigationBarBackButtonHidden(true)
-        case .thirdOnboarding:
-            ThirdOnboardingView()
-                .navigationBarBackButtonHidden(true)
+        case .onboarding:
+            OnboardingView()
         case .petInfo:
             PetInfoView()
                 .navigationBarBackButtonHidden(true)
