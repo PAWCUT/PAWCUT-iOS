@@ -8,10 +8,8 @@
 import SwiftUI
 
 struct ArchiveEmptyView: View {
-
     let petType: PetType
-    // TODO: navigationManager 뷰에서 제거, 클로저 파라미터 추가.
-    private let navigationManager = NavigationManager.shared
+    let onTap: () -> Void
     
     var body: some View {
         VStack(spacing: 22) {
@@ -22,20 +20,13 @@ struct ArchiveEmptyView: View {
                 size: CGSize(width: 100, height: 100)
             )
             
-            VStack(spacing: 12) {
-                PawTitleLabel.semi18("비어있음", color: .grayScale01)
-                
-                PawBodyLabel.med14(
-                    "아직 찍은 사진이 없습니다.\n오늘의 하루를 남겨보세요.",
-                    color: .grayScale03,
-                    alignment: .center,
-                    lineLimit: 2
-                )
-            }
+            ExplainContents(
+                stateString: "비어있음",
+                explainString: "아직 찍은 사진이 없습니다.\n오늘의 하루를 남겨보세요."
+            )
             
             PawTakeCutButton("포우컷 촬영하러 가기") {
-                // TODO: Fix me
-                navigationManager.navigate(to: .main(.camera))
+                onTap()
             }
             .padding(.horizontal, 116)
             
@@ -46,5 +37,8 @@ struct ArchiveEmptyView: View {
     }
 }
 #Preview {
-    ArchiveEmptyView(petType: .dog)
+    ArchiveEmptyView(petType: .dog) {
+        print("did tap")
+    }
 }
+

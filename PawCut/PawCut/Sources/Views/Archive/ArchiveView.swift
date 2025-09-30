@@ -14,14 +14,27 @@ struct ArchiveView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // TODO: VM bye
             if viewModel.groupedPhotos.isEmpty {
-                ArchiveEmptyView(petType: viewModel.getPetType())
+                ArchiveEmptyView(petType: viewModel.getPetType()) {
+                    viewModel.didTapTakeCutButton()
+                }
             } else {
                 if viewModel.showGrid {
-                    ArchiveGridView(viewModel: viewModel)
+                    ArchiveGridView(
+                        sortedDates: viewModel.sortedDates,
+                        groupedPhotos: viewModel.groupedPhotos,
+                        onPhotoTap: viewModel.didTapPhotoDetails
+                    )
                 } else {
-                    ArchiveCalendarView(viewModel: viewModel)
+                    ArchiveCalendarView(
+                        calendarRange: viewModel.calendarRange,
+                        thumbnailImages: viewModel.createThumbnailImages(),
+                        onDateNavigate: { date in
+                            if viewModel.createThumbnailImages().keys.contains(date) {
+                                viewModel.didTapPhotoDetails(date: date, index: 0)
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -31,9 +44,7 @@ struct ArchiveView: View {
         .toolbarBackground(.grayScale06, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    viewModel.toggleDisplay()
-                }) {
+                Button(action: viewModel.didTapToggleDisplay) {
                     ImageComponent(
                         imageName: viewModel.showGrid ? "calendar_icon" : "grid_icon",
                         size: CGSize(width: 20, height: 20)
@@ -42,10 +53,10 @@ struct ArchiveView: View {
             }
         }
         .refreshable {
-            viewModel.refreshData()
+            viewModel.didTapRefresh()
         }
         .onAppear {
-            viewModel.setupModelContext(modelContext)
+            viewModel.willSetupModelContext(modelContext)
         }
     }
 }
