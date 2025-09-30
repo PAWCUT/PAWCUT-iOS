@@ -7,13 +7,11 @@
 
 import SwiftUI
 
-// TODO : iconName 초기값 지정
 struct ToastView: View {
     let message: String
-    var iconName: String
+    let iconName: String
     var backgroundColor: Color = .grayScale01
     var textColor: Color = .white
-    var iconColor: Color = .pointPurple01
     var cornerRadius: CGFloat = 20
     
     var body: some View {
@@ -32,42 +30,45 @@ struct ToastView: View {
 struct ToastModifier: ViewModifier {
     @Binding var isShowing: Bool
     let message: String
-    let iconName: String
-    var duration: TimeInterval = 3.0 // 토스트가 표시되는 시간
+    var iconName: String? = nil
+    var duration: TimeInterval = 3.0
     var animation: Animation = .easeInOut(duration: 0.3)
     var transition: AnyTransition = .move(edge: .bottom).combined(with: .opacity)
     
     func body(content: Content) -> some View {
         ZStack(alignment: .bottom) {
-            content // 원래의 뷰 내용
+            content
             
             if isShowing {
-                ToastView(message: message, iconName: iconName)
-                    .transition(transition)
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
-                            withAnimation(animation) {
-                                isShowing = false
-                            }
+                ToastView(
+                    message: message,
+                    iconName: iconName ?? "toast_icon" // 기본값 적용
+                )
+                .transition(transition)
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
+                        withAnimation(animation) {
+                            isShowing = false
                         }
                     }
-                    .padding(.bottom, 62)
+                }
+                .padding(.bottom, 62)
             }
         }
     }
 }
 
 extension View {
-    func toast(isShowing: Binding<Bool>, message: String, iconName: String, duration: TimeInterval = 2.0) -> some View {
+    func toast(isShowing: Binding<Bool>, message: String, iconName: String? = nil, duration: TimeInterval = 2.0) -> some View {
         self.modifier(ToastModifier(isShowing: isShowing, message: message, iconName: iconName, duration: duration))
     }
 }
 
 struct ToastTestView: View {
-    @State private var showSuccessToast: Bool = false
-    @State private var showFailToast: Bool = false
-    @State private var showLongMessageToast: Bool = false
-    @State private var showDelayedToast: Bool = false
+    @State private var showSuccessToast = false
+    @State private var showFailToast = false
+    @State private var showLongMessageToast = false
+    @State private var showDelayedToast = false
     
     var body: some View {
         NavigationView {
@@ -102,10 +103,10 @@ struct ToastTestView: View {
             }
             .navigationTitle("토스트 테스트")
             .navigationBarTitleDisplayMode(.inline)
-            .toast(isShowing: $showSuccessToast, message: "작업이 성공적으로 처리되었습니다!", iconName: "toast_icon", duration: 2.0)
-            .toast(isShowing: $showFailToast, message: "오류가 발생했습니다. 다시 시도해주세요.", iconName: "toast_icon", duration: 3.0)
-            .toast(isShowing: $showLongMessageToast, message: "이것은 매우 긴 메시지를 담고 있는 토스트입니다. \n여러 줄로 표시될 수 있습니다.\n이렇게\n이렇게", iconName: "toast_icon", duration: 4.0)
-            .toast(isShowing: $showDelayedToast, message: "1초 후 나타난 토스트입니다.", iconName: "toast_icon", duration: 2.0)
+            .toast(isShowing: $showSuccessToast, message: "작업이 성공적으로 처리되었습니다!", duration: 2.0)
+            .toast(isShowing: $showFailToast, message: "오류가 발생했습니다. 다시 시도해주세요.", duration: 3.0)
+            .toast(isShowing: $showLongMessageToast, message: "이것은 매우 긴 메시지를 담고 있는 토스트입니다. \n여러 줄로 표시될 수 있습니다.\n이렇게\n이렇게", duration: 4.0)
+            .toast(isShowing: $showDelayedToast, message: "1초 후 나타난 토스트입니다.", iconName: "pawcut_sound", duration: 2.0)
         }
     }
 }
@@ -113,4 +114,3 @@ struct ToastTestView: View {
 #Preview {
     ToastTestView()
 }
-

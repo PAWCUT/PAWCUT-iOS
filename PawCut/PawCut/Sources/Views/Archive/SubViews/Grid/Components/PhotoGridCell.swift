@@ -25,7 +25,7 @@ struct PhotoGridCell: View {
         }
         .frame(width: gridWidth, height: gridHeight)
         .overlay(
-            showDateOverlay ? ArchivePhotoDateOverlay(date: photo.createdAt) : nil,
+            showDateOverlay ? PhotoDateOverlay(date: photo.createdAt) : nil,
             alignment: .topLeading
         )
         .onTapGesture {
