@@ -108,7 +108,6 @@ private extension PhotoDetailsViewModel {
 
                 try await imageFileManager.saveToPhotoLibrary(image: image)
                 handleResult(message: "저장이 완료되었어요.", haptic: .success)
-
             } catch {
                 handleResult(message: "저장에 실패했어요.", haptic: .error)
             }
@@ -131,7 +130,6 @@ private extension PhotoDetailsViewModel {
 
             loadPhotosFromDatabase() // 갱신
             handleResult(message: "사진이 삭제되었어요.", haptic: .success)
-
         } catch {
             handleResult(message: "사진을 삭제할 수 없어요.", haptic: .error)
         }

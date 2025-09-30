@@ -111,7 +111,6 @@ final class ArchiveViewModel: ObservableObject {
     }
 }
 
-
 private extension ArchiveViewModel {
     func navigateToPhotoDetails(date: Date, index: Int) {
         navigationManager.navigate(to: .main(.photoDetails(date: date, index: index)))
@@ -124,7 +123,6 @@ private extension ArchiveViewModel {
 
 // TODO: SwiftData 처리를 extension 으로 해둠. 추후 처리 필요
 private extension ArchiveViewModel {
-    
     func loadPhotosFromDatabase() {
         guard let modelContext = modelContext else { return }
         
@@ -143,7 +141,6 @@ private extension ArchiveViewModel {
                     self.updateCalendarRange()
                     self.isLoading = false
                 }
-                
             } catch {
                 await MainActor.run {
                     print("사진 로딩 실패: \(error)")

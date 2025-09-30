@@ -20,7 +20,7 @@ struct PhotoDetailsThumbnailStrip: View {
                 HStack(spacing: 3) {
                     ForEach(currentPhotos.indices, id: \.self) { index in
                         let photo = currentPhotos[index]
-                        PhotoDetailsThumbnailCell(
+                        ThumbnailStripCell(
                             photo: photo,
                             isSelected: photo.id == currentPhoto?.id,
                             onTap: {

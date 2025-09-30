@@ -55,7 +55,7 @@ struct PhotoDetailsView: View {
                     )
                     .padding(.bottom, 58)
                     
-                    PhotoDetailsBottomControls(
+                    PhotoDetailsBottomControlView(
                         onSaveTap: {
                             viewModel.didTapSavePhoto()
                         },
