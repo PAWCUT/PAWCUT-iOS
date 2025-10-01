@@ -20,7 +20,7 @@ struct SelectableImageScrollView: View {
                                 onToggleSelection(index)
                             }
                             .overlay(
-                                RoundedRectangle(cornerRadius: 8)
+                                RoundedRectangle(cornerRadius: 4)
                                     .strokeBorder(
                                         selectedIndices.contains(index)
                                             ? Color.grayScale01 : .clear,

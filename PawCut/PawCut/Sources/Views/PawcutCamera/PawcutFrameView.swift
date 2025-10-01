@@ -33,51 +33,16 @@ struct PawcutFrameView: View {
 
                 Spacer()
 
-                // TODO: HStack 제거, 디자인 시스템 적용
-                HStack(spacing: 0) {
-                    Text(viewModel.selectedFrameDisplayName ?? "")
-                        .pretendardFont(size: ._18, weight: .bold)
-                        .foregroundColor(.grayScale01)
+                PawTitleLabel.bold18(viewModel.selectedFrameDisplayName ?? "")
+                    .padding(.horizontal, 21)
 
-                }
-                .padding(.horizontal, 21)
-
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 8) {
-                        ForEach(
-                            // TODO: 왜 Array 써야하지?
-                            Array(viewModel.frameScrollImageNames.enumerated()),
-                            id: \.offset
-                        ) { index, name in
-
-                            let image = UIImage(named: name)
-                            let isSelected =
-                                index == viewModel.selectedFrameIndex
-
-                            if let image = image {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .frame(width: 40, height: 40)
-                                    .clipShape(Circle())
-                                    .overlay(
-                                        Circle()
-                                            .strokeBorder(
-                                                isSelected
-                                                    ? Color.pointPurple01
-                                                    : .clear,
-                                                lineWidth: 2
-                                            )
-                                    )
-                                    .onTapGesture {
-                                        viewModel.selectedFrameIndex = index
-                                    }
-                            }
-                        }
+                PawcutFrameSelectionScrollView(
+                    frames: viewModel.frames,
+                    selectedFrameIndex: viewModel.selectedFrameIndex,
+                    onSelect: { index in
+                        viewModel.selectedFrameIndex = index
                     }
-                    .padding(.horizontal)
-                }
-                .padding(.top, 31)
-                .padding(.leading, 4)
+                )
 
                 PawPrimaryButton("저장하기") {
                     let exportView = PawcutGridImagePreview(
@@ -104,10 +69,7 @@ struct PawcutFrameView: View {
                     }
                 }
                 .onAppear {
-                    // TODO: 로직 분리
-                    if viewModel.selectedFrameIndex == nil {
-                        viewModel.selectedFrameIndex = 0
-                    }
+                    viewModel.selectDefaultFrameIfNeeded()
                 }
             }
 
