@@ -35,9 +35,8 @@ struct ZoomableAsyncPhotoImageView: View {
                     .scaleEffect(currentScale)
                     .offset(limitedOffset(for: geometry, image: image))
                     .gesture(makeZoomAndPanGesture(for: geometry, image: image))
-                    .onTapGesture(count: 2) {
-                        handleDoubleTap()
-                    }
+                    .onTapGesture(count: 2) { currentScale == minScale ? handleDoubleTap() : () }
+
             } else {
                 Image("empty_image")
                     .frame(maxWidth: .infinity)
