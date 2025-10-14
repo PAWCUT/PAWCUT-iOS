@@ -239,14 +239,14 @@ private extension PhotoDetailsViewModel {
         }
     }
     
-    func willShowToastMessage(_ message: String) {
+    func showToastMessage(_ message: String) {
         toastMessage = message
         showToast = true
     }
     
     func handleResult(message: String, haptic: HapticType) async {
         await MainActor.run {
-            willShowToastMessage(message)
+            showToastMessage(message)
             triggerHaptic(haptic)
         }
     }
