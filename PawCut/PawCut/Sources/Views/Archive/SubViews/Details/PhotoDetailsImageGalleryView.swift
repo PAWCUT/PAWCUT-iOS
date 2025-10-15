@@ -31,7 +31,6 @@ struct PhotoDetailsImageGallery: View {
                     ZoomableAsyncPhotoImageView(fileName: photo.fileName) { newScale in
                         isZoomedIn = newScale > 1.0
                     }
-                    .aspectRatio(contentMode: .fit)
                     .sideTapNavigationGesture(
                         onTapLeft: {
                             if !isZoomedIn {

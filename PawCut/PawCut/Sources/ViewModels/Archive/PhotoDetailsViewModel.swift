@@ -12,9 +12,9 @@ import Photos
 @MainActor
 final class PhotoDetailsViewModel: ObservableObject {
     
-    @Published var groupedPhotos: [Date: [Photo]] = [:]
-    @Published var currentDate: Date = Date()
-    @Published var currentIndex: Int = 0
+    @Published private(set) var groupedPhotos: [Date: [Photo]] = [:]
+    @Published var currentDate: Date
+    @Published var currentIndex: Int
     @Published var showDeleteConfirmation: Bool = false
     @Published var showToast: Bool = false
     @Published var toastMessage: String = ""
@@ -28,7 +28,7 @@ final class PhotoDetailsViewModel: ObservableObject {
     }
     
     var currentPhotos: [Photo] {
-        return groupedPhotos[currentDate.startOfDay] ?? []
+        groupedPhotos[currentDate.startOfDay] ?? []
     }
     
     var currentPhoto: Photo? {
@@ -36,7 +36,7 @@ final class PhotoDetailsViewModel: ObservableObject {
         return currentPhotos[currentIndex]
     }
     
-    init(initialDate: Date = Date(), initialIndex: Int = 0) {
+    init(initialDate: Date, initialIndex: Int) {
         self.currentDate = initialDate.startOfDay
         self.currentIndex = initialIndex
     }
@@ -95,57 +95,58 @@ private extension PhotoDetailsViewModel {
             do {
                 let authStatus = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
                 let permissionStatus = PhotoPermissionStatus(from: authStatus)
-
+                
                 guard permissionStatus.canSavePhoto else {
-                    handleResult(message: permissionStatus.userMessage, haptic: .error)
+                    await handleResult(message: permissionStatus.userMessage, haptic: .error)
                     return
                 }
-
+                
                 guard let image = await imageFileManager.loadImage(fileName: photo.fileName) else {
-                    handleResult(message: "사진을 불러올 수 없어요.", haptic: .error)
+                    await handleResult(message: "사진을 불러올 수 없어요.", haptic: .error)
                     return
                 }
-
+                
                 try await imageFileManager.saveToPhotoLibrary(image: image)
-                handleResult(message: "저장이 완료되었어요.", haptic: .success)
+                await handleResult(message: "저장이 완료되었어요.", haptic: .success)
             } catch {
-                handleResult(message: "저장에 실패했어요.", haptic: .error)
+                await handleResult(message: "저장에 실패했어요.", haptic: .error)
             }
         }
     }
-
+    
     func deletePhoto(_ photo: Photo) {
         Task {
             await performDelete(photo)
         }
     }
-
+    
     private func performDelete(_ photo: Photo) async {
         guard let modelContext = modelContext else { return }
-
+        
         do {
             try await imageFileManager.deleteFile(fileName: photo.fileName)
             modelContext.delete(photo)
             try modelContext.save()
-
-            loadPhotosFromDatabase() // 갱신
-            handleResult(message: "사진이 삭제되었어요.", haptic: .success)
+            
+            loadPhotosFromDatabase()
+            await handleResult(message: "사진이 삭제되었어요.", haptic: .success)
         } catch {
-            handleResult(message: "사진을 삭제할 수 없어요.", haptic: .error)
+            await handleResult(message: "사진을 삭제할 수 없어요.", haptic: .error)
         }
     }
-
+    
+    // TODO: SwiftData 로직 구현 필요
     func loadPhotosFromDatabase() {
         guard let modelContext = modelContext else { return }
-
+        
         Task {
             do {
                 let descriptor = FetchDescriptor<Photo>(sortBy: [SortDescriptor(\.createdAt, order: .forward)])
                 let allPhotos = try modelContext.fetch(descriptor)
-
+                
                 let calendar = Calendar.current
                 var newGroupedPhotos: [Date: [Photo]] = [:]
-
+                
                 for photo in allPhotos {
                     let dayKey = calendar.startOfDay(for: photo.createdAt)
                     if newGroupedPhotos[dayKey] == nil {
@@ -153,35 +154,35 @@ private extension PhotoDetailsViewModel {
                     }
                     newGroupedPhotos[dayKey]?.append(photo)
                 }
-
+                
                 groupedPhotos = newGroupedPhotos
-                updateCurrentPhotosAndIndex()
-
+                willUpdateCurrentPhotosAndIndex()
+                
                 if groupedPhotos.isEmpty {
                     navigateBack()
                 }
             } catch {
-                handleResult(message: "사진 목록을 불러오지 못했어요.", haptic: .error)
+                await handleResult(message: "사진 목록을 불러오지 못했어요.", haptic: .error)
             }
         }
     }
-
-    func updateCurrentPhotosAndIndex() {
+    
+    func willUpdateCurrentPhotosAndIndex() {
         let normalizedCurrentDate = currentDate.startOfDay
-
+        
         if groupedPhotos[normalizedCurrentDate]?.isEmpty != false {
             if let latestDate = sortedDates.last {
                 currentDate = latestDate
                 currentIndex = 0
             }
         }
-
+        
         let photosCount = currentPhotos.count
         if currentIndex >= photosCount {
             currentIndex = max(0, photosCount - 1)
         }
     }
-
+    
     func getAllPhotos() -> [Photo] {
         sortedDates.flatMap { groupedPhotos[$0.startOfDay] ?? [] }
     }
@@ -190,31 +191,31 @@ private extension PhotoDetailsViewModel {
 private extension PhotoDetailsViewModel {
     func moveToNextImage() {
         let allPhotos = getAllPhotos()
-
+        
         if let currentPhoto = currentPhoto,
            let currentAllIndex = allPhotos.firstIndex(where: { $0.id == currentPhoto.id }),
            currentAllIndex < allPhotos.count - 1 {
             let nextPhoto = allPhotos[currentAllIndex + 1]
             let nextDate = nextPhoto.createdAt.startOfDay
             let nextIndexInDate = groupedPhotos[nextDate]?.firstIndex(where: { $0.id == nextPhoto.id }) ?? 0
-
+            
             currentDate = nextDate
             currentIndex = nextIndexInDate
             
             triggerHaptic(.selection)
         }
     }
-
+    
     func moveToPreviousImage() {
         let allPhotos = getAllPhotos()
-
+        
         if let currentPhoto = currentPhoto,
            let currentAllIndex = allPhotos.firstIndex(where: { $0.id == currentPhoto.id }),
            currentAllIndex > 0 {
             let previousPhoto = allPhotos[currentAllIndex - 1]
             let previousDate = previousPhoto.createdAt.startOfDay
             let previousIndexInDate = groupedPhotos[previousDate]?.firstIndex(where: { $0.id == previousPhoto.id }) ?? 0
-
+            
             currentDate = previousDate
             currentIndex = previousIndexInDate
             
@@ -223,30 +224,30 @@ private extension PhotoDetailsViewModel {
     }
 }
 
-extension PhotoDetailsViewModel {
+private extension PhotoDetailsViewModel {
     enum HapticType {
         case success
         case selection
         case error
-        case saveComplete
     }
-
+    
     func triggerHaptic(_ type: HapticType) {
         switch type {
         case .success: HapticManager.shared.triggerSuccess()
         case .selection: HapticManager.shared.triggerSelection()
         case .error: HapticManager.shared.triggerError()
-        case .saveComplete: HapticManager.shared.triggerSaveComplete()
         }
     }
-
+    
     func showToastMessage(_ message: String) {
         toastMessage = message
         showToast = true
     }
-
-    func handleResult(message: String, haptic: HapticType) {
-        showToastMessage(message)
-        triggerHaptic(haptic)
+    
+    func handleResult(message: String, haptic: HapticType) async {
+        await MainActor.run {
+            showToastMessage(message)
+            triggerHaptic(haptic)
+        }
     }
 }
