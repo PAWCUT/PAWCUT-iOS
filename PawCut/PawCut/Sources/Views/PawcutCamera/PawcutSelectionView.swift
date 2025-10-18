@@ -10,9 +10,12 @@ import SwiftUI
 struct PawcutSelectionView: View {
     @StateObject var viewModel: PawcutSelectionViewModel
 
-    init(images: [UIImage]) {
+    init(images: [UIImage], entryPoint: EntryPoint) {
         self._viewModel = StateObject(
-            wrappedValue: PawcutSelectionViewModel(sourceImages: images)
+            wrappedValue: PawcutSelectionViewModel(
+                sourceImages: images,
+                entryPoint: entryPoint
+            )
         )
     }
 
@@ -61,12 +64,12 @@ struct PawcutSelectionView: View {
             confirmTitle: "돌아가기",
             cancelTitle: "취소",
             onConfirm: {
-                viewModel.confirmBackNavigation()
+                viewModel.tapBackButton()
             }
         )
     }
 }
 
 #Preview {
-    PawcutSelectionView(images: [UIImage(named: "onboarding_1")!])
+    PawcutSelectionView(images: [UIImage(named: "onboarding_1")!], entryPoint: .camera)
 }

@@ -40,11 +40,11 @@ class MainViewModel: ObservableObject {
                     images.append(image)
                 }
             }
-            
-            
-            
+
             navigationManager.navigate(
-                to: .main(.pawcutSelection(images: images))
+                to: .main(
+                    .pawcutSelection(images: images, entryPoint: .photoPicker)
+                )
             )
         }
     }

@@ -1,5 +1,10 @@
 import SwiftUI
 
+enum EntryPoint {
+    case camera
+    case photoPicker
+}
+
 @MainActor
 class PawcutSelectionViewModel: ObservableObject {
     private let navigationManager = NavigationManager.shared
@@ -10,6 +15,7 @@ class PawcutSelectionViewModel: ObservableObject {
     @Published var showBackAlert = false
 
     let maxSelection = 4
+    let entryPoint: EntryPoint
 
     var selectedCount: Int { selectedIndices.count }
     var sourceImagesCount: Int { sourceImages.count }
@@ -17,8 +23,9 @@ class PawcutSelectionViewModel: ObservableObject {
         selectedIndices.map { sourceImages[$0] }
     }
 
-    init(sourceImages: [UIImage]) {
+    init(sourceImages: [UIImage], entryPoint: EntryPoint) {
         self.sourceImages = sourceImages
+        self.entryPoint = entryPoint
     }
 
     func toggleSelection(at index: Int) {
@@ -49,15 +56,15 @@ class PawcutSelectionViewModel: ObservableObject {
     }
 
     func tapBackButton() {
-        
-        navigationManager.popUntil(to: 3)
+        switch entryPoint {
+        case .camera:
+            navigationManager.popUntil(to: 3)
+        case .photoPicker:
+            navigationManager.pop()
+        }
     }
 
     func requestBackNavigation() {
         showBackAlert = true
-    }
-
-    func confirmBackNavigation() {
-        tapBackButton()
     }
 }
