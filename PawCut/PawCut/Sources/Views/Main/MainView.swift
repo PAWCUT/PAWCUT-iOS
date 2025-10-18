@@ -79,7 +79,8 @@ struct MainView: View {
                 matching: .images
             ) {
                 Text("앱에서 불러오기")
-            }.onChange(of: viewModel.importImages) {
+            }.onChange(of: viewModel.importImages) { _, newItem in
+                guard !newItem.isEmpty else { return }
                 viewModel.tapPawcutSelectionButton()
             }
         }

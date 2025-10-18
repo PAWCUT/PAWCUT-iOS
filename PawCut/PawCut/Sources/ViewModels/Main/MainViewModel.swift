@@ -46,6 +46,10 @@ class MainViewModel: ObservableObject {
                     .pawcutSelection(images: images, entryPoint: .photoPicker)
                 )
             )
+
+            await MainActor.run {
+                self.importImages = []
+            }
         }
     }
 
