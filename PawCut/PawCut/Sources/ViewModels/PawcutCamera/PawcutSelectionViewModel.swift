@@ -49,6 +49,7 @@ class PawcutSelectionViewModel: ObservableObject {
     }
 
     func tapBackButton() {
+        
         navigationManager.popUntil(to: 3)
     }
 

@@ -5,6 +5,7 @@
 //  Created by donghee on 8/16/25.
 //
 
+import PhotosUI
 import SwiftUI
 
 struct MainHeaderView: View {
@@ -70,6 +71,16 @@ struct MainView: View {
 
             PawPrimaryButton("촬영하기") {
                 viewModel.tapCaptureButton()
+            }
+
+            PhotosPicker(
+                selection: $viewModel.importImages,
+                maxSelectionCount: 8,
+                matching: .images
+            ) {
+                Text("앱에서 불러오기")
+            }.onChange(of: viewModel.importImages) {
+                viewModel.tapPawcutSelectionButton()
             }
         }
         .navigationTitle("")
