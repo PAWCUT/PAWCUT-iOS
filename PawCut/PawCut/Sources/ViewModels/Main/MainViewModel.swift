@@ -7,9 +7,8 @@
 
 import Foundation
 
-// TODO: MainViewModel로 네이밍 변경
 @MainActor
-class HomeViewModel: ObservableObject {
+class MainViewModel: ObservableObject {
     @Published var petName: String = ""
     private let navigationManager = NavigationManager.shared
     private let petStorage: PetStorage = PetStorage()

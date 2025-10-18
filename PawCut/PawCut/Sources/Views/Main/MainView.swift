@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainHeaderView: View {
-    let viewModel: HomeViewModel
+    let viewModel: MainViewModel
 
     var body: some View {
         HStack {
@@ -33,12 +33,13 @@ struct MainHeaderView: View {
 }
 
 struct MainTitleView: View {
-    let viewModel: HomeViewModel
+    let viewModel: MainViewModel
 
     var body: some View {
         HStack {
             PawTitleLabel.bold24(
-                viewModel.getPetName().withComleteWordByJongsung+" 함께 행복한\n추억을 남겨 보세요!",
+                viewModel.getPetName().withComleteWordByJongsung
+                    + " 함께 행복한\n추억을 남겨 보세요!",
                 alignment: .leading,
                 lineLimit: 2
             )
@@ -50,23 +51,23 @@ struct MainTitleView: View {
 
 struct MainView: View {
 
-    @StateObject var viewModel = HomeViewModel()
+    @StateObject var viewModel = MainViewModel()
 
     var body: some View {
         VStack {
             MainHeaderView(viewModel: viewModel)
 
             MainTitleView(viewModel: viewModel)
-            
+
             Spacer()
-            
+
             ImageComponent(
                 imageName: "main_photo",
                 size: CGSize(width: 308, height: 369)
             )
-            
+
             Spacer()
-            
+
             PawPrimaryButton("촬영하기") {
                 viewModel.tapCaptureButton()
             }
