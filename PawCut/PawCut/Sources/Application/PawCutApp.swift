@@ -23,7 +23,6 @@ struct PawCutApp: App {
         WindowGroup {
             ZStack {
                 ContentView()
-                    .scaleEffect(showSplash ? 0.95 : 1.0)
                     .opacity(showSplash ? 0 : 1)
                 
                 if showSplash {
