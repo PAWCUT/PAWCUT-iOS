@@ -11,7 +11,7 @@ import SwiftUI
 @MainActor
 class MainViewModel: ObservableObject {
     @Published var petName: String = ""
-    @Published var importImages: [PhotosPickerItem] = []
+    @Published var importImages: [UIImage] = []
 
     private let navigationManager = NavigationManager.shared
     private let petStorage: PetStorage = PetStorage()
@@ -31,26 +31,13 @@ class MainViewModel: ObservableObject {
     }
 
     func tapPawcutSelectionButton() {
-        Task {
-            var images: [UIImage] = []
-            for item in importImages {
-                if let data = try? await item.loadTransferable(type: Data.self),
-                    let image = UIImage(data: data)
-                {
-                    images.append(image)
-                }
-            }
-
-            navigationManager.navigate(
-                to: .main(
-                    .pawcutSelection(images: images, entryPoint: .photoPicker)
-                )
+        navigationManager.navigate(
+            to: .main(
+                .pawcutSelection(images: importImages, entryPoint: .photoPicker)
             )
+        )
 
-            await MainActor.run {
-                self.importImages = []
-            }
-        }
+        importImages = []
     }
 
     func tapSettingButton() {

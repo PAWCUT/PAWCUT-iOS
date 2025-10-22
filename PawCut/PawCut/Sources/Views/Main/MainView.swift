@@ -33,7 +33,7 @@ struct MainView: View {
 
             PhotoImportPickerView(
                 importImages: $viewModel.importImages,
-                onImport: {
+                tapPawcutSelectionButton: {
                     viewModel.tapPawcutSelectionButton()
                 }
             )

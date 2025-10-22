@@ -5,24 +5,24 @@
 //  Created by Jay on 10/19/25.
 //
 
-import SwiftUI
 import PhotosUI
+import SwiftUI
 
 struct PhotoImportPickerView: View {
-    @Binding var importImages: [PhotosPickerItem]
-    var onImport: () -> Void
+    @Binding var importImages: [UIImage]
+    var tapPawcutSelectionButton: () -> Void
+
+    @State private var showPicker = false
     
     var body: some View {
         VStack(spacing: 0) {
             PawTitleLabel.bold18("이미 남겨둔 순간이 있나요?")
                 .padding(.horizontal, 20)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            
-            PhotosPicker(
-                selection: $importImages,
-                maxSelectionCount: 8,
-                matching: .images
-            ) {
+
+            Button{
+                showPicker = true
+            } label: {
                 HStack(spacing: 0) {
                     Image("import_photo_icon")
                         .resizable()
@@ -56,9 +56,12 @@ struct PhotoImportPickerView: View {
                 .padding(.top, 18)
                 .padding(.horizontal, 20)
             }
-            .onChange(of: importImages) { _, newItem in
-                guard !newItem.isEmpty else { return }
-                onImport()
+            .fullScreenCover(isPresented: $showPicker) {
+                FullScreenPhotoPickerView { uiImages in
+                    importImages = uiImages
+                    tapPawcutSelectionButton()
+                }
+                .ignoresSafeArea()
             }
         }
         .padding(.vertical, 40)
