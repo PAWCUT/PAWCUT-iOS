@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct MainHeaderView: View {
-    let viewModel: MainViewModel
+    var tapAchiveButton: () -> Void
+    var tapSettingButton: () -> Void
 
     var body: some View {
         HStack {
@@ -19,12 +20,12 @@ struct MainHeaderView: View {
             Spacer()
 
             IconButton(imageName: "archivebox") {
-                viewModel.tapAchiveButton()
+                tapAchiveButton()
             }
             .padding(.trailing, -4)
 
             IconButton(imageName: "gearshape") {
-                viewModel.tapSettingButton()
+                tapSettingButton()
             }
         }
         .padding(.horizontal, 20)

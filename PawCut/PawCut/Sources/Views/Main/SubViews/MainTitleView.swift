@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainTitleView: View {
     let viewModel: MainViewModel
+    var getPetName: () -> Void
 
     var body: some View {
         HStack {

@@ -13,9 +13,23 @@ struct MainView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            MainHeaderView(viewModel: viewModel)
-            
-            CaptureSectionView(viewModel: viewModel)
+            MainHeaderView(
+                tapAchiveButton: {
+                    viewModel.tapAchiveButton()
+                },
+                tapSettingButton: {
+                    viewModel.tapSettingButton()
+                }
+            )
+
+            CaptureSectionView(
+                tapCaptureButton: {
+                    viewModel.tapCaptureButton()
+                },
+                getPetName: {
+                    viewModel.getPetName()
+                }
+            )
 
             PhotoImportPickerView(
                 importImages: $viewModel.importImages,

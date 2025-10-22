@@ -8,16 +8,24 @@
 import SwiftUI
 
 struct CaptureSectionView: View {
-    let viewModel: MainViewModel
-    
+    var tapCaptureButton: () -> Void
+    var getPetName: () -> String
+
     var body: some View {
         VStack(spacing: 0) {
-            MainTitleView(viewModel: viewModel)
-            
+            PawTitleLabel.bold24(
+                getPetName().withComleteWordByJongsung
+                    + " 함께 행복한\n추억을 남겨 보세요!",
+                alignment: .center,
+                lineLimit: 2
+            )
+            .padding(.top, 20)
+            .padding(.bottom, 3)
+
             Spacer()
 
             PawPrimaryButton("촬영하기") {
-                viewModel.tapCaptureButton()
+                tapCaptureButton()
             }
             .overlay(
                 ImageComponent(
@@ -29,7 +37,7 @@ struct CaptureSectionView: View {
         }
         .background(
             Color("PointPurple02")
-                    .clipShape(BottomRoundedShape(radius: 18))
+                .clipShape(BottomRoundedShape(radius: 18))
                 .ignoresSafeArea()
         )
     }
