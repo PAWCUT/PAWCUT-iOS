@@ -13,6 +13,7 @@ struct SelectableImageScrollView: View {
                     ZStack(alignment: .topLeading) {
                         Image(uiImage: images[index])
                             .resizable()
+                            .aspectRatio(contentMode: .fill) 
                             .frame(width: 100, height: 132)
                             .clipShape(RoundedRectangle(cornerRadius: 4))
                             .contentShape(RoundedRectangle(cornerRadius: 4))
