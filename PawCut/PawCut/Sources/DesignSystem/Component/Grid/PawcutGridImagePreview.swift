@@ -60,6 +60,7 @@ struct PawcutGridImagePreview: View {
                         if index < images.count {
                             Image(uiImage: images[index])
                                 .resizable()
+                                .aspectRatio(contentMode: .fill) 
                                 .frame(
                                     width: style.metrics.imagesWidth,
                                     height: style.metrics.imagesHeight

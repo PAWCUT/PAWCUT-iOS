@@ -12,7 +12,7 @@ enum MainDestination: NavigationDestination {
     case archive
     case photoDetails(date: Date, index: Int)
     case pawcutFrameSelection(images: [UIImage])
-    case pawcutSelection(images: [UIImage])
+    case pawcutSelection(images: [UIImage], entryPoint: EntryPoint)
     case setting
     case soundSetting
     case fixPetInfo
@@ -40,8 +40,8 @@ enum MainDestination: NavigationDestination {
             FixPetInfoView()
         case .petInfo:
             PetInfoView()
-        case .pawcutSelection(let images):
-            PawcutSelectionView(images: images)
+        case .pawcutSelection(let images, let entryPoint):
+            PawcutSelectionView(images: images, entryPoint: entryPoint)
         case .tip:
             PawcutTipView()
         case .ready:

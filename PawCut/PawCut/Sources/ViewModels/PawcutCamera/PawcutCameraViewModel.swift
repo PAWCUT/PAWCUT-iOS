@@ -101,7 +101,7 @@ final class PawcutCameraViewModel: NSObject, ObservableObject {
                     
                     DispatchQueue.main.async {
                         self?.navigationManager
-                            .navigate(to: .main(.pawcutSelection(images: self?.capturedImages ?? [])))
+                            .navigate(to: .main(.pawcutSelection(images: self?.capturedImages ?? [], entryPoint: .camera)))
                     }
                     return
                 }
