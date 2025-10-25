@@ -7,7 +7,7 @@ class PawcutFrameViewModel: ObservableObject {
     @Published var isBottomSheetPresented = false
     @Published var selectedFrameIndex: Int? = nil
 
-    let frames = FrameType.allCases
+    let frames = FrameType.sortedCases
 
     init(selectedImages: [UIImage]) {
         self.selectedImages = selectedImages
