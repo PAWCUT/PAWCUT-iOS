@@ -18,7 +18,7 @@ struct PawcutSelectionView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            PawBackButtonNavigationBar {
+            LegacyPawBackButtonNavigationBar {
                 viewModel.requestBackNavigation()
             }
 

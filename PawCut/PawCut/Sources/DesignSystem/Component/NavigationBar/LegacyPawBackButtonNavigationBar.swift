@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PawBackButtonNavigationBar: View {
+struct LegacyPawBackButtonNavigationBar: View {
     let backAction: () -> Void
     
     var body: some View {
@@ -27,7 +27,7 @@ struct PawBackButtonNavigationBar: View {
 
 
 #Preview {
-    PawBackButtonNavigationBar {
+    LegacyPawBackButtonNavigationBar {
         
     }
 }
