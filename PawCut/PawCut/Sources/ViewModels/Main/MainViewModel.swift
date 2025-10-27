@@ -15,9 +15,19 @@ class MainViewModel: ObservableObject {
 
     private let navigationManager = NavigationManager.shared
     private let petStorage: PetStorage = PetStorage()
+    private let selectedPetType: PetType
 
     init() {
         self.petName = petStorage.getPetName()
+        self.selectedPetType = petStorage.getPetType()
+    }
+    
+    var mainImageName: String {
+        return "main_" + selectedPetType.filePrefix + "photo"
+    }
+    
+    var importImageName: String {
+        return "import_photo_" + selectedPetType.filePrefix + "icon"
     }
 
     let currentPage: Int = 0
