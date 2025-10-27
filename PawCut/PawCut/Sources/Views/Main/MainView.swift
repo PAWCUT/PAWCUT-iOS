@@ -41,6 +41,9 @@ struct MainView: View {
                 }
             )
         }
+        .onAppear() {
+            viewModel.updatePetInfo()
+        }
     }
 }
 
