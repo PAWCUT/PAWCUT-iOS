@@ -9,18 +9,19 @@ import SwiftUI
 
 struct PawNavigationBarModifier: ViewModifier {
     @Environment(\.pawNavigationConfiguration) private var config
+    @Environment(\.dismiss) private var dismiss
     
     func body(content: Content) -> some View {
         VStack(spacing: 0) {
             PawNavigationBar(
                 style: config.style,
                 title: config.title,
-                onBackTapped: config.backAction ?? {},
+                onBackTapped: config.backAction ?? { dismiss() },
                 trailingItem: config.trailingItem
             )
             
             content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .toolbarVisibility(.hidden, for: .navigationBar)
         }
     }
 }
