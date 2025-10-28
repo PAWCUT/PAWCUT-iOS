@@ -12,17 +12,21 @@ struct PawNavigationConfiguration {
     var title: String
     var backAction: (() -> Void)?
     var trailingItem: AnyView?
+    var isHidden: Bool
+
     
     init(
         style: PawNavigationStyle = .onlyBackButton,
         title: String = "",
         backAction: (() -> Void)? = nil,
-        trailingItem: AnyView? = nil
+        trailingItem: AnyView? = nil,
+        isHidden: Bool = false
     ) {
         self.style = style
         self.title = title
         self.backAction = backAction
         self.trailingItem = trailingItem
+        self.isHidden = isHidden
     }
 }
 
