@@ -35,8 +35,10 @@ struct SettingView: View {
             Spacer()
         }
         .padding(.top, 8)
-        .navigationTitle("설정")
-        .navigationBarTitleDisplayMode(.inline)
+        .pawNavigationBar()
+        .pawNavigationTitle("설정")
+        .pawNavigationStyle(.inline)
+        .enableNativeSwipeBack()
         .fullScreenCover(
             item: Binding<URLItem?>(
                 get: {

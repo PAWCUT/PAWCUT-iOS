@@ -13,13 +13,17 @@ struct FixPetInfoView: View {
     var body: some View {
         VStack {
             FixPetInfoContentView(viewModel: viewModel)
-
+            
             Spacer()
 
             PawPrimaryButton("저장하기", isEnabled: viewModel.isValidInput) {
                 viewModel.tapSaveButton()
             }
         }
+        .pawNavigationBar()
+        .pawNavigationStyle(.inline)
+        .pawNavigationTitle("프로필")
+        .enableNativeSwipeBack()
     }
 }
 
@@ -36,7 +40,7 @@ struct FixPetInfoContentView: View {
                 )
                 .frame(height: 70, alignment: .topLeading)
                 .padding(.bottom, 44)
-                .padding(.top, 56)
+                .padding(.top, 36)
 
             PawTitleLabel
                 .semi14(
