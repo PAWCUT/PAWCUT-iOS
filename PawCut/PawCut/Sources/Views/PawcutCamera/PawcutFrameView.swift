@@ -90,6 +90,8 @@ struct PawcutFrameView: View {
                 )
             }
         }
+        .pawNavigationBar()
+        .enableNativeSwipeBack(true)
     }
 }
 

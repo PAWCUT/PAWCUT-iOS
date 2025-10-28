@@ -22,6 +22,8 @@ struct PawcutTipView: View {
                 }
             }
         }
+        .pawNavigationBar()
+        .enableNativeSwipeBack()
     }
 }
 

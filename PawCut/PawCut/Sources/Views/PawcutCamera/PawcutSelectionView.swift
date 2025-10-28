@@ -21,10 +21,6 @@ struct PawcutSelectionView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            LegacyPawBackButtonNavigationBar {
-                viewModel.requestBackNavigation()
-            }
-
             Spacer()
 
             ScrollView {
@@ -54,6 +50,11 @@ struct PawcutSelectionView: View {
             PawPrimaryButton("다음", isEnabled: viewModel.selectedCount == 4) {
                 viewModel.tapNextButton()
             }
+        }
+        .pawNavigationBar()
+        .enableNativeSwipeBack(false)
+        .pawNavigationBackAction {
+            viewModel.requestBackNavigation()
         }
         .frame(maxHeight: .infinity, alignment: .top)
         .navigationBarBackButtonHidden()
