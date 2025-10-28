@@ -30,11 +30,19 @@ extension View {
         }
     }
     
-    func pawNavigationTrailingItem<Content: View>(
-        @ViewBuilder _ content: @escaping () -> Content
-    ) -> some View {
+    func pawNavigationTrailingItems(_ items: any PawNavigationItem...) -> some View {
         transformEnvironment(\.pawNavigationConfiguration) { config in
-            config.trailingItem = AnyView(content())
+            let viewItems = items.prefix(2).map { item -> AnyView in
+                AnyView(item)
+            }
+            
+            config.trailingItem = AnyView(
+                HStack(spacing: 0) {
+                    ForEach(0..<viewItems.count, id: \.self) { index in
+                        viewItems[index]
+                    }
+                }
+            )
         }
     }
 }
