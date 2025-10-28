@@ -38,20 +38,16 @@ struct ArchiveView: View {
                 }
             }
         }
-        .navigationTitle("아카이브")
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(false)
-        .toolbarBackground(.grayScale06, for: .navigationBar)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: viewModel.didTapToggleDisplay) {
-                    ImageComponent(
-                        imageName: viewModel.showGrid ? "calendar_icon" : "grid_icon",
-                        size: CGSize(width: 20, height: 20)
-                    )
-                }
-            }
-        }
+        .pawNavigationBar()
+        .pawNavigationTitle("아카이브")
+        .pawNavigationStyle(.inline)
+        .enableNativeSwipeBack()
+        .pawNavigationTrailingItems(
+            NavigationIconItem(
+                imageName: viewModel.showGrid ? "calendar_icon" : "grid_icon",
+                action: viewModel.didTapToggleDisplay
+            )
+        )
         .refreshable {
             viewModel.didTapRefresh()
         }

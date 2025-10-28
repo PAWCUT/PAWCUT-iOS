@@ -30,28 +30,28 @@ extension PawNavigationStyle {
     static let onlyBackButton = PawNavigationStyle(
         showsTitle: false,
         height: 44,
-        backgroundColor: .white,
+        backgroundColor: .grayScale06,
         foregroundColor: .grayScale01
     )
 
     static let inline = PawNavigationStyle(
         showsTitle: true,
         height: 44,
-        backgroundColor: .white,
+        backgroundColor: .grayScale06,
         foregroundColor: .grayScale01
     )
     
     static let inlineWithItem = PawNavigationStyle(
         showsTitle: true,
         height: 44,
-        backgroundColor: .white,
+        backgroundColor: .grayScale06,
         foregroundColor: .grayScale01
     )
     
     static let camera = PawNavigationStyle(
         showsTitle: false,
         height: 44,
-        backgroundColor: .black,
+        backgroundColor: .grayScale01,
         foregroundColor: .grayScale06
     )
 }

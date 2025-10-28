@@ -23,18 +23,6 @@ struct PhotoDetailsView: View {
             Color.grayScale06.ignoresSafeArea()
             
             VStack(spacing: 0) {
-                if !isZoomedIn {
-                    PhotoDetailsHeader(
-                        currentPhoto: viewModel.currentPhoto,
-                        onBackTap: {
-                            viewModel.didTapBackButton()
-                        }
-                    )
-                    .padding(.top, 11)
-                    .padding(.horizontal)
-                    .padding(.bottom, 26)
-                }
-                
                 PhotoDetailsImageGallery(
                     sortedDates: viewModel.sortedDates,
                     groupedPhotos: viewModel.groupedPhotos,
@@ -68,7 +56,11 @@ struct PhotoDetailsView: View {
                 }
             }
         }
-        .navigationBarHidden(true)
+        .pawNavigationBar()
+        .pawNavigationStyle(.inline)
+        .pawNavigationTitle(viewModel.currentPhoto?.createdAt.koreanMonthDateString ?? "날짜 없음")
+        .pawNavigationBarHidden(isZoomedIn)
+        .enableNativeSwipeBack()
         .onAppear {
             viewModel.willSetupModelContext(modelContext)
         }

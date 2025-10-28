@@ -64,7 +64,7 @@ struct PawNavigationBar: View {
         .pawNavigationStyle(.inline)
         .pawNavigationTitle("아이템")
         .pawNavigationTrailingItems(
-            PawNavigationIconItem(systemName: "gearshape") { }
+            NavigationIconItem(systemName: "gearshape") { }
         )
 }
 
@@ -74,8 +74,8 @@ struct PawNavigationBar: View {
         .pawNavigationStyle(.inlineWithItem)
         .pawNavigationTitle("아이템")
         .pawNavigationTrailingItems(
-            PawNavigationIconItem(systemName: "gearshape") { },
-            PawNavigationIconItem(systemName: "gearshape") { }
+            NavigationIconItem(systemName: "gearshape") { },
+            NavigationIconItem(systemName: "gearshape") { }
         )
 }
 
@@ -85,7 +85,7 @@ struct PawNavigationBar: View {
         .pawNavigationStyle(.camera)
         .pawNavigationTitle("안녕")
         .pawNavigationTrailingItems(
-            PawNavigationIconItem(imageName: "pawcut_sound") { },
-            PawNavigationIconItem(imageName: "flash_dark") { }
+            NavigationIconItem(imageName: "pawcut_sound") { },
+            NavigationIconItem(imageName: "flash_dark") { }
         )
 }

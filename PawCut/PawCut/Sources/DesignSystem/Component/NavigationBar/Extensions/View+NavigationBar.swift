@@ -45,4 +45,10 @@ extension View {
             )
         }
     }
+    
+    func pawNavigationBarHidden(_ isHidden: Bool) -> some View {
+        transformEnvironment(\.pawNavigationConfiguration) { config in
+            config.isHidden = isHidden
+        }
+    }
 }

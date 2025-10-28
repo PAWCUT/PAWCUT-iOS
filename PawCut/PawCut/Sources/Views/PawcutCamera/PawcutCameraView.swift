@@ -37,8 +37,6 @@ struct PawcutCameraView: View {
                     )
             }
             
-            PawcutCameraTopSubView(viewModel: viewModel)
-            
             PawBodyLabel.semi16("\(viewModel.currentShotIndex) / 8", color: .grayScale06)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
@@ -87,6 +85,25 @@ struct PawcutCameraView: View {
             }
             
         }
+        .pawNavigationBar()
+        .pawNavigationStyle(.camera)
+        .pawNavigationBackAction {
+            viewModel.tapBackButton()
+        }
+        .enableNativeSwipeBack(false)
+        .pawNavigationTrailingItems(
+            SoundIconItem(
+                imageName: "pawcut_sound",
+                action: viewModel.playSound
+            ),
+            
+            FlashIconItem(
+                enabledImageName: "flash_light",
+                disabledImageName: "flash_dark",
+                isEnabled: viewModel.isFlashEnabled,
+                action: viewModel.toggleFlash
+            )
+        )
         .toolbar(.hidden, for: .navigationBar)
         .onChange(of: viewModel.session.isRunning) { _, isRunning in
             if isRunning {

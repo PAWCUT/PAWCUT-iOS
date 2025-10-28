@@ -13,12 +13,14 @@ struct PawNavigationBarModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         VStack(spacing: 0) {
-            PawNavigationBar(
-                style: config.style,
-                title: config.title,
-                onBackTapped: config.backAction ?? { dismiss() },
-                trailingItem: config.trailingItem
-            )
+            if !config.isHidden {
+                PawNavigationBar(
+                    style: config.style,
+                    title: config.title,
+                    onBackTapped: config.backAction ?? { dismiss() },
+                    trailingItem: config.trailingItem
+                )
+            }
             
             content
                 .toolbarVisibility(.hidden, for: .navigationBar)
