@@ -10,7 +10,7 @@ import SwiftUI
 struct CaptureSectionView: View {
     var tapCaptureButton: () -> Void
     var getPetName: () -> String
-    var mainImageName: String
+    let mainImageName: String
 
     var body: some View {
         VStack(spacing: 0) {

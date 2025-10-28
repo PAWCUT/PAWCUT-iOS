@@ -10,7 +10,7 @@ import SwiftUI
 
 struct PhotoImportPickerView: View {
     @Binding var importImages: [UIImage]
-    var importImageName: String
+    let importImageName: String
     var tapPawcutSelectionButton: () -> Void
 
     @State private var showPicker = false
