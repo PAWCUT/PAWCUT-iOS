@@ -17,7 +17,8 @@ struct PawNavigationBar: View {
         ZStack {
             if style.showsTitle {
                 Text(title)
-                    .font(.system(size: 17, weight: .semibold))
+                    .lineLimit(1)
+                    .pretendardFont(size: ._16, weight: .semibold)
                     .foregroundColor(style.foregroundColor)
             }
             
