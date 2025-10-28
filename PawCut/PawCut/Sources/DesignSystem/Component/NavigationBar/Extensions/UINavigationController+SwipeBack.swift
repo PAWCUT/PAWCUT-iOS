@@ -8,17 +8,23 @@
 import UIKit
 import SwiftUI
 
-extension UINavigationController: UIGestureRecognizerDelegate {
-    override open func viewDidLoad() {
-        super.viewDidLoad()
-        interactivePopGestureRecognizer?.delegate = self
+private class SwipeBackGestureDelegate: NSObject, UIGestureRecognizerDelegate {
+    weak var navigationController: UINavigationController?
+    
+    init(navigationController: UINavigationController) {
+        self.navigationController = navigationController
+        super.init()
     }
     
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return viewControllers.count > 1
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard let navController = navigationController else { return false }
+        return navController.viewControllers.count > 1
     }
     
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
         return false
     }
 }
@@ -48,6 +54,7 @@ struct NavigationControllerAccessor: UIViewControllerRepresentable {
 
 class NavigationControllerAccessorViewController: UIViewController {
     private var isSwipeBackEnabled: Bool
+    private var gestureDelegate: SwipeBackGestureDelegate?
     
     init(isSwipeBackEnabled: Bool) {
         self.isSwipeBackEnabled = isSwipeBackEnabled
@@ -55,7 +62,13 @@ class NavigationControllerAccessorViewController: UIViewController {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("NavigationControllerAccessorViewController : init(coder:) has not been implemented")
+        fatalError("NavigationControllerAccessorViewController: init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.isHidden = true
+        view.isUserInteractionEnabled = false
     }
     
     override func didMove(toParent parent: UIViewController?) {
@@ -69,11 +82,23 @@ class NavigationControllerAccessorViewController: UIViewController {
         guard let navigationController = navigationController else { return }
         
         if isEnabled {
+            if gestureDelegate == nil {
+                gestureDelegate = SwipeBackGestureDelegate(navigationController: navigationController)
+            }
+            
             navigationController.interactivePopGestureRecognizer?.isEnabled = true
-            navigationController.interactivePopGestureRecognizer?.delegate = navigationController as? UIGestureRecognizerDelegate
+            navigationController.interactivePopGestureRecognizer?.delegate = gestureDelegate
         } else {
             navigationController.interactivePopGestureRecognizer?.isEnabled = false
+            navigationController.interactivePopGestureRecognizer?.delegate = nil
         }
+    }
+    
+    deinit {
+        if let navController = navigationController {
+            navController.interactivePopGestureRecognizer?.delegate = nil
+        }
+        gestureDelegate = nil
     }
 }
 
