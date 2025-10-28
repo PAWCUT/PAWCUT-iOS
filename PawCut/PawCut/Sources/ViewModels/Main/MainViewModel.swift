@@ -12,15 +12,30 @@ import SwiftUI
 class MainViewModel: ObservableObject {
     @Published var petName: String = ""
     @Published var importImages: [UIImage] = []
+    @Published var selectedPetType: PetType
 
     private let navigationManager = NavigationManager.shared
     private let petStorage: PetStorage = PetStorage()
 
     init() {
         self.petName = petStorage.getPetName()
+        self.selectedPetType = petStorage.getPetType()
+    }
+    
+    var mainImageName: String {
+        return "main_" + selectedPetType.filePrefix + "photo"
+    }
+    
+    var importImageName: String {
+        return "import_photo_" + selectedPetType.filePrefix + "icon"
     }
 
     let currentPage: Int = 0
+    
+    func updatePetInfo() {
+        petName = petStorage.getPetName()
+        selectedPetType = petStorage.getPetType()
+    }
 
     func tapCaptureButton() {
         navigationManager.navigate(to: .main(.tip))
@@ -50,9 +65,5 @@ class MainViewModel: ObservableObject {
 
     func getPetName() -> String {
         return self.petName
-    }
-
-    func updatePetInfo() {
-        petName = petStorage.getPetName()
     }
 }

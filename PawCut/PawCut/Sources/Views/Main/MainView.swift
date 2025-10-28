@@ -28,15 +28,21 @@ struct MainView: View {
                 },
                 getPetName: {
                     viewModel.getPetName()
-                }
+                },
+                mainImageName:
+                    viewModel.mainImageName
             )
 
             PhotoImportPickerView(
                 importImages: $viewModel.importImages,
+                importImageName: viewModel.importImageName,
                 tapPawcutSelectionButton: {
                     viewModel.tapPawcutSelectionButton()
                 }
             )
+        }
+        .onAppear() {
+            viewModel.updatePetInfo()
         }
     }
 }

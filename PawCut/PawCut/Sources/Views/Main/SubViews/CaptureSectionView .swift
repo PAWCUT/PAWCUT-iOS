@@ -10,6 +10,7 @@ import SwiftUI
 struct CaptureSectionView: View {
     var tapCaptureButton: () -> Void
     var getPetName: () -> String
+    let mainImageName: String
 
     var body: some View {
         VStack(spacing: 0) {
@@ -29,7 +30,7 @@ struct CaptureSectionView: View {
             }
             .overlay(
                 ImageComponent(
-                    imageName: "main_photo",
+                    imageName: mainImageName,
                     size: CGSize(width: 350, height: 320)
                 )
                 .offset(CGSize(width: 0, height: -160))

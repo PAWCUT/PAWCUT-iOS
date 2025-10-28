@@ -10,6 +10,7 @@ import SwiftUI
 
 struct PhotoImportPickerView: View {
     @Binding var importImages: [UIImage]
+    let importImageName: String
     var tapPawcutSelectionButton: () -> Void
 
     @State private var showPicker = false
@@ -24,7 +25,7 @@ struct PhotoImportPickerView: View {
                 showPicker = true
             } label: {
                 HStack(spacing: 0) {
-                    Image("import_photo_icon")
+                    Image(importImageName)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 100, height: 100)
