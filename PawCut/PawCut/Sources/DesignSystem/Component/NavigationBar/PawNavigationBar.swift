@@ -14,91 +14,77 @@ struct PawNavigationBar: View {
     let trailingItem: AnyView?
     
     var body: some View {
-        HStack(alignment: .center, spacing: 0) {
-            Button(action: onBackTapped) {
-                Image(systemName: "chevron.left")
-                    .font(.system(size: 22, weight: .semibold))
-                    .foregroundColor(style.foregroundColor)
-                    .frame(width: 33, height: 44)
-            }
-            
-            Spacer()
-            
+        ZStack {
             if style.showsTitle {
                 Text(title)
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundColor(style.foregroundColor)
             }
             
-            Spacer()
-            
-            if let trailingItem = trailingItem {
-                trailingItem
-                    .frame(width: 44, height: 44)
-            } else {
-                Color.clear
-                    .frame(width: 44, height: 44)
+            HStack(spacing: 0) {
+                Button(action: onBackTapped) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 22, weight: .semibold))
+                        .foregroundColor(style.foregroundColor)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                
+                Spacer()
+                
+                if let trailingItem = trailingItem {
+                    trailingItem
+                } else {
+                    Color.clear
+                        .frame(width: 44, height: 44)
+                }
             }
         }
         .frame(height: style.height)
+        .frame(maxWidth: .infinity)
         .background(style.backgroundColor)
     }
 }
-
-#Preview("Only Back Button") {
-    VStack {
-        Text("Content")
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-    .pawNavigationBar()
+#Preview("백버튼만") {
+    Text("백버튼")
+        .pawNavigationBar()
 }
 
-#Preview("Inline") {
-    VStack {
-        Text("Content")
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-    .pawNavigationBar()
-    .pawNavigationStyle(.inline)
-    .pawNavigationTitle("인라인")
+#Preview("인라인") {
+    Text("인라인")
+        .pawNavigationBar()
+        .pawNavigationStyle(.inline)
+        .pawNavigationTitle("인라인")
 }
 
-#Preview("Inline With Item") {
-    VStack {
-        Text("Content")
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-    .pawNavigationBar()
-    .pawNavigationStyle(.inlineWithItem)
-    .pawNavigationTitle("아이템")
-    .pawNavigationTrailingItem {
-        Button(action: {}) {
-            Image(systemName: "play.circle")
-                .font(.system(size: 24))
-                .foregroundColor(.white)
-        }
-    }
+#Preview("Inline + 아이템 1개") {
+    Text("Content")
+        .pawNavigationBar()
+        .pawNavigationStyle(.inline)
+        .pawNavigationTitle("아이템")
+        .pawNavigationTrailingItems(
+            PawNavigationIconItem(systemName: "gearshape") { }
+        )
+}
+
+#Preview("Inline + 아이템 2개") {
+    Text("아이템 2개")
+        .pawNavigationBar()
+        .pawNavigationStyle(.inlineWithItem)
+        .pawNavigationTitle("아이템")
+        .pawNavigationTrailingItems(
+            PawNavigationIconItem(systemName: "gearshape") { },
+            PawNavigationIconItem(systemName: "gearshape") { }
+        )
 }
 
 #Preview("Camera") {
-    ZStack {
-        Color.black.ignoresSafeArea()
-        Text("Camera Preview")
-            .foregroundColor(.white)
-    }
-    .pawNavigationBar()
-    .pawNavigationStyle(.camera)
-    .pawNavigationTrailingItem {
-        Button(action: {}) {
-            Image(systemName: "play.circle")
-                .font(.system(size: 24))
-                .foregroundColor(.white)
-        }
-        Button(action: {}) {
-            Image(systemName: "bolt.fill")
-                .font(.system(size: 20))
-                .foregroundColor(.white)
-        }
-    }
-    .pawNavigationTitle("안녕")
+    Text("카메라")
+        .pawNavigationBar()
+        .pawNavigationStyle(.camera)
+        .pawNavigationTitle("안녕")
+        .pawNavigationTrailingItems(
+            PawNavigationIconItem(imageName: "pawcut_sound") { },
+            PawNavigationIconItem(imageName: "flash_dark") { }
+        )
 }

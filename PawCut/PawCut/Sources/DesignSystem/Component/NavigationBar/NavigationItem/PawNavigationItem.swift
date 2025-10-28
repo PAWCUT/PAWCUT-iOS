@@ -15,17 +15,14 @@ protocol PawNavigationItem: View {
 struct PawNavigationIconItem: PawNavigationItem {
     let action: () -> Void
     let image: Image
-    let isDarkMode: Bool
     
-    init(systemName: String, isDarkMode: Bool = false, action: @escaping () -> Void) {
+    init(systemName: String, action: @escaping () -> Void) {
         self.image = Image(systemName: systemName)
-        self.isDarkMode = isDarkMode
         self.action = action
     }
     
-    init(imageName: String, isDarkMode: Bool = false, action: @escaping () -> Void) {
+    init(imageName: String, action: @escaping () -> Void) {
         self.image = Image(imageName)
-        self.isDarkMode = isDarkMode
         self.action = action
     }
     
@@ -35,7 +32,7 @@ struct PawNavigationIconItem: PawNavigationItem {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 20, height: 20)
-                .foregroundColor(isDarkMode ? .white : .black)
+                .foregroundColor(.grayScale01)
                 .frame(width: 44, height: 44)
         }
     }
