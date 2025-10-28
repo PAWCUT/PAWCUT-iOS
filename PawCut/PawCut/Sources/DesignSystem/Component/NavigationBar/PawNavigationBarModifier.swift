@@ -20,6 +20,7 @@ struct PawNavigationBarModifier: ViewModifier {
             )
             
             content
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }

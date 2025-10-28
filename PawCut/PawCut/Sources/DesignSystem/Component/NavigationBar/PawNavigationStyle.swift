@@ -17,7 +17,7 @@ struct PawNavigationStyle: Equatable {
         showsTitle: Bool = false,
         height: CGFloat = 44,
         backgroundColor: Color = .white,
-        foregroundColor: Color = .black
+        foregroundColor: Color = .grayScale01
     ) {
         self.showsTitle = showsTitle
         self.height = height
@@ -31,27 +31,27 @@ extension PawNavigationStyle {
         showsTitle: false,
         height: 44,
         backgroundColor: .white,
-        foregroundColor: .black
+        foregroundColor: .grayScale01
     )
 
     static let inline = PawNavigationStyle(
         showsTitle: true,
         height: 44,
         backgroundColor: .white,
-        foregroundColor: .black
+        foregroundColor: .grayScale01
     )
     
     static let inlineWithItem = PawNavigationStyle(
         showsTitle: true,
         height: 44,
         backgroundColor: .white,
-        foregroundColor: .black
+        foregroundColor: .grayScale01
     )
     
     static let camera = PawNavigationStyle(
         showsTitle: false,
         height: 44,
         backgroundColor: .black,
-        foregroundColor: .white
+        foregroundColor: .grayScale06
     )
 }
